@@ -21,12 +21,6 @@ class ProblemSpecification(State):
     
     def cost(self):
         return 1
-
-    def print(self):
-        #
-        # Usado para imprimir a solução encontrada. 
-        # O PATH do estado inicial até o final.
-        return str(self.operator)
     
     def env(self):
         #
