@@ -21,17 +21,11 @@ Change the version attribute in `setup.py` and then type:
 
 ```bash
 python setup.py sdist
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-```
-
-if you need to upload a new version, please type:
-
-```bash
-twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+twine upload dist/*
 ```
 
 ## How to install the package
 
 ```bash
-pip install --index-url https://test.pypi.org/simple/ aigyminsper
+pip install aigyminsper
 ```
