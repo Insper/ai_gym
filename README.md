@@ -24,6 +24,20 @@ python setup.py sdist
 twine upload dist/*
 ```
 
+## How to upgrade the package
+
+If you need to upgrade the package, please follow these steps: 
+
+* change what you need in the code;
+* test it :smile: ;
+* change the `setup.py` file. In special, the `version` attribute;
+* type 
+
+```bash
+python setup.py sdist
+twine upload dist/*
+```
+
 ## How to install the package
 
 ```bash

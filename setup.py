@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='aigyminsper',
-    version='0.1.1',
+    version='0.1.2',
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[],
     description='This package implements basic AI algorithms',

@@ -46,10 +46,9 @@ class SumOne(State):
 
 
 def main():
-    print('Busca em largura')
     state = SumOne(1, '', 23)
     algorithm = BuscaLargura()
-    result = algorithm.search(state)
+    result = algorithm.search(state, trace=True)
     if result != None:
         print('Achou!')
         print(result.show_path())

@@ -1,7 +1,5 @@
 from collections import deque
 from aigyminsper.search.Graph import Node
-import logging
-logging.basicConfig(filename='search_algorithms.log', level=logging.DEBUG)
 
 # function used to sort a list
 def sortFunction(val):
@@ -26,12 +24,13 @@ class SearchAlgorithm:
 #
 class BuscaLargura (SearchAlgorithm):
 
-    def search (self, initialState): 
+    def search (self, initialState, trace=False): 
         #Creating a Queue
         open = deque()
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.popleft()
+            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
             for i in n.state.sucessors():
@@ -43,12 +42,13 @@ class BuscaLargura (SearchAlgorithm):
 #
 class BuscaProfundidade (SearchAlgorithm):
 
-    def search (self, initialState, m): 
+    def search (self, initialState, m, trace=False): 
         #Using list as stack
         open = []
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.pop()
+            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
             if (n.depth < m):
@@ -61,11 +61,11 @@ class BuscaProfundidade (SearchAlgorithm):
 #
 class BuscaProfundidadeIterativa (SearchAlgorithm):
 
-    def search (self, initialState): 
+    def search (self, initialState, trace=False): 
         n = 1
         algorithm = BuscaProfundidade()
         while True:
-            result = algorithm.search(initialState, n)
+            result = algorithm.search(initialState, n, trace)
             if (result != None):
                 return result
             n = n+1
@@ -75,7 +75,7 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
 #
 class BuscaCustoUniforme (SearchAlgorithm):
 
-    def search (self, initialState):
+    def search (self, initialState, trace=False):
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.g))
@@ -83,6 +83,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
             #list sorted by g()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
+            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
             for i in n.state.sucessors():
@@ -124,7 +125,6 @@ class AEstrela (SearchAlgorithm):
             #list sorted by f()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            #logging.debug(n.state.env()+" -- "+str(n.f())+" -- "+str(n.h()))
             
             if (n.state.is_goal()):
                 return n
@@ -137,7 +137,4 @@ class AEstrela (SearchAlgorithm):
                     # nao eh adiciona o estado ao vetor.
                     # eh adicionado o conteudo
                     states.append(new_n.state.env())
-                    logging.debug(len(states))
-                else: 
-                    logging.debug('nao entrou')
         return None
