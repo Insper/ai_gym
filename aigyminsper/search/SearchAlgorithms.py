@@ -16,7 +16,7 @@ def sortFunction(val):
 #
 
 class SearchAlgorithm:
-    def search(self):
+    def search(self, trace=False):
         pass
 
 #
@@ -96,7 +96,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
 #
 class BuscaGananciosa (SearchAlgorithm):
 
-    def search (self, initialState):
+    def search (self, initialState, trace=False):
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.h()))
@@ -104,6 +104,7 @@ class BuscaGananciosa (SearchAlgorithm):
             #list sorted by h()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
+            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
             for i in n.state.sucessors():
@@ -116,7 +117,7 @@ class BuscaGananciosa (SearchAlgorithm):
 #
 class AEstrela (SearchAlgorithm):
 
-    def search (self, initialState):
+    def search (self, initialState, trace=False):
         states = []
         open = []
         new_n = Node(initialState, None)
@@ -125,7 +126,7 @@ class AEstrela (SearchAlgorithm):
             #list sorted by f()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            
+            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
             for i in n.state.sucessors():
