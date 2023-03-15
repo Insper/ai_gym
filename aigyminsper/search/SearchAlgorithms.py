@@ -129,13 +129,4 @@ class AEstrela (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
-            for i in n.state.sucessors():
-                new_n = Node(i,n)
-                # eh necessario descrever o conteudo do estado
-                # para verificar se ele já foi instanciado ou nao
-                if (new_n.state.env() not in states):
-                    open.append((new_n,new_n.f()))
-                    # nao eh adiciona o estado ao vetor.
-                    # eh adicionado o conteudo
-                    states.append(new_n.state.env())
         return None
