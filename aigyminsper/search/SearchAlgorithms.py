@@ -33,7 +33,7 @@ class BuscaLargura (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
-            for i in n.state.sucessors():
+            for i in n.state.successors():
                 open.append(Node(i,n))
         return None
 
@@ -52,7 +52,7 @@ class BuscaProfundidade (SearchAlgorithm):
             if (n.state.is_goal()):
                 return n
             if (n.depth < m):
-                for i in n.state.sucessors():
+                for i in n.state.successors():
                     open.append(Node(i,n))
         return None
 
@@ -86,7 +86,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
-            for i in n.state.sucessors():
+            for i in n.state.successors():
                 new_n = Node(i,n)
                 open.append((new_n,new_n.g))
         return None
@@ -107,7 +107,7 @@ class BuscaGananciosa (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
-            for i in n.state.sucessors():
+            for i in n.state.successors():
                 new_n = Node(i,n)
                 open.append((new_n, new_n.h()))
         return None
@@ -129,7 +129,7 @@ class AEstrela (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
-            for i in n.state.sucessors():
+            for i in n.state.successors():
                 new_n = Node(i,n)
                 # eh necessario descrever o conteudo do estado
                 # para verificar se ele já foi instanciado ou nao

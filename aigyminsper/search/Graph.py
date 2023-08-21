@@ -41,7 +41,7 @@ class Node:
 class State(ABC):
 
     @abstractmethod
-    def sucessors(self):
+    def successors(self):
         pass
     
     @abstractmethod
