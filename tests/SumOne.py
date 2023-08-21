@@ -9,11 +9,11 @@ class SumOne(State):
         self.number = n
         self.goal = g
     
-    def sucessors(self):
-        sucessors = []
-        sucessors.append(SumOne(self.number+1, "+1 ", self.goal))
-        sucessors.append(SumOne(self.number+2, "+2 ", self.goal))
-        return sucessors
+    def successors(self):
+        successors = []
+        successors.append(SumOne(self.number+1, "+1 ", self.goal))
+        successors.append(SumOne(self.number+2, "+2 ", self.goal))
+        return successors
     
     def is_goal(self):
         if self.goal == self.number:
