@@ -114,10 +114,18 @@ class BuscaGananciosa (SearchAlgorithm):
 
 #
 # This class implements a A* search algorithm
-#
+
+# Pruning options: 
+
+# "without"
+# "father-son"
+# "ancestral-son"
+# "general"
+
 class AEstrela (SearchAlgorithm):
 
-    def search (self, initialState, trace=False):
+    def search (self, initialState, pruning, trace=False):
+
         states = []
         open = []
         new_n = Node(initialState, None)
@@ -129,11 +137,18 @@ class AEstrela (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
+            
+            # iterate trought all successors
             for i in n.state.sucessors():
                 new_n = Node(i,n)
-                # eh necessario descrever o conteudo do estado
-                # para verificar se ele já foi instanciado ou nao
-                if (new_n.state.env() not in states):
+                # without pruning
+                if pruning == "without":
+                    open.append((new_n,new_n.f()))
+                # father-son pruning
+                elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                    open.append((new_n,new_n.f()))
+                # general pruning
+                elif pruning == "general" (new_n.state.env() not in states):
                     open.append((new_n,new_n.f()))
                     # nao eh adiciona o estado ao vetor.
                     # eh adicionado o conteudo
