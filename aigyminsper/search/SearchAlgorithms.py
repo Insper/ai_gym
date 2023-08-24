@@ -124,7 +124,7 @@ class BuscaGananciosa (SearchAlgorithm):
 
 class AEstrela (SearchAlgorithm):
 
-    def search (self, initialState, pruning, trace=False):
+    def search (self, initialState, pruning='without', trace=False):
 
         states = []
         open = []
@@ -134,11 +134,12 @@ class AEstrela (SearchAlgorithm):
             #list sorted by f()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
+
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+
             if (n.state.is_goal()):
                 return n
 
-            
             # iterate trought all successors
             for i in n.state.sucessors():
 
