@@ -126,6 +126,7 @@ class AEstrela (SearchAlgorithm):
 
     def search (self, initialState, pruning='without', trace=False):
 
+
         states = []
         open = []
         new_n = Node(initialState, None)
