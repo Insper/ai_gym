@@ -124,7 +124,8 @@ class BuscaGananciosa (SearchAlgorithm):
 
 class AEstrela (SearchAlgorithm):
 
-    def search (self, initialState, pruning, trace=False):
+    def search (self, initialState, pruning='without', trace=False):
+
 
         states = []
         open = []
