@@ -3,6 +3,7 @@ from aigyminsper.search.Graph import State
 
 class AspiradorPo(State):
 
+    # armchairs = {'ESQ': [True, 'desvirado'], 'DIR': [True,['desvirado']], 'CIMA': [True,['desvirado']], 'BAIXO': [True,['desvirado']]}
     def __init__(self, op, posicao, s_esq, s_dir, s_cima, s_baixo, armchairs: dict):
         self.operator = op
         self.posicao_robo = posicao
@@ -11,43 +12,60 @@ class AspiradorPo(State):
         self.situacao_cima = s_cima
         self.situacao_baixo = s_baixo
         self.armchairs = armchairs
-    
-def successors(self):
-    successors = []
-
-    # Check if the room is dirty and not cleaned
-    if self.posicao_robo == 'ESQ' and self.situacao_esq == 'SUJO':
-        # Check if there is an armchair
-        if self.armchairs[self.posicao_robo]:
-            # Flip armchair
-            flipped_armchairs = self.armchairs.copy()
-            flipped_armchairs[self.posicao_robo] = False
-            successors.append(AspiradorPo("virar_poltrona", self.posicao_robo, self.situacao_esq, self.situacao_dir, self.situacao_cima, self.situacao_baixo, flipped_armchairs))
-
-            # Clean the room
-            cleaned_armchairs = flipped_armchairs.copy()
-            cleaned_armchairs[self.posicao_robo] = True
-            successors.append(AspiradorPo("limpar", self.posicao_robo, 'LIMPO', self.situacao_dir, self.situacao_cima, self.situacao_baixo, cleaned_armchairs))
-            
-            # Turn armchair back
-            successors.append(AspiradorPo("desvirar_poltrona", self.posicao_robo, 'LIMPO', self.situacao_dir, self.situacao_cima, self.situacao_baixo, self.armchairs))
-        else:
-            # Clean the room without armchair actions
-            cleaned_armchairs = self.armchairs.copy()
-            cleaned_armchairs[self.posicao_robo] = True
-            successors.append(AspiradorPo("limpar", self.posicao_robo, 'LIMPO', self.situacao_dir, self.situacao_cima, self.situacao_baixo, cleaned_armchairs))
-
-    # Check the other directions
-    for direction in ['dir', 'cima', 'baixo']:
-        if self.posicao_robo == direction.upper() and getattr(self, f'situacao_{direction}') == 'SUJO':
-            successors.append(AspiradorPo("limpar", self.posicao_robo, getattr(self, f'situacao_{direction}'), self.situacao_dir, self.situacao_cima, self.situacao_baixo, self.armchairs))
+        self.preconditions = {
+            "ESQ": ["CIMA","BAIXO","DIR"],
+            "DIR": ["CIMA","BAIXO","ESQ"],
+            "CIMA": ["ESQ","DIR"],
+            "BAIXO": ["ESQ","DIR"],
+        }
+                              
+    def successors(self):
+        successors = []
+        # movimentar
+        for direction in self.preconditions[self.posicao_robo]:
+            successors.append(AspiradorPo(direction.lower(), direction, self.situacao_esq, self.situacao_dir, self.situacao_cima, self.situacao_baixo, self.armchairs))
         
-    # Movement directions: esq, dir, cima, baixo
-    for direction in ['esq', 'dir', 'cima', 'baixo']:
-        if self.posicao_robo != direction.upper():
-            successors.append(AspiradorPo(direction, direction.upper(), self.situacao_esq, self.situacao_dir, self.situacao_cima, self.situacao_baixo, self.armchairs))
+        # virar a poltrona
+        if self.armchairs['ESQ'][0] and self.situacao_esq == 'SUJO' and self.posicao_robo == 'ESQ':
+            self.armchairs['ESQ'][1] = 'virado'
+            successors.append(AspiradorPo("virar poltrona",self.posicao_robo,'POLTRONA VIRADA',self.situacao_dir,self.situacao_cima, self.situacao_baixo, self.armchairs))
+        if self.armchairs['DIR'][0] and self.situacao_dir == 'SUJO' and self.posicao_robo == 'DIR':
+            self.armchairs['DIR'][1] = 'virado'
+            successors.append(AspiradorPo("virar poltrona",self.posicao_robo,self.situacao_esq,'POLTRONA VIRADA',self.situacao_cima, self.situacao_baixo, self.armchairs))
+        if self.armchairs['CIMA'][0] and self.situacao_cima == 'SUJO' and self.posicao_robo == 'CIMA':
+            self.armchairs['CIMA'][1] = 'virado'
+            successors.append(AspiradorPo("virar poltrona",self.posicao_robo,self.situacao_esq,self.situacao_dir,'POLTRONA VIRADA', self.situacao_baixo, self.armchairs))
+        if self.armchairs['BAIXO'][0] and    self.situacao_baixo == 'SUJO' and self.posicao_robo == 'BAIXO':
+            self.armchairs['BAIXO'][1] = 'virado'
+            successors.append(AspiradorPo("virar poltrona",self.posicao_robo,self.situacao_esq,self.situacao_dir,self.situacao_cima, 'POLTRONA VIRADA', self.armchairs))
 
-    return successors
+
+        #limpar poltrona
+        if self.armchairs['ESQ'][1] == 'virado' and self.situacao_esq == 'SUJO' and self.posicao_robo == 'ESQ':
+            successors.append(AspiradorPo("limpar",self.posicao_robo,'LIMPO',self.situacao_dir,self.situacao_cima, self.situacao_baixo, self.armchairs))
+            self.armchairs['ESQ'][1] = 'desvirado'
+        if self.armchairs['DIR'][1] == 'virado' and self.situacao_dir == 'SUJO' and self.posicao_robo == 'DIR':
+            successors.append(AspiradorPo("limpar",self.posicao_robo,self.situacao_esq,'LIMPO',self.situacao_cima, self.situacao_baixo, self.armchairs))
+            self.armchairs['DIR'][1] = 'desvirado'
+        if self.armchairs['CIMA'][1] == 'virado' and self.situacao_cima == 'SUJO' and self.posicao_robo == 'CIMA':
+            successors.append(AspiradorPo("limpar",self.posicao_robo,self.situacao_esq,self.situacao_dir,'LIMPO', self.situacao_baixo, self.armchairs))
+            self.armchairs['CIMA'][1] = 'desvirado'
+        if self.armchairs['BAIXO'][1] == 'virado' and self.situacao_baixo == 'SUJO' and self.posicao_robo == 'BAIXO':
+            successors.append(AspiradorPo("limpar",self.posicao_robo,self.situacao_esq,self.situacao_dir,self.situacao_cima, 'LIMPO', self.armchairs))
+            self.armchairs['BAIXO'][1] = 'desvirado'
+
+
+        #desvirar poltrona
+        if self.armchairs['ESQ'][1] == 'desvirado' and self.situacao_esq == 'LIMPO' and self.posicao_robo == 'ESQ':
+            successors.append(AspiradorPo("desvirar poltrona",self.posicao_robo,'POLTRONA DESVIRADA',self.situacao_dir,self.situacao_cima, self.situacao_baixo, self.armchairs))
+        if self.armchairs['DIR'][1] == 'desvirado' and self.situacao_dir == 'LIMPO' and self.posicao_robo == 'DIR':
+            successors.append(AspiradorPo("desvirar poltrona",self.posicao_robo,self.situacao_esq,'POLTRONA DESVIRADA',self.situacao_cima, self.situacao_baixo, self.armchairs))
+        if self.armchairs['CIMA'][1] == 'desvirado' and self.situacao_cima == 'LIMPO' and self.posicao_robo == 'CIMA':
+            successors.append(AspiradorPo("desvirar poltrona",self.posicao_robo,self.situacao_esq,self.situacao_dir,'POLTRONA DESVIRADA', self.situacao_baixo, self.armchairs))
+        if self.armchairs['BAIXO'][1] == 'desvirado' and self.situacao_baixo == 'LIMPO' and self.posicao_robo == 'BAIXO':
+            successors.append(AspiradorPo("desvirar poltrona",self.posicao_robo,self.situacao_esq,self.situacao_dir,self.situacao_cima, 'POLTRONA DESVIRADA', self.armchairs))
+            
+        return successors
 
         
     
@@ -60,17 +78,17 @@ def successors(self):
         return 1
 
     def description(self):
-        return "Implementa um aspirador de po para 4 quartos"
+        return "Implementa um aspirador de po para 4 quartos com poltronas"
 
     def env(self):
         return self.operator
 
 
 def main():
-    armchairs = {'ESQ': True, 'DIR': True, 'CIMA': True, 'BAIXO': True}
-    state = AspiradorPo('', 'ESQ', 'SUJO', 'SUJO', 'SUJO', 'SUJO', armchairs)
+    armchairs = {'ESQ': [True, 'desvirado'], 'DIR': [True,['desvirado']], 'CIMA': [True,['desvirado']], 'BAIXO': [True,['desvirado']]}
+    state = AspiradorPo('', 'ESQ', 'SUJO', 'LIMPO', 'LIMPO', 'LIMPO', armchairs)
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state)
+    result = algorithm.search(state, False)
     if result is not None:
         print('Achou!')
         print(result.show_path())
