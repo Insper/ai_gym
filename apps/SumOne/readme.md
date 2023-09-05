@@ -6,15 +6,18 @@
 
 #### Segundo o que discutimos em sala de aula, quais destes algoritmos são ótimos? Os resultado encontrados neste exercício são coerentes com está informação? Justifique a sua resposta.
 
-Os algoritmos de busca em profundidade e profundidade iterativa sào ótimos, uma vez que esses nos garantem a solução dos problemas com menos iterações.
+Os algoritmos de busca em largura e busca em profundidade iterativa são ótimos, uma vez que esses nos garantem a solução dos problemas com menos iterações.
 
-O algoritmo de  busca em largura, por outro lado, não nos garante esse tipo de solução, porque ele pode demorar muito tempo para encontrar a solução do problema, sem contar que esse pode não encontrar a solução do problema, caso o número de iterações seja grande.
+O algoritmo de  busca em profundidade, por outro lado, não nos garante esse tipo de solução, uma vez que ele pode demorar muito tempo para encontrar a solução do problema, sem contar que esse pode não encontrar a solução do problema, caso a  meta esteja em profundidade maior que m.
 
 
 #### Segundo o que discutimos em sala de aula, quais destes algoritmos são completos? Os resultado encontrados neste exercício são coerentes com está informação? Justifique a sua resposta. 
 
-Segundo o que discutimos em sala de aula, o algoritimo de busca em largura pode ser classificado como completo. Uma vez que garante a solução do problema, mas não garantindo uma solução ótima, pois leva muito mais tempo e iterações do que os outros algoritmos na resolução do problema.
-Podemos ver esse resultado, avaliando o gráfico gerado, onde podemos ver que o tempo de processamento é muito maior do que os outros algoritmos.
+Segundo o que discutimos em sala de aula, os algoritimos que são completos são:
+- Busca em Largura
+- Busca em Profundidade Iterativa
+
+Uma vez que ambos garantem a solução do problema, caso exista uma solução.
 
 
 #### Teve algum algoritmo que travou por falta de memória no seu computador? Se sim, qual é a explicação?
