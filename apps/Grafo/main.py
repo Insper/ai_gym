@@ -37,6 +37,7 @@ def main():
     if result != None:
         print('Achou!')
         print(result.show_path())
+        print(result.g) #Mostra o custo do caminho
     else:
         print('Nao achou solucao')
 
