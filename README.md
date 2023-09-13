@@ -15,6 +15,15 @@ pip install -r requirements.txt
 
 To quit the virtual environment, type `deactivate`. If you already have the virtual environment configured then type `source venv/bin/activate`.
 
+## How to test the project
+
+To run the tests, please type in the root directory: 
+
+```bash
+export PYTHONPATH=.
+pytest tests
+```
+
 ## How to publish the package using PyPi
 
 Change the version attribute in `setup.py` and then type: 
