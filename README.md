@@ -52,3 +52,7 @@ twine upload dist/*
 ```bash
 pip install aigyminsper
 ```
+
+## Change log
+
+The change log of this library is in the [Changelog.md](./Changelog.md) file. 

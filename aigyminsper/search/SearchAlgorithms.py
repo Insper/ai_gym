@@ -16,7 +16,7 @@ def sortFunction(val):
 #
 
 class SearchAlgorithm:
-    def search(self, trace=False):
+    def search(self, pruning='without', trace=False):
         pass
 
 #
@@ -24,7 +24,7 @@ class SearchAlgorithm:
 #
 class BuscaLargura (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False): 
+    def search (self, initialState, pruning='without', trace=False): 
         # List to keep track of the visited nodes
         states = []
         #Creating a Queue
@@ -54,7 +54,7 @@ class BuscaLargura (SearchAlgorithm):
 #
 class BuscaProfundidade (SearchAlgorithm):
 
-    def search (self, initialState, m,pruning='without', trace=False): 
+    def search (self, initialState, m, pruning='without', trace=False): 
         # List to keep track of the visited nodes
         states = []
         #Using list as stack
@@ -85,11 +85,11 @@ class BuscaProfundidade (SearchAlgorithm):
 #
 class BuscaProfundidadeIterativa (SearchAlgorithm):
 
-    def search (self, initialState, trace=False): 
+    def search (self, initialState, pruning='without', trace=False): 
         n = 1
         algorithm = BuscaProfundidade()
         while True:
-            result = algorithm.search(initialState, n, trace)
+            result = algorithm.search(initialState, n, pruning, trace)
             if (result != None):
                 return result
             n = n+1
@@ -99,7 +99,7 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
 #
 class BuscaCustoUniforme (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False):
+    def search (self, initialState, pruning='without', trace=False):
         # List to keep track of the visited nodes
         states = []
         open = []
@@ -131,7 +131,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
 #
 class BuscaGananciosa (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False):
+    def search (self, initialState, pruning='without', trace=False):
         # List to keep track of the visited nodes
         states = []
         open = []
