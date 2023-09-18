@@ -3,19 +3,18 @@ from aigyminsper.search.Graph import State
 
 class Grafo(State):
 
-    def __init__(self, op,posicao, final, grafo, cost=0):
+    def __init__(self, op, anterior, posicao, final, grafo):
         self.operator = op
+        self.anterior = anterior
         self.posicao_robo = posicao
         self.grafo = grafo
         self.final = final
-        self.cost_to_next_state = cost
 
     def successors(self):
         successors = []
 
         for i in self.grafo[self.posicao_robo]:
-            self.cost_to_next_state = self.cost()
-            successors.append(Grafo(f'{self.posicao_robo} -> {i}', i, self.final, self.grafo, self.cost_to_next_state))
+            successors.append(Grafo(f'{self.posicao_robo} -> {i}', self.posicao_robo, i, self.final, self.grafo))
 
 
         return successors
@@ -44,8 +43,8 @@ class Grafo(State):
             'G -> F': 1, 
         }
         
-        transition_key = f'{self.posicao_robo} -> {self.final}'
-        cost = costs.get(transition_key, 0)
+        transition_key = f'{self.anterior} -> {self.posicao_robo}'
+        cost = costs.get(transition_key, 1)
         print(f'Custo de {transition_key} é {cost}')
 
         return cost
@@ -59,13 +58,13 @@ class Grafo(State):
         return "Encontrar o menor caminho entre dois pontos de interesse (POI)"
 
     def env(self):
-        return self.operator
+        return self.operator+"  "+self.posicao_robo
 
 
 def main():
-    state = Grafo('', 'A', 'C', {'A': ['B', 'C'], 'B': ['A', 'C', 'D'], 'C': ['A', 'B', 'E'], 'D': ['B', 'E'], 'E': ['F','G','C','D'], 'F': ['G','E'], 'G': ['E','F']}, 0)
+    state = Grafo('', '', 'A', 'E', {'A': ['B', 'C'], 'B': ['A', 'C', 'D'], 'C': ['A', 'B', 'E'], 'D': ['B', 'E'], 'E': ['F','G','C','D'], 'F': ['G','E'], 'G': ['E','F']})
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state)
+    result = algorithm.search(state, trace=True)
     if result != None:
         print('Achou!')
         print(result.g)
