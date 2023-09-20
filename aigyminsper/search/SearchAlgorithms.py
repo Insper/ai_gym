@@ -131,13 +131,13 @@ class BuscaCustoUniforme (SearchAlgorithm):
                 new_n = Node(i,n)
                 # without pruning
                 if pruning == "without":
-                    open.append(new_n,new_n.g)
+                    open.append((new_n, new_n.g))
                 # father-son pruning
                 elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
-                    open.append(new_n,new_n.g)
+                    open.append((new_n, new_n.g))
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
-                    open.append(new_n,new_n.g)
+                    open.append((new_n, new_n.g))
                     states.append(new_n.state.env())
         return None
     
@@ -168,13 +168,13 @@ class BuscaGananciosa (SearchAlgorithm):
                 new_n = Node(i,n)
                 # without pruning
                 if pruning == "without":
-                    open.append(new_n,new_n.h())
+                    open.append((new_n, new_n.h()))
                 # father-son pruning
                 elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
-                    open.append(new_n,new_n.h())
+                    open.append((new_n, new_n.h()))
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
-                    open.append(new_n,new_n.h())
+                    open.append((new_n, new_n.h()))
                     states.append(new_n.state.env())
         return None
 
