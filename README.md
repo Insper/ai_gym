@@ -39,6 +39,7 @@ If you need to upgrade the package, please follow these steps:
 
 * change what you need in the code;
 * test it :smile: ;
+* describe what you did in the [Changelog.md](./Changelog.md) file;
 * change the `setup.py` file. In special, the `version` attribute;
 * type 
 
