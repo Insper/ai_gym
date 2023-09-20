@@ -1,0 +1,54 @@
+site_name: AIGYM
+repo_url: https://github.com/Insper/ai_gym/
+repo_name: AIGYM
+site_url: https://insper.github.io/ai_gym/
+
+theme:
+    name: 'material'
+
+extra_css:
+  - css/custom.css
+
+nav:
+  - 'Home': 'index.md'
+  - 'User Guide': 'user_guide.md'
+  - 'Examples': examples.md
+  - 'Community': community.md
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.0.0/js-yaml.min.js
+  - js/markdown-enhancer.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - attr_list
+  - markdown.extensions.admonition
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.details
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - pymdownx.magiclink
+  - pymdownx.critic:
+      mode: view
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      base_path: "docs/_snippets"
+      check_paths: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - footnotes
+
+
+
+
