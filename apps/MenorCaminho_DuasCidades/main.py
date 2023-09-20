@@ -15,12 +15,12 @@ class Map(State):
         self.operator = op
         self.goal = goal
 
-    def sucessors(self):
-        sucessors = []
+    def successors(self):
+        successors = []
         neighbors = Map.area[self.city]
         for next_city in neighbors:
-            sucessors.append(Map(next_city[1], next_city[0], next_city[1], self.goal))
-        return sucessors
+            successors.append(Map(next_city[1], next_city[0], next_city[1], self.goal))
+        return successors
 
     def is_goal(self):
         return (self.city == self.goal)
@@ -71,7 +71,7 @@ class Map(State):
         # a estrutura do arquivo considerando uma estrutura otimizada
         #
         Map.g = nx.Graph()
-        f = csv.reader(open('../data/MapHeuristics.csv','r'))
+        f = csv.reader(open('apps/MenorCaminho_DuasCidades/data/MapHeuristics.csv','r'))
         for row in f: 
             Map.g.add_edge(row[0],row[1], distance = row[2])
 
