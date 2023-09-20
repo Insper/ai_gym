@@ -1,6 +1,6 @@
 # AIGYM
 
-This is a package with basic AI algorithms. This package is used in some subjects at Insper. 
+The goal of this libray is provide a set of tools to help you to learn Artificial Intelligence.
 
 ## How to setup the environment
 
@@ -57,3 +57,24 @@ pip install aigyminsper
 ## Change log
 
 The change log of this library is in the [Changelog.md](./Changelog.md) file. 
+
+## Documentation
+
+The documentation of this library is in the [docs](./docs) folder. 
+We are using [MkDocs](https://www.mkdocs.org/) to generate the documentation.
+
+To see the documentation in your local machine, please type: 
+
+```bash 
+mkdocs serve
+```
+
+To deploy a new version of the documentation, please merge the content in the stable branch: 
+
+```bash
+git checkout stable
+git merge master
+git push
+```
+
+There is a GitHub Action that will deploy the documentation in the GitHub Pages.
