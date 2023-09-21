@@ -24,8 +24,8 @@ jobs:
         pip install
         build
         --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
+    - name: Build a distribution 📦
+      run: python3 setup.py sdist
     - name: Store the distribution packages
       uses: actions/upload-artifact@v3
       with:
