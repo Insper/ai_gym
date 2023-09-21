@@ -1,6 +1,6 @@
 from setuptools import setup
 
-with open('./docs/index.md') as f:
+with open('docs/index.md') as f:
     long_description = f.read()
 
 setup(
