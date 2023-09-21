@@ -7,3 +7,7 @@ The goal of this libray is provide a set of tools to help you to learn Artificia
 ```bash
 pip install aigyminsper
 ```
+
+## Web site
+
+This is the website: [https://insper.github.io/ai_gym/](https://insper.github.io/ai_gym/)
