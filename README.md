@@ -24,15 +24,6 @@ export PYTHONPATH=.
 pytest tests
 ```
 
-## How to publish the package using PyPi
-
-Change the version attribute in `setup.py` and then type: 
-
-```bash
-python setup.py sdist
-twine upload dist/*
-```
-
 ## How to upgrade the package
 
 If you need to upgrade the package, please follow these steps: 
@@ -41,12 +32,20 @@ If you need to upgrade the package, please follow these steps:
 * test it :smile: ;
 * describe what you did in the [Changelog.md](./Changelog.md) file;
 * change the `setup.py` file. In special, the `version` attribute;
-* type 
+* commit and push the changes on `main` branch;
+* then do the same on the `stable` branch;
+
+We have two workflows in the GitHub Actions:
+
+* to publish the package in the PyPI when you push something in the `stable` branch. This workflow does the same as: 
 
 ```bash
 python setup.py sdist
 twine upload dist/*
 ```
+
+* to publish the website (documentation) in the GitHub Pages.
+
 
 ## How to install the package
 
