@@ -6,7 +6,6 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   build:
     name: Build distribution
