@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='aigyminsper',
-    version='0.1.6',
+    version='0.1.7',
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[],
     description='A libray that helps you to learn Artificial Intelligence.',
