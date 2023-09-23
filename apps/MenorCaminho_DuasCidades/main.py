@@ -39,8 +39,6 @@ class Map(State):
 
     def h(self):
         return int(Map.g.edges[self.city,self.goal]['distance'])
-        #return random.randint(1,10)
-        #return 1
 
     @staticmethod
     def createArea():
@@ -65,27 +63,25 @@ class Map(State):
 
     @staticmethod
     def createHeuristics():
-        #
-        # O arquvo MapHeuristics.csv considera apenas os objetivos "o" e "x"
-        # TODO modificar o arquivo para considerar todas as cidades. talvez modificar
-        # a estrutura do arquivo considerando uma estrutura otimizada
-        #
         Map.g = nx.Graph()
         f = csv.reader(open('apps/MenorCaminho_DuasCidades/data/MapHeuristics.csv','r'))
         for row in f: 
             Map.g.add_edge(row[0],row[1], distance = row[2])
+        
 
 def main():
 
     Map.createArea()
     Map.createHeuristics()
+    
 
-    state = Map('i', 0, 'i', 'o')
+    # state = Map('i', 0, 'i', 'o')
     # state = Map('b', 0, 'b', 'o')
-    #state = Map('i', 0, 'i', 'x')
+    state = Map('i', 0, 'i', 'x')
+
     #algorithm = BuscaLargura()
-    #algorithm = BuscaCustoUniforme()
-    algorithm = BuscaGananciosa()
+    algorithm = BuscaCustoUniforme()
+    # algorithm = BuscaGananciosa()
     ts = time.time()
     result = algorithm.search(state, trace=True)
     tf = time.time()
@@ -93,7 +89,7 @@ def main():
         print(result.show_path())
     else:
         print('Nao achou solucao')
-    print('Tempo de processamento em segundos: ' + str(tf-ts))
+    print('Tempo de processamento em milisegundos: ' + str(tf-ts))
     print('O custo da solucao eh: '+str(result.g))
 
 if __name__ == '__main__':

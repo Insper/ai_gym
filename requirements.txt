@@ -1,4 +1,4 @@
 pytest
 twine
-
-
+plottingtools
+dataframe_image
