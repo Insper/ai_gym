@@ -138,14 +138,6 @@ class AspiradorPo(State):
         return self.operator + ' ' + self.posicao_robo + ' ' + self.situacao_esq + ' ' + str(self.armchairs)
 
 
-# def main():
-#     armchairs = {'ESQ': [True, 'desvirado'], 'DIR': [True,'desvirado'], 'CIMA': [True,'desvirado'], 'BAIXO': [True,'desvirado']}
-#     state = AspiradorPo('', 'ESQ', 'SUJO', 'LIMPO', 'LIMPO', 'LIMPO', armchairs)
-#     algorithm = BuscaProfundidadeIterativa()
-#     result = algorithm.search(state, True)
-#         return self.operator
-
-
 def main():
     armchairs = {'ESQ': [True, 'desvirado'], 'DIR': [True,['desvirado']], 'CIMA': [True,['desvirado']], 'BAIXO': [True,['desvirado']]}
     state = AspiradorPo('', 'ESQ', 'SUJO', 'LIMPO', 'LIMPO', 'LIMPO', armchairs)
