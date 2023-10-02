@@ -209,7 +209,7 @@ class AEstrela (SearchAlgorithm):
             if (n.state.is_goal()):
                 return n
             # iterate trought all successors
-            for i in n.state.sucessors():
+            for i in n.state.successors():
 
                 new_n = Node(i,n)
                 # without pruning
