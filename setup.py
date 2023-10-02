@@ -5,7 +5,7 @@ with open('ABOUT.md') as f:
 
 setup(
     name='aigyminsper',
-    version='0.1.7',
+    version='0.1.8',
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[],
     description='A libray that helps you to learn Artificial Intelligence.',
