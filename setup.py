@@ -1,11 +1,11 @@
 from setuptools import setup
 
-with open('ABOUT.md') as f:
+with open('README.md') as f:
     long_description = f.read()
 
 setup(
     name='aigyminsper',
-    version='0.1.8',
+    version='0.1.9',
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[],
     description='A libray that helps you to learn Artificial Intelligence.',

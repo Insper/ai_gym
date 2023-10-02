@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.9] 2023-10-02
+
+### Added
+
+### Changed
+
+### Fixed
+
+* Fixed bug in A* algorithm.
+
 ## [0.1.7] 2023-09-21
 
 ### Added
