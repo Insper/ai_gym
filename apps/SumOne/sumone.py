@@ -37,7 +37,7 @@ def main():
     state = SumOne(1, '', objetivo)
     # algorithm = BuscaLargura()
     #algorithm = BuscaProfundidade()
-    algorithm = BuscaProfundidadeIterativa()
+    algorithm = BuscaProfundidadeIteraZtiva()
     start_time = datetime.now()
     result = algorithm.search(state)
     end_time = datetime.now()

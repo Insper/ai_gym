@@ -1,0 +1,5 @@
+aigyminsper
+pandas
+networkx
+pygame
+pytest
