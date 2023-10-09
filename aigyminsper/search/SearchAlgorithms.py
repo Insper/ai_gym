@@ -1,28 +1,42 @@
 from collections import deque
 from aigyminsper.search.Graph import Node
 
-# function used to sort a list
 def sortFunction(val):
+    """
+    Function to sort the list by g(), h() or f()  
+    """
     return val[1]
 
-#
-# Implements search algorithms:
-# 1) Breadth-first search (BuscaLargura)
-# 2) Depth-first search (BuscaProfundidade)
-# 3) Iterative deepening search (BPI)
-# 4) Uniform cost search (CustoUniforme)
-# 5) Greddy search algorithm (BuscaGananciosa)
-# 6) A* search algorithm (AEstrela)
-#
-
 class SearchAlgorithm:
-    def search(self, pruning='without', trace=False):
+    """
+    This class implements an interface for search algorithms.
+    This class should not be instantiated.
+
+    This class is used by the following implementations:
+        - Breadth-first search (BuscaLargura)
+        - Depth-first search (BuscaProfundidade)
+        - Iterative deepening search (BPI)
+        - Uniform cost search (CustoUniforme)
+        - Greddy search algorithm (BuscaGananciosa)
+        - A* search algorithm (AEstrela)
+    """
+
+    def search(self, initialState, pruning='without', trace=False):
+        """
+        This method implements a search algorithm.
+
+        Parameters:
+            initialState: the initial state of the search.
+            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            trace: a boolean that defines if the trace if printed or not.
+        """
         pass
 
-#
-# This class implements the Breadth-first search
-#
+
 class BuscaLargura (SearchAlgorithm):
+    """
+    This class implements the Breadth-first search algorithm.    
+    """
 
     def search (self, initialState, pruning='without', trace=False): 
         # Define valid pruning options
@@ -54,10 +68,11 @@ class BuscaLargura (SearchAlgorithm):
                     states.append(new_n.state.env())
         return None
 
-#
-# This class implements the Depth-first search (limited)
-#
+
 class BuscaProfundidade (SearchAlgorithm):
+    """
+    This class implements the Depth-first search (limited)    
+    """
 
     def search (self, initialState, m, pruning='without', trace=False): 
         # Define valid pruning options
@@ -90,10 +105,10 @@ class BuscaProfundidade (SearchAlgorithm):
                         states.append(new_n.state.env())
         return None
 
-#
-# This class implements Iterative Deepening Depth-first search
-#
 class BuscaProfundidadeIterativa (SearchAlgorithm):
+    """
+    This class implements Iterative Deepening Depth-first search
+    """
 
     def search (self, initialState, pruning='without', trace=False): 
         n = 1
@@ -104,10 +119,11 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
                 return result
             n = n+1
 
-#
-# This class implements a Uniform cost search algorithm
-#
+
 class BuscaCustoUniforme (SearchAlgorithm):
+    """
+    This class implements a Uniform cost search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
@@ -141,10 +157,11 @@ class BuscaCustoUniforme (SearchAlgorithm):
                     states.append(new_n.state.env())
         return None
     
-#
-# This class implements a Greddy search algorithm
-#
+
 class BuscaGananciosa (SearchAlgorithm):
+    """
+    This class implements a Greddy search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
@@ -178,17 +195,11 @@ class BuscaGananciosa (SearchAlgorithm):
                     states.append(new_n.state.env())
         return None
 
-#
-# This class implements a A* search algorithm
-
-# Pruning options: 
-
-# "without"
-# "father-son"
-# "ancestral-son"
-# "general"
 
 class AEstrela (SearchAlgorithm):
+    """
+    This class implements a A* search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
