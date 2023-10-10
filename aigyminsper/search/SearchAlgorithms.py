@@ -16,7 +16,7 @@ def sortFunction(val):
 #
 
 class SearchAlgorithm:
-    def search(self, trace=False):
+    def search(self, pruning='without', trace=False):
         pass
 
 #
@@ -24,7 +24,14 @@ class SearchAlgorithm:
 #
 class BuscaLargura (SearchAlgorithm):
 
-    def search (self, initialState, trace=False): 
+    def search (self, initialState, pruning='without', trace=False): 
+        # Define valid pruning options
+        valid_pruning_options = ['without', 'father-son', 'general']
+        if pruning not in valid_pruning_options:
+            raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
+
+        # List to keep track of the visited nodes
+        states = []
         #Creating a Queue
         open = deque()
         open.append(Node(initialState, None))
@@ -34,7 +41,17 @@ class BuscaLargura (SearchAlgorithm):
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
-                open.append(Node(i,n))
+                new_n = Node(i,n)
+                # without pruning
+                if pruning == "without":
+                    open.append(new_n)
+                # father-son pruning
+                elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                    open.append(new_n)
+                # general pruning
+                elif pruning == "general" and (new_n.state.env() not in states):
+                    open.append(new_n)
+                    states.append(new_n.state.env())
         return None
 
 #
@@ -42,7 +59,14 @@ class BuscaLargura (SearchAlgorithm):
 #
 class BuscaProfundidade (SearchAlgorithm):
 
-    def search (self, initialState, m, trace=False): 
+    def search (self, initialState, m, pruning='without', trace=False): 
+        # Define valid pruning options
+        valid_pruning_options = ['without', 'father-son', 'general']
+        if pruning not in valid_pruning_options:
+            raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
+
+        # List to keep track of the visited nodes
+        states = []
         #Using list as stack
         open = []
         open.append(Node(initialState, None))
@@ -53,7 +77,17 @@ class BuscaProfundidade (SearchAlgorithm):
                 return n
             if (n.depth < m):
                 for i in n.state.successors():
-                    open.append(Node(i,n))
+                    new_n = Node(i,n)
+                    # without pruning
+                    if pruning == "without":
+                        open.append(new_n)
+                    # father-son pruning
+                    elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                        open.append(new_n)
+                    # general pruning
+                    elif pruning == "general" and (new_n.state.env() not in states):
+                        open.append(new_n)
+                        states.append(new_n.state.env())
         return None
 
 #
@@ -61,11 +95,11 @@ class BuscaProfundidade (SearchAlgorithm):
 #
 class BuscaProfundidadeIterativa (SearchAlgorithm):
 
-    def search (self, initialState, trace=False): 
+    def search (self, initialState, pruning='without', trace=False): 
         n = 1
         algorithm = BuscaProfundidade()
         while True:
-            result = algorithm.search(initialState, n, trace)
+            result = algorithm.search(initialState, n, pruning, trace)
             if (result != None):
                 return result
             n = n+1
@@ -75,7 +109,14 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
 #
 class BuscaCustoUniforme (SearchAlgorithm):
 
-    def search (self, initialState, trace=False):
+    def search (self, initialState, pruning='without', trace=False):
+        # Define valid pruning options
+        valid_pruning_options = ['without', 'father-son', 'general']
+        if pruning not in valid_pruning_options:
+            raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
+
+        # List to keep track of the visited nodes
+        states = []
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.g))
@@ -88,7 +129,16 @@ class BuscaCustoUniforme (SearchAlgorithm):
                 return n
             for i in n.state.successors():
                 new_n = Node(i,n)
-                open.append((new_n,new_n.g))
+                # without pruning
+                if pruning == "without":
+                    open.append((new_n, new_n.g))
+                # father-son pruning
+                elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                    open.append((new_n, new_n.g))
+                # general pruning
+                elif pruning == "general" and (new_n.state.env() not in states):
+                    open.append((new_n, new_n.g))
+                    states.append(new_n.state.env())
         return None
     
 #
@@ -96,7 +146,14 @@ class BuscaCustoUniforme (SearchAlgorithm):
 #
 class BuscaGananciosa (SearchAlgorithm):
 
-    def search (self, initialState, trace=False):
+    def search (self, initialState, pruning='without', trace=False):
+        # Define valid pruning options
+        valid_pruning_options = ['without', 'father-son', 'general']
+        if pruning not in valid_pruning_options:
+            raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
+
+        # List to keep track of the visited nodes
+        states = []
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.h()))
@@ -109,15 +166,37 @@ class BuscaGananciosa (SearchAlgorithm):
                 return n
             for i in n.state.successors():
                 new_n = Node(i,n)
-                open.append((new_n, new_n.h()))
+                # without pruning
+                if pruning == "without":
+                    open.append((new_n, new_n.h()))
+                # father-son pruning
+                elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                    open.append((new_n, new_n.h()))
+                # general pruning
+                elif pruning == "general" and (new_n.state.env() not in states):
+                    open.append((new_n, new_n.h()))
+                    states.append(new_n.state.env())
         return None
 
 #
 # This class implements a A* search algorithm
-#
+
+# Pruning options: 
+
+# "without"
+# "father-son"
+# "ancestral-son"
+# "general"
+
 class AEstrela (SearchAlgorithm):
 
-    def search (self, initialState, trace=False):
+    def search (self, initialState, pruning='without', trace=False):
+        # Define valid pruning options
+        valid_pruning_options = ['without', 'father-son', 'general']
+        if pruning not in valid_pruning_options:
+            raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
+
+        # List to keep track of the visited nodes
         states = []
         open = []
         new_n = Node(initialState, None)
@@ -129,11 +208,18 @@ class AEstrela (SearchAlgorithm):
             if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
             if (n.state.is_goal()):
                 return n
+            # iterate trought all successors
             for i in n.state.successors():
+
                 new_n = Node(i,n)
-                # eh necessario descrever o conteudo do estado
-                # para verificar se ele já foi instanciado ou nao
-                if (new_n.state.env() not in states):
+                # without pruning
+                if pruning == "without":
+                    open.append((new_n,new_n.f()))
+                # father-son pruning
+                elif pruning == "father-son" and (new_n.state.env() != n.state.env()):
+                    open.append((new_n,new_n.f()))
+                # general pruning
+                elif pruning == "general" and (new_n.state.env() not in states):
                     open.append((new_n,new_n.f()))
                     # nao eh adiciona o estado ao vetor.
                     # eh adicionado o conteudo
