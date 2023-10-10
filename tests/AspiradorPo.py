@@ -1,4 +1,5 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
+from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
 from aigyminsper.search.Graph import State
 
 class AspiradorPo(State):
@@ -58,9 +59,9 @@ class AspiradorPo(State):
 
 def main():
     #state = AspiradorPo('','ESQ','SUJO','SUJO')
-    state = AspiradorPo('','ESQ','LIMPO','LIMPO')
-    algorithm = BuscaLargura()
-    result = algorithm.search(state)
+    state = AspiradorPo('','ESQ','LIMPO','SUJO')
+    algorithm = BuscaProfundidadeIterativa()
+    result = algorithm.search(state, pruning='general')
     if result != None:
         print('Achou!')
         print(result.show_path())

@@ -1,4 +1,5 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
+from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
 from aigyminsper.search.Graph import State
 
 class SumOne(State):
@@ -46,9 +47,9 @@ class SumOne(State):
 
 
 def main():
-    state = SumOne(1, '', 23)
-    algorithm = BuscaLargura()
-    result = algorithm.search(state, trace=True)
+    state = SumOne(3, '', 6)
+    algorithm = BuscaProfundidadeIterativa()
+    result = algorithm.search(state, trace=True, pruning='general')
     if result != None:
         print('Achou!')
         print(result.show_path())
