@@ -1,43 +1,39 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
 from aigyminsper.search.Graph import State
 
-class AspiradorPo(State):
+class Aspiradordepo(State):
 
-    def __init__(self, op, posicao, s_esq, s_dir):
+    def __init__(self, op, pos, sit_esq, sit_dir):
         # You must use this name for the operator!
         self.operator = op
-        # DIR; ESQ
-        self.posicao_robo = posicao
-        # LIMPO; SUJO
-        self.situacao_esq = s_esq
-        # LIMPO; SUJO
-        self.situacao_dir = s_dir
+        self.pos = pos 
+        self.sit_esq = sit_esq
+        self.sit_dir = sit_dir
     
     def successors(self):
         successors = []
-        # esq
-        successors.append(AspiradorPo("esq", "ESQ", self.situacao_esq, self.situacao_dir))
-        # dir
-        successors.append(AspiradorPo("dir", "DIR", self.situacao_esq, self.situacao_dir))
-        # limpar
-        if self.posicao_robo == 'ESQ':
-            successors.append(AspiradorPo("limpar", self.posicao_robo, 'LIMPO', self.situacao_dir))
+
+        successors.append(Aspiradordepo("esq", "ESQ", self.sit_esq, self.sit_dir))
+        successors.append(Aspiradordepo("dir", "DIR", self.sit_esq, self.sit_dir))
+
+        if self.pos == "ESQ":
+            successors.append(Aspiradordepo("limpar", self.pos, "LIMPO", self.sit_dir))
+
         else:
-            successors.append(AspiradorPo('limpar', self.posicao_robo, self.situacao_esq, 'LIMPO'))
-        
+            successors.append(Aspiradordepo("limpar", self.pos, self.sit_esq, "LIMPO")) 
+
         return successors
     
     def is_goal(self):
-        if (self.situacao_dir == 'LIMPO') and (self.situacao_esq == 'LIMPO') and (self.posicao_robo == "ESQ"):
+        if (self.sit_dir == "LIMPO") and (self.sit_esq == "LIMPO") and (self.pos == "ESQ"):
             return True
-        return False 
-
+    
+    def description(self):
+        return "Descrição do problema"
+    
     def cost(self):
         return 1
-
-    def description(self):
-        return "Implementa um aspirador de po para 2 quartos"
-
+    
     def env(self):
         #
         # IMPORTANTE: este método não deve apenas retornar uma descrição do environment, mas 
@@ -53,14 +49,15 @@ class AspiradorPo(State):
         # - para o problema do soma 1 e 2: return str(self.number)
         # - para o problema das cidades: return self.city
         #
-        return self.operator
+        return (f"Posição robÔ:{self.pos}, Quarto esquerdo:{self.sit_esq}, Quarto direito:{self.sit_dir}")
+
 
 
 def main():
-    #state = AspiradorPo('','ESQ','SUJO','SUJO')
-    state = AspiradorPo('','ESQ','LIMPO','LIMPO')
+    print('Busca em profundidade iterativa')
+    state = Aspiradordepo("", "DIR", "SUJO", "SUJO")
     algorithm = BuscaLargura()
-    result = algorithm.search(state)
+    result = algorithm.search(state, trace=True)
     if result != None:
         print('Achou!')
         print(result.show_path())
