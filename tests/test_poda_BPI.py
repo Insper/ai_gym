@@ -50,34 +50,34 @@ def test_poi_without_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state, trace=True)
-    assert result.show_path() == " ; ir p/ b ; ir p/ d "
+    assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_poi_father_son_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state, trace=True, pruning='father-son')
-    assert result.show_path() == " ; ir p/ b ; ir p/ d "
+    assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_poi_general_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state, trace=True, pruning='general')
-    assert result.show_path() == " ; ir p/ b ; ir p/ d "
+    assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_aspiradorpo_without_pruning():
     state = AspiradorPo('','ESQ','LIMPO','SUJO')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state)
-    assert result.show_path() == " ; dir ; limpar ; esq "
+    assert result.show_path() == " ; dir ; limpar ; esq"
 
 def test_aspiradorpo_father_son_pruning():
     state = AspiradorPo('','ESQ','LIMPO','SUJO')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state)
-    assert result.show_path() == " ; dir ; limpar ; esq "
+    assert result.show_path() == " ; dir ; limpar ; esq"
     
 def test_aspiradorpo_general_pruning():
     state = AspiradorPo('','ESQ','LIMPO','SUJO')
     algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state)
-    assert result.show_path() == " ; dir ; limpar ; esq "
+    assert result.show_path() == " ; dir ; limpar ; esq"
