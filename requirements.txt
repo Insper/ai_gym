@@ -1,7 +1,5 @@
 pytest
 twine
-plottingtools
-dataframe_image
 mkdocs
 mkdocs-material
 

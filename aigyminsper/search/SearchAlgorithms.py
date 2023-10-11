@@ -24,7 +24,7 @@ class SearchAlgorithm:
 #
 class BuscaLargura (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False): 
+    def search (self, initialState, pruning='without', trace=False): 
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -59,7 +59,7 @@ class BuscaLargura (SearchAlgorithm):
 #
 class BuscaProfundidade (SearchAlgorithm):
 
-    def search (self, initialState, m,pruning='without', trace=False): 
+    def search (self, initialState, m, pruning='without', trace=False): 
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -109,7 +109,7 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
 #
 class BuscaCustoUniforme (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False):
+    def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -146,7 +146,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
 #
 class BuscaGananciosa (SearchAlgorithm):
 
-    def search (self, initialState,pruning='without', trace=False):
+    def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -209,7 +209,7 @@ class AEstrela (SearchAlgorithm):
             if (n.state.is_goal()):
                 return n
             # iterate trought all successors
-            for i in n.state.sucessors():
+            for i in n.state.successors():
 
                 new_n = Node(i,n)
                 # without pruning
