@@ -1,4 +1,3 @@
-from aigyminsper.search.SearchAlgorithms import BuscaLargura
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
 from aigyminsper.search.Graph import State
 
@@ -17,14 +16,14 @@ class AspiradorPo(State):
     def successors(self):
         successors = []
         # esq
-        successors.append(AspiradorPo("esq", "ESQ", self.situacao_esq, self.situacao_dir))
+        successors.append(AspiradorPo("esq","ESQ",self.situacao_esq,self.situacao_dir))
         # dir
-        successors.append(AspiradorPo("dir", "DIR", self.situacao_esq, self.situacao_dir))
+        successors.append(AspiradorPo("dir","DIR",self.situacao_esq,self.situacao_dir))
         # limpar
         if self.posicao_robo == 'ESQ':
-            successors.append(AspiradorPo("limpar", self.posicao_robo, 'LIMPO', self.situacao_dir))
+            successors.append(AspiradorPo("limpar",self.posicao_robo,'LIMPO',self.situacao_dir))
         else:
-            successors.append(AspiradorPo('limpar', self.posicao_robo, self.situacao_esq, 'LIMPO'))
+            successors.append(AspiradorPo('limpar',self.posicao_robo,self.situacao_esq,'LIMPO'))
         
         return successors
     
@@ -58,10 +57,10 @@ class AspiradorPo(State):
 
 
 def main():
-    #state = AspiradorPo('','ESQ','SUJO','SUJO')
-    state = AspiradorPo('','ESQ','LIMPO','SUJO')
+    state = AspiradorPo('','ESQ','SUJO','SUJO')
+    #state = AspiradorPo('','ESQ','LIMPO','LIMPO')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state, pruning='general')
+    result = algorithm.search(state)
     if result != None:
         print('Achou!')
         print(result.show_path())

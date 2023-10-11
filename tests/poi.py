@@ -67,10 +67,10 @@ def main():
     #algorithm = BuscaLargura()
     #algorithm = BuscaProfundidade()
     #result = algorithm.search(state, m=3)
-    algorithm = BuscaProfundidadeIterativa()
+    #algorithm = BuscaProfundidadeIterativa()
 
     #algorithm = BuscaCustoUniforme()
-    result = algorithm.search(state, trace=True, pruning='father-son')
+    result = algorithm.search(state, trace=True)
 
     if result != None:
         print(f'O caminho é {result.show_path()}')
