@@ -69,8 +69,8 @@ def main():
     #result = algorithm.search(state, m=3)
     #algorithm = BuscaProfundidadeIterativa()
 
-    #algorithm = BuscaCustoUniforme()
-    result = algorithm.search(state, trace=True)
+    algorithm = BuscaCustoUniforme()
+    result = algorithm.search(state, trace=True, pruning='general')
 
     if result != None:
         print(f'O caminho é {result.show_path()}')
