@@ -29,9 +29,10 @@ class SubidaMontanha (SearchAlgorithm):
                 best_state = i
         return best_state
 
-    def search (self, initialState):
+    def search (self, initialState, trace= False):
         atual = initialState
         while True:
+            if trace: print(f'Estado = {atual.env()}') 
             prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 return atual
@@ -50,9 +51,10 @@ class SubidaMontanhaEstocastico (SearchAlgorithm):
                 best_state = i
         return best_state
 
-    def search (self, initialState):
+    def search (self, initialState, trace= False):
         atual = initialState
         while True:
+            if trace: print(f'Estado = {atual.env()}') 
             prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 if atual.is_goal():
