@@ -1,17 +1,26 @@
+"""
+This module implements the following search algorithms:
+
+- hill-climing search algorithm
+- stochastic hill-climbing search algorithm
+- simulated annealing search (algoritmo da têmpera simulada) TODO
+- local beam search (busca em feixe local) TODO
+
+"""
+
 from aigyminsper.search.SearchAlgorithms import SearchAlgorithm
 
-# function used to sort a list
 def sortFunction(val):
+    """
+    Function to sort the list by g(), h() or f()  
+    """
     return val[1]
 
-#
-# Implements search algorithms:
-# 1) hill-climing search algorithms
-# 2) Simulated annealing search (algoritmo da têmpera simulada) TODO
-# 3) Local Beam Search (busca em feixe local) TODO
-#
 
 class SubidaMontanha (SearchAlgorithm):
+    """
+    This class implements the hill-climbing search algorithm.
+    """
 
     def best(self, successors):
         best_state = successors[0]
@@ -30,6 +39,9 @@ class SubidaMontanha (SearchAlgorithm):
 
 
 class SubidaMontanhaEstocastico (SearchAlgorithm):
+    """
+    This class implements the stochastic hill-climbing search algorithm.
+    """
 
     def best(self, successors):
         best_state = successors[0]
