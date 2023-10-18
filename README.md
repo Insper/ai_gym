@@ -17,12 +17,14 @@ To quit the virtual environment, type `deactivate`. If you already have the virt
 
 ## How to test the project
 
-To run the tests, please type in the root directory: 
+If you are using Linux, please type in the root directory: 
 
 ```bash
 export PYTHONPATH=.
 pytest tests
 ```
+
+You can also run the tests using the VSCode. Just open the `tests` folder and click on the `Run All Tests` button.
 
 ## How to upgrade the package
 
