@@ -1,22 +1,3 @@
-#
-# Considerando as implementações: 
-#
-# - AspiradorPo.py
-# - SumOne.py
-# - poi.py
-#
-# Testar o algoritmo: 
-#
-# 3) Iterative deepening search (BPI)
-#
-# Com as seguintes configurações de poda: 
-#
-# - without pruning
-# - father-son pruning
-# - general pruning
-#
-#
-
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
 from SumOne import SumOne
 from poi import Poi
@@ -49,19 +30,19 @@ def test_sumone_general_pruning():
 def test_poi_without_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state, trace=True)
+    result = algorithm.search(state)
     assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_poi_father_son_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state, trace=True, pruning='father-son')
+    result = algorithm.search(state, pruning='father-son')
     assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_poi_general_pruning():
     state = Poi('','A','A','D')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state, trace=True, pruning='general')
+    result = algorithm.search(state, pruning='general')
     assert result.show_path() == " ; ir p/ b ; ir p/ d"
 
 def test_aspiradorpo_without_pruning():
@@ -73,11 +54,11 @@ def test_aspiradorpo_without_pruning():
 def test_aspiradorpo_father_son_pruning():
     state = AspiradorPo('','ESQ','LIMPO','SUJO')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state)
+    result = algorithm.search(state, pruning='father-son')
     assert result.show_path() == " ; dir ; limpar ; esq"
     
 def test_aspiradorpo_general_pruning():
     state = AspiradorPo('','ESQ','LIMPO','SUJO')
     algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state)
+    result = algorithm.search(state, pruning='general')
     assert result.show_path() == " ; dir ; limpar ; esq"
