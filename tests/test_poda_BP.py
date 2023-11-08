@@ -82,12 +82,18 @@ def test_bp_aspiradorpo_without_pruning():
 def test_bp_aspiradorpo_father_son_pruning():
     state = AspiradorPo('','ESQ','SUJO','SUJO')
     algorithm = BuscaProfundidade()
-    result = algorithm.search(state, 5, pruning='father-son')
-    assert result.show_path() == ' ; limpar ; dir ; limpar ; dir ; esq'
-    assert result.g == 5
+    result = algorithm.search(state, 10, pruning='father-son')
+    assert result.show_path() == ' ; limpar ; dir ; limpar ; esq'
+    assert result.g == 4
 
 def test_bp_aspiradorpo_general_pruning():
     state = AspiradorPo('', 'ESQ', 'SUJO', 'SUJO')
     algorithm = BuscaProfundidade()
     result = algorithm.search(state, 5, pruning='general')
-    assert result is None
+    assert result.show_path() == ' ; limpar ; dir ; limpar ; esq'
+
+def test_bp_aspiradorpo_without_pruning_10():
+    state = AspiradorPo('', 'ESQ', 'SUJO', 'SUJO')
+    algorithm = BuscaProfundidade()
+    result = algorithm.search(state, 10, pruning='without')
+    assert result.show_path() == ' ; limpar ; limpar ; limpar ; limpar ; limpar ; limpar ; limpar ; dir ; limpar ; esq'
