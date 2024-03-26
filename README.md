@@ -78,6 +78,8 @@ git merge master
 git push
 ```
 
+There is a GitHub Action that will deploy the documentation in the GitHub Pages.
+
 ## Contributing
 
 * Fork the Project
@@ -86,4 +88,4 @@ git push
 * Push to the Branch (git push origin feature/AmazingFeature)
 * Open a Pull Request
 
-There is a GitHub Action that will deploy the documentation in the GitHub Pages.
+
