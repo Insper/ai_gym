@@ -1,7 +1,7 @@
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
-from SumOne import SumOne
-from poi import Poi
-from AspiradorPo import AspiradorPo
+from .SumOne import SumOne
+from .poi import Poi
+from .AspiradorPo import AspiradorPo
 
 def test_sumone_without_pruning():
     state = SumOne(3, '', 6)

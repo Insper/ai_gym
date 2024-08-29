@@ -18,9 +18,9 @@
 #
 
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidade
-from SumOne import SumOne
-from poi import Poi
-from AspiradorPo import AspiradorPo
+from .SumOne import SumOne
+from .poi import Poi
+from .AspiradorPo import AspiradorPo
 
 # ---------------------------------- SumOne ---------------------------------- #
 
