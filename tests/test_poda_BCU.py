@@ -18,9 +18,9 @@
 #
 
 from aigyminsper.search.SearchAlgorithms import BuscaCustoUniforme
-from SumOne import SumOne
-from poi import Poi
-from AspiradorPo import AspiradorPo
+from .SumOne import SumOne
+from .poi import Poi
+from .AspiradorPo import AspiradorPo
 
 def test_bcu_sumone_without_pruning():
     state = SumOne(1, '', 23)
