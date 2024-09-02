@@ -3,4 +3,5 @@ twine
 mkdocs
 mkdocs-material
 numpy
+pylint
 
