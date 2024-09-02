@@ -40,7 +40,7 @@ Uma sequência de ações válidas para resolver o estado acima é:
 dir; limpar; dir; limpar; dir; baixo; baixo; limpar; esq; limpar; esq; limpar; esq; limpar
 ```
 
-# Um outro exemplo 
+## Um outro exemplo 
 
 Considere um novo exemplo:
 
