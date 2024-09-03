@@ -32,6 +32,15 @@ class SearchAlgorithm:
         """
         pass
 
+    def print_trace(self, node) -> None:
+        """
+        This method prints the trace of the search.
+
+        Parameters:
+            node: the node that is the solution of the search.
+        """
+        print(f"Path (State {node.state.env()}): {node.show_path()} -- Cost: {node.g}")
+
 
 class BuscaLargura (SearchAlgorithm):
     """
@@ -51,7 +60,8 @@ class BuscaLargura (SearchAlgorithm):
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.popleft()
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -87,7 +97,8 @@ class BuscaProfundidade (SearchAlgorithm):
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.pop()
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             if (n.depth < m):
@@ -140,7 +151,8 @@ class BuscaCustoUniforme (SearchAlgorithm):
             #list sorted by g()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -178,7 +190,8 @@ class BuscaGananciosa (SearchAlgorithm):
             #list sorted by h()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -216,7 +229,8 @@ class AEstrela (SearchAlgorithm):
             #list sorted by f()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+            
             if (n.state.is_goal()):
                 return n
             # iterate trought all successors
