@@ -18,8 +18,8 @@
 #
 
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
-from SumOne import SumOne
-from poi import Poi
+from .SumOne import SumOne
+from .poi import Poi
 
 def test_sumone_without_pruning():
     state = SumOne(1, '', 11)

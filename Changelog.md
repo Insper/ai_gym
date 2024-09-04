@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] 2024-09-04
+
+### Added
+
+* A new form of tracing the search algorithms
+
+### Changed
+
+* Refactor search module interface for cleaner interaction
+* Using sets to lower time complexity on general pruning
+
+### Fixed
+
+
 ## [0.1.9] 2023-10-02
 
 ### Added

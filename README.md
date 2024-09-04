@@ -17,12 +17,13 @@ To quit the virtual environment, type `deactivate`. If you already have the virt
 
 ## How to test the project
 
-To run the tests, please type in the root directory: 
+Execute:
 
 ```bash
-export PYTHONPATH=.
-pytest tests
+pytest 
 ```
+
+You can also run the tests using the VSCode. Just open the `tests` folder and click on the `Run All Tests` button.
 
 ## How to upgrade the package
 
@@ -77,3 +78,13 @@ git push
 ```
 
 There is a GitHub Action that will deploy the documentation in the GitHub Pages.
+
+## Contributing
+
+* Fork the Project
+* Create your Feature Branch (git checkout -b feature/AmazingFeature)
+* Commit your Changes (git commit -m 'Add some AmazingFeature)
+* Push to the Branch (git push origin feature/AmazingFeature)
+* Open a Pull Request
+
+

@@ -53,7 +53,7 @@ class AspiradorPo(State):
         # - para o problema do soma 1 e 2: return str(self.number)
         # - para o problema das cidades: return self.city
         #
-        return self.operator
+        return self.posicao_robo+"#"+self.situacao_esq+"#"+self.situacao_dir
 
 
 def main():
@@ -64,6 +64,7 @@ def main():
     if result != None:
         print('Achou!')
         print(result.show_path())
+        print(result.g)
     else:
         print('Nao achou solucao')
 

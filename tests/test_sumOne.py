@@ -1,7 +1,7 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidade
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
-from SumOne import SumOne
+from .SumOne import SumOne
 
 def test_largura():
     state = SumOne(1, '', 11)

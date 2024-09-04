@@ -1,28 +1,51 @@
 from collections import deque
 from aigyminsper.search.Graph import Node
 
-# function used to sort a list
 def sortFunction(val):
+    """
+    Function to sort the list by g(), h() or f()  
+    """
     return val[1]
 
-#
-# Implements search algorithms:
-# 1) Breadth-first search (BuscaLargura)
-# 2) Depth-first search (BuscaProfundidade)
-# 3) Iterative deepening search (BPI)
-# 4) Uniform cost search (CustoUniforme)
-# 5) Greddy search algorithm (BuscaGananciosa)
-# 6) A* search algorithm (AEstrela)
-#
-
 class SearchAlgorithm:
-    def search(self, pruning='without', trace=False):
+    """
+    This class implements an interface for search algorithms.
+    This class should not be instantiated.
+
+    This class is used by the following implementations:
+        - Breadth-first search (BuscaLargura)
+        - Depth-first search (BuscaProfundidade)
+        - Iterative deepening search (BPI)
+        - Uniform cost search (CustoUniforme)
+        - Greddy search algorithm (BuscaGananciosa)
+        - A* search algorithm (AEstrela)
+    """
+
+    def search(self, initialState, pruning='without', trace=False):
+        """
+        This method implements a search algorithm.
+
+        Parameters:
+            initialState: the initial state of the search.
+            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            trace: a boolean that defines if the trace if printed or not.
+        """
         pass
 
-#
-# This class implements the Breadth-first search
-#
+    def print_trace(self, node) -> None:
+        """
+        This method prints the trace of the search.
+
+        Parameters:
+            node: the node that is the solution of the search.
+        """
+        print(f"Path (State {node.state.env()}): {node.show_path()} -- Cost: {node.g}")
+
+
 class BuscaLargura (SearchAlgorithm):
+    """
+    This class implements the Breadth-first search algorithm.    
+    """
 
     def search (self, initialState, pruning='without', trace=False): 
         # Define valid pruning options
@@ -30,14 +53,15 @@ class BuscaLargura (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         #Creating a Queue
         open = deque()
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.popleft()
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -51,13 +75,14 @@ class BuscaLargura (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append(new_n)
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
 
-#
-# This class implements the Depth-first search (limited)
-#
+
 class BuscaProfundidade (SearchAlgorithm):
+    """
+    This class implements the Depth-first search (limited)    
+    """
 
     def search (self, initialState, m, pruning='without', trace=False): 
         # Define valid pruning options
@@ -65,14 +90,15 @@ class BuscaProfundidade (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         #Using list as stack
         open = []
         open.append(Node(initialState, None))
         while (len(open) > 0):
             n = open.pop()
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             if (n.depth < m):
@@ -87,13 +113,13 @@ class BuscaProfundidade (SearchAlgorithm):
                     # general pruning
                     elif pruning == "general" and (new_n.state.env() not in states):
                         open.append(new_n)
-                        states.append(new_n.state.env())
+                        states.add(new_n.state.env())
         return None
 
-#
-# This class implements Iterative Deepening Depth-first search
-#
 class BuscaProfundidadeIterativa (SearchAlgorithm):
+    """
+    This class implements Iterative Deepening Depth-first search
+    """
 
     def search (self, initialState, pruning='without', trace=False): 
         n = 1
@@ -104,10 +130,11 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
                 return result
             n = n+1
 
-#
-# This class implements a Uniform cost search algorithm
-#
+
 class BuscaCustoUniforme (SearchAlgorithm):
+    """
+    This class implements a Uniform cost search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
@@ -115,8 +142,8 @@ class BuscaCustoUniforme (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.g))
@@ -124,7 +151,8 @@ class BuscaCustoUniforme (SearchAlgorithm):
             #list sorted by g()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -138,13 +166,14 @@ class BuscaCustoUniforme (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append((new_n, new_n.g))
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
     
-#
-# This class implements a Greddy search algorithm
-#
+
 class BuscaGananciosa (SearchAlgorithm):
+    """
+    This class implements a Greddy search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
@@ -152,8 +181,8 @@ class BuscaGananciosa (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.h()))
@@ -161,7 +190,8 @@ class BuscaGananciosa (SearchAlgorithm):
             #list sorted by h()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+
             if (n.state.is_goal()):
                 return n
             for i in n.state.successors():
@@ -175,20 +205,14 @@ class BuscaGananciosa (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append((new_n, new_n.h()))
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
 
-#
-# This class implements a A* search algorithm
-
-# Pruning options: 
-
-# "without"
-# "father-son"
-# "ancestral-son"
-# "general"
 
 class AEstrela (SearchAlgorithm):
+    """
+    This class implements a A* search algorithm
+    """
 
     def search (self, initialState, pruning='without', trace=False):
         # Define valid pruning options
@@ -196,8 +220,8 @@ class AEstrela (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.f()))
@@ -205,7 +229,8 @@ class AEstrela (SearchAlgorithm):
             #list sorted by f()
             open.sort(key = sortFunction, reverse = True)
             n = open.pop()[0]
-            if trace: print(f'Estado = {n.state.env()} com custo = {n.g}') 
+            if trace: self.print_trace(n)
+            
             if (n.state.is_goal()):
                 return n
             # iterate trought all successors
@@ -223,5 +248,5 @@ class AEstrela (SearchAlgorithm):
                     open.append((new_n,new_n.f()))
                     # nao eh adiciona o estado ao vetor.
                     # eh adicionado o conteudo
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
