@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-* Refactor search module interface for cleaner interaction 
+* Refactor search module interface for cleaner interaction
+* Using sets to lower time complexity on general pruning
 
 ### Fixed
 
