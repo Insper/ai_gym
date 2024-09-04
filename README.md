@@ -73,7 +73,7 @@ To deploy a new version of the documentation, please merge the content in the st
 
 ```bash
 git checkout stable
-git merge master
+git merge main
 git push
 ```
 
