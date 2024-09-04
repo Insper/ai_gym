@@ -22,6 +22,7 @@ jobs:
       run: >-
         python3 -m
         pip install
+        pip install setuptools
         build
         --user
     - name: Build a distribution 📦
