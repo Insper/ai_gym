@@ -53,8 +53,8 @@ class BuscaLargura (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         #Creating a Queue
         open = deque()
         open.append(Node(initialState, None))
@@ -75,7 +75,7 @@ class BuscaLargura (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append(new_n)
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
 
 
@@ -90,8 +90,8 @@ class BuscaProfundidade (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         #Using list as stack
         open = []
         open.append(Node(initialState, None))
@@ -113,7 +113,7 @@ class BuscaProfundidade (SearchAlgorithm):
                     # general pruning
                     elif pruning == "general" and (new_n.state.env() not in states):
                         open.append(new_n)
-                        states.append(new_n.state.env())
+                        states.add(new_n.state.env())
         return None
 
 class BuscaProfundidadeIterativa (SearchAlgorithm):
@@ -142,8 +142,8 @@ class BuscaCustoUniforme (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.g))
@@ -166,7 +166,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append((new_n, new_n.g))
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
     
 
@@ -181,8 +181,8 @@ class BuscaGananciosa (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.h()))
@@ -205,7 +205,7 @@ class BuscaGananciosa (SearchAlgorithm):
                 # general pruning
                 elif pruning == "general" and (new_n.state.env() not in states):
                     open.append((new_n, new_n.h()))
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
 
 
@@ -220,8 +220,8 @@ class AEstrela (SearchAlgorithm):
         if pruning not in valid_pruning_options:
             raise ValueError(f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}")
 
-        # List to keep track of the visited nodes
-        states = []
+        # Set to keep track of the visited nodes
+        states = set()
         open = []
         new_n = Node(initialState, None)
         open.append((new_n, new_n.f()))
@@ -248,5 +248,5 @@ class AEstrela (SearchAlgorithm):
                     open.append((new_n,new_n.f()))
                     # nao eh adiciona o estado ao vetor.
                     # eh adicionado o conteudo
-                    states.append(new_n.state.env())
+                    states.add(new_n.state.env())
         return None
