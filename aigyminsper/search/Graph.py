@@ -1,3 +1,5 @@
+"""Module providing classes Node and State."""
+
 from abc import ABC, abstractmethod
 
 class Node:
@@ -13,7 +15,7 @@ class Node:
 
         self.state = state
         self.father_node = father_node
-        if self.father_node == None:
+        if self.father_node is None:
             self.depth = 0
             self.g = 0
         else:
@@ -24,11 +26,10 @@ class Node:
         """
         Return the path from the root node to the current node
         """
-        if self.father_node != None:
-            return self.father_node.show_path()  + " ; " + self.state.operator 
-        else:
-            return self.state.operator
-    
+        if self.father_node is not None:
+            return self.father_node.show_path()  + " ; " + self.state.operator
+        return self.state.operator
+
     def h(self):
         """
         Return the heuristic value of the current node
@@ -40,8 +41,8 @@ class Node:
         Return the evaluation function value of the current node: f(n) = g(n) + h(n)
         """
         return self.g + self.h()
-     
-    
+
+
 class State(ABC):
     """
     This class represents a state in a search problem.
@@ -61,28 +62,24 @@ class State(ABC):
         """
         Return a list of successors of the current state
         """
-        pass
-    
+
     @abstractmethod
     def is_goal(self):
         """
         It returns True if the current state is a goal state
         """
-        pass
-    
+
     @abstractmethod
     def description(self):
         """
         Return a string with a brief description of the problem
         """
-        pass
-    
+
     @abstractmethod
     def cost(self):
         """
         Return the cost of the current state
         """
-        pass
 
     def print(self):
         """
@@ -95,4 +92,3 @@ class State(ABC):
         """
         Return the description of the environment of the current state
         """
-        pass
