@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] 2024-09-04
+
+### Added
+
+* A new form of tracing the search algorithms
+
+### Changed
+
+### Fixed
+
+
 ## [0.1.9] 2023-10-02
 
 ### Added
