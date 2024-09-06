@@ -1,16 +1,14 @@
-from setuptools import setup
-
-with open('./docs/index.md') as f:
-    long_description = f.read()
+from setuptools import setup, find_packages
 
 setup(
-    name='aigyminsper',
-    version='0.2.0',
+    name="aigyminsper",
+    version="0.2.1",
     packages=['aigyminsper','aigyminsper.search'],
-    install_requires=[],
-    description='A libray that helps you to learn Artificial Intelligence.',
     author='Fabricio Barth',
     author_email='fabriciojb@insper.edu.br',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
+    description='A libray that helps you to learn Artificial Intelligence.',
+    long_description=open("ABOUT.md").read(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/insper/ai_gym/",
+    license='MIT',
 )
