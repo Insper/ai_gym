@@ -5,7 +5,7 @@
 
 from aigyminsper.search.CSPAlgorithms import SubidaMontanha
 from aigyminsper.search.CSPAlgorithms import SubidaMontanhaEstocastico
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 import numpy as np
 import random
 import time

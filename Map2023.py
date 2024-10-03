@@ -2,7 +2,7 @@ from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
 from aigyminsper.search.SearchAlgorithms import BuscaCustoUniforme
 from aigyminsper.search.SearchAlgorithms import BuscaGananciosa
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 import time
 import networkx as nx
 import csv
@@ -65,7 +65,7 @@ class Map(State):
         
     @staticmethod
     def createHeuristics():
-        Map.g = nx.Graph()
+        Map.g = nx.graph()
         f = csv.reader(open("MapHeuristics.csv","r"))
         for row in f: 
             Map.g.add_edge(row[0],row[1], distance = row[2])
