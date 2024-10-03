@@ -1,6 +1,6 @@
 from unittest import result
 from aicode.search.SearchAlgorithms import AEstrela
-from aicode.search.Graph import State
+from aicode.search.graph import State
 import math
 
 class Puzzle8(State):

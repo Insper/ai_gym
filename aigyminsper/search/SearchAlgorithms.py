@@ -1,5 +1,5 @@
 from collections import deque
-from aigyminsper.search.Graph import Node
+from aigyminsper.search.graph import Node
 
 def sortFunction(val):
     """

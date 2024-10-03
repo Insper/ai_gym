@@ -57,6 +57,9 @@ class State(ABC):
     - print: returns a string with the operator that generated the current state
     """
 
+    def __init__(self, operator=None):
+        self.operator = operator
+
     @abstractmethod
     def successors(self):
         """

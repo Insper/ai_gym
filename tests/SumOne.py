@@ -1,5 +1,5 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 
 class SumOne(State):
 

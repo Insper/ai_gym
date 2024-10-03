@@ -1,4 +1,4 @@
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 from aigyminsper.search.SearchAlgorithms import BuscaLargura, BuscaProfundidadeIterativa
 from aigyminsper.search.SearchAlgorithms import BuscaProfundidade,BuscaCustoUniforme
 
