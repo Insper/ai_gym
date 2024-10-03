@@ -1,5 +1,5 @@
 from aigyminsper.search.SearchAlgorithms import AEstrela, BuscaGananciosa, BuscaLargura, BuscaProfundidade, BuscaProfundidadeIterativa
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 import numpy
 import sys
 
@@ -64,9 +64,6 @@ class VacuumWorldGeneric(State):
     
     def cost(self):
         return 1
-
-    def print(self):
-        return str(self.operator)
     
     def env(self):
         return str(self.mapa)+" "+str(self.lin)+" "+str(self.col)

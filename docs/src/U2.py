@@ -1,5 +1,5 @@
-from aicode.search.SearchAlgorithms import BuscaCustoUniforme
-from aicode.search.Graph import State
+from aigyminsper.search.SearchAlgorithms import BuscaCustoUniforme
+from aigyminsper.search.graph import State
 
 class U2(State):
 
@@ -15,7 +15,7 @@ class U2(State):
         self.larry = larry
         self.lanterna = lanterna
 
-    def sucessors(self):
+    def successors(self):
         sucessors = []
         if self.bono == self.lanterna:
             sucessors.append(U2(not self.bono, self.edge, self.adam, self.larry, not self.lanterna, 'bono'))

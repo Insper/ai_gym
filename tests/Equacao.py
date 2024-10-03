@@ -1,5 +1,5 @@
 from aigyminsper.search.CSPAlgorithms import SubidaMontanha, SubidaMontanhaEstocastico
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 import numpy as np
 
 class Equacao(State):

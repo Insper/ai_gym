@@ -1,6 +1,6 @@
 """Module providing classes Node and State."""
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 class Node:
     """
@@ -43,7 +43,7 @@ class Node:
         return self.g + self.h()
 
 
-class State(ABC):
+class State:
     """
     This class represents a state in a search problem.
     This is an abstract class. This class defines the following abstract methods:
@@ -56,6 +56,12 @@ class State(ABC):
     This class also defines the following non-abstract methods:
     - print: returns a string with the operator that generated the current state
     """
+
+    def __init__(self,operator):
+        """
+        - operator: the operator that generated the current state
+        """
+        self.operator = operator
 
     @abstractmethod
     def successors(self):
