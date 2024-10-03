@@ -1,11 +1,10 @@
 from aigyminsper.search.SearchAlgorithms import BuscaLargura
-from aigyminsper.search.Graph import State
+from aigyminsper.search.graph import State
 
 class SumOne(State):
 
     def __init__(self, n, op, g):
-        # You must use this name for the operator!
-        self.operator = op
+        super().__init__(op)
         self.number = n
         self.goal = g
     

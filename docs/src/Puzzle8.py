@@ -1,6 +1,6 @@
 from unittest import result
-from aicode.search.SearchAlgorithms import AEstrela
-from aicode.search.Graph import State
+from aigyminsper.search.SearchAlgorithms import AEstrela
+from aigyminsper.search.graph import State
 import math
 
 class Puzzle8(State):
@@ -24,7 +24,7 @@ class Puzzle8(State):
                 resultado[i][j] = self.tabuleiro[i][j]
         return resultado
 
-    def sucessors(self):
+    def successors(self):
         sucessors = []
         lin, col = Puzzle8.onde_esta_N(self.tabuleiro, 0)
         # zero para cima
