@@ -1,4 +1,8 @@
 pytest
 twine
-
+mkdocs
+mkdocs-material
+numpy
+pylint
+setuptools
 

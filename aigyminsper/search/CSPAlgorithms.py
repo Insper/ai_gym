@@ -1,17 +1,26 @@
+"""
+This module implements the following search algorithms:
+
+- hill-climing search algorithm
+- stochastic hill-climbing search algorithm
+- simulated annealing search (algoritmo da têmpera simulada) TODO
+- local beam search (busca em feixe local) TODO
+
+"""
+
 from aigyminsper.search.SearchAlgorithms import SearchAlgorithm
 
-# function used to sort a list
 def sortFunction(val):
+    """
+    Function to sort the list by g(), h() or f()  
+    """
     return val[1]
 
-#
-# Implements search algorithms:
-# 1) hill-climing search algorithms
-# 2) Simulated annealing search (algoritmo da têmpera simulada) TODO
-# 3) Local Beam Search (busca em feixe local) TODO
-#
 
 class SubidaMontanha (SearchAlgorithm):
+    """
+    This class implements the hill-climbing search algorithm.
+    """
 
     def best(self, successors):
         best_state = successors[0]
@@ -20,16 +29,20 @@ class SubidaMontanha (SearchAlgorithm):
                 best_state = i
         return best_state
 
-    def search (self, initialState):
+    def search (self, initialState, trace= False):
         atual = initialState
         while True:
-            prox = self.best(atual.sucessors())
+            if trace: print(f'Estado = {atual.env()}') 
+            prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 return atual
             atual = prox
 
 
 class SubidaMontanhaEstocastico (SearchAlgorithm):
+    """
+    This class implements the stochastic hill-climbing search algorithm.
+    """
 
     def best(self, successors):
         best_state = successors[0]
@@ -38,10 +51,11 @@ class SubidaMontanhaEstocastico (SearchAlgorithm):
                 best_state = i
         return best_state
 
-    def search (self, initialState):
+    def search (self, initialState, trace= False):
         atual = initialState
         while True:
-            prox = self.best(atual.sucessors())
+            if trace: print(f'Estado = {atual.env()}') 
+            prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 if atual.is_goal():
                     return atual

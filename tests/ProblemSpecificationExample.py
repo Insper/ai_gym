@@ -8,10 +8,10 @@ class ProblemSpecification(State):
         self.operator = op
         #TODO
     
-    def sucessors(self):
-        sucessors = []
+    def successors(self):
+        successors = []
         #TODO
-        return sucessors
+        return successors
     
     def is_goal(self):
         pass

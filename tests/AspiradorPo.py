@@ -13,19 +13,19 @@ class AspiradorPo(State):
         # LIMPO; SUJO
         self.situacao_dir = s_dir
     
-    def sucessors(self):
-        sucessors = []
+    def successors(self):
+        successors = []
         # esq
-        sucessors.append(AspiradorPo("esq","ESQ",self.situacao_esq,self.situacao_dir))
+        successors.append(AspiradorPo("esq","ESQ",self.situacao_esq,self.situacao_dir))
         # dir
-        sucessors.append(AspiradorPo("dir","DIR",self.situacao_esq,self.situacao_dir))
+        successors.append(AspiradorPo("dir","DIR",self.situacao_esq,self.situacao_dir))
         # limpar
         if self.posicao_robo == 'ESQ':
-            sucessors.append(AspiradorPo("limpar",self.posicao_robo,'LIMPO',self.situacao_dir))
+            successors.append(AspiradorPo("limpar",self.posicao_robo,'LIMPO',self.situacao_dir))
         else:
-            sucessors.append(AspiradorPo('limpar',self.posicao_robo,self.situacao_esq,'LIMPO'))
+            successors.append(AspiradorPo('limpar',self.posicao_robo,self.situacao_esq,'LIMPO'))
         
-        return sucessors
+        return successors
     
     def is_goal(self):
         if (self.situacao_dir == 'LIMPO') and (self.situacao_esq == 'LIMPO') and (self.posicao_robo == "ESQ"):
@@ -53,7 +53,7 @@ class AspiradorPo(State):
         # - para o problema do soma 1 e 2: return str(self.number)
         # - para o problema das cidades: return self.city
         #
-        return self.operator
+        return self.posicao_robo+"#"+self.situacao_esq+"#"+self.situacao_dir
 
 
 def main():
@@ -64,6 +64,7 @@ def main():
     if result != None:
         print('Achou!')
         print(result.show_path())
+        print(result.g)
     else:
         print('Nao achou solucao')
 

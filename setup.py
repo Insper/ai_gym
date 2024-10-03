@@ -1,11 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='aigyminsper',
-    version='0.1.3',
+    name="aigyminsper",
+    version="0.2.1",
     packages=['aigyminsper','aigyminsper.search'],
-    install_requires=[],
-    description='This package implements basic AI algorithms',
     author='Fabricio Barth',
-    author_email='fabriciojb@insper.edu.br'
+    author_email='fabriciojb@insper.edu.br',
+    description='A libray that helps you to learn Artificial Intelligence.',
+    long_description=open("ABOUT.md").read(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/insper/ai_gym/",
+    license='MIT',
 )
