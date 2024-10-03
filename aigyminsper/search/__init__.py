@@ -13,7 +13,7 @@ Exposes the main classes of the search module:
 - SubidaMontanhaEstocastico: the class that implements the Stochastic Hill Climbing search algorithm.
 """
 
-from .Graph import State
+from .graph import State
 from .SearchAlgorithms import (
     SearchAlgorithm,
     BuscaLargura,

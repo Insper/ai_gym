@@ -1,5 +1,5 @@
 from aicode.search.SearchAlgorithms import BuscaCustoUniforme
-from aicode.search.Graph import State
+from aicode.search.graph import State
 
 class U2(State):
 
