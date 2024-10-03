@@ -10,11 +10,12 @@ Exposes the main classes of the search module:
 - BuscaGananciosa: the class that implements the Greedy search algorithm.
 - AEstrela: the class that implements the A* search algorithm.
 - SubidaMontanha: the class that implements the Hill Climbing search algorithm.
-- SubidaMontanhaEstocastico: the class that implements the Stochastic Hill Climbing search algorithm.
+- SubidaMontanhaEstocastico: the class that implements the
+  Stochastic Hill Climbing search algorithm.
 """
 
 from .graph import State
-from .SearchAlgorithms import (
+from .search_algorithms import (
     SearchAlgorithm,
     BuscaLargura,
     BuscaProfundidade,
@@ -23,7 +24,7 @@ from .SearchAlgorithms import (
     BuscaGananciosa,
     AEstrela,
 )
-from .CSPAlgorithms import SubidaMontanha, SubidaMontanhaEstocastico
+from .csp_algorithms import SubidaMontanha, SubidaMontanhaEstocastico
 
 __all__ = [
     "State",

@@ -1,4 +1,4 @@
-from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa
 from .SumOne import SumOne
 from .poi import Poi
 from .AspiradorPo import AspiradorPo

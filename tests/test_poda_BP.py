@@ -17,7 +17,7 @@
 #
 #
 
-from aigyminsper.search.SearchAlgorithms import BuscaProfundidade
+from aigyminsper.search.search_algorithms import BuscaProfundidade
 from .SumOne import SumOne
 from .poi import Poi
 from .AspiradorPo import AspiradorPo

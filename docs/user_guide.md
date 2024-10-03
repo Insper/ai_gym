@@ -43,7 +43,8 @@ You, as a developer, must implement the methods `successors`, `is_goal`, `descri
 The next step is define the best algorithm to solve the problem.
 
 ```python
-from aigyminsper.search.SearchAlgorithms import BuscaLargura
+from aigyminsper.search.search_algorithms import BuscaLargura
+
 
 def main():
     print('Busca em profundidade iterativa')
@@ -55,6 +56,7 @@ def main():
         print(result.show_path())
     else:
         print('Nao achou solucao')
+
 
 if __name__ == '__main__':
     main()

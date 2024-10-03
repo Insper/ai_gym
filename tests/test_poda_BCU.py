@@ -17,7 +17,7 @@
 #
 #
 
-from aigyminsper.search.SearchAlgorithms import BuscaCustoUniforme
+from aigyminsper.search.search_algorithms import BuscaCustoUniforme
 from .SumOne import SumOne
 from .poi import Poi
 from .AspiradorPo import AspiradorPo

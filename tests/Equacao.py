@@ -1,4 +1,4 @@
-from aigyminsper.search.CSPAlgorithms import SubidaMontanha, SubidaMontanhaEstocastico
+from aigyminsper.search.csp_algorithms import SubidaMontanha, SubidaMontanhaEstocastico
 from aigyminsper.search.graph import State
 import numpy as np
 

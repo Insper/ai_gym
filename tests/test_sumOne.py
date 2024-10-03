@@ -1,6 +1,6 @@
-from aigyminsper.search.SearchAlgorithms import BuscaLargura
-from aigyminsper.search.SearchAlgorithms import BuscaProfundidade
-from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import BuscaLargura
+from aigyminsper.search.search_algorithms import BuscaProfundidade
+from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa
 from .SumOne import SumOne
 
 def test_largura():

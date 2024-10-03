@@ -1,4 +1,4 @@
-from aigyminsper.search.SearchAlgorithms import AEstrela, BuscaGananciosa, BuscaLargura, BuscaProfundidade, BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import AEstrela, BuscaGananciosa, BuscaLargura, BuscaProfundidade, BuscaProfundidadeIterativa
 from aigyminsper.search.graph import State
 import numpy
 import sys

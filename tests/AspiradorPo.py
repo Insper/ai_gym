@@ -1,4 +1,4 @@
-from aigyminsper.search.SearchAlgorithms import BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa
 from aigyminsper.search.graph import State
 
 class AspiradorPo(State):

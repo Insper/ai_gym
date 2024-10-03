@@ -8,9 +8,9 @@ This module implements the following search algorithms:
 
 """
 
-from aigyminsper.search.SearchAlgorithms import SearchAlgorithm
+from aigyminsper.search.search_algorithms import SearchAlgorithm
 
-def sortFunction(val):
+def sort_function(val):
     """
     Function to sort the list by g(), h() or f()  
     """
@@ -23,16 +23,24 @@ class SubidaMontanha (SearchAlgorithm):
     """
 
     def best(self, successors):
+        """
+        This method finds and returns the best successor based on the heuristic value.
+        Parameters:
+            successors (list): A list of successor states to evaluate.
+        Returns:
+            Node: The successor with the lowest heuristic value.
+        """
         best_state = successors[0]
         for i in successors:
             if i.h() < best_state.h():
                 best_state = i
         return best_state
 
-    def search (self, initialState, trace= False):
-        atual = initialState
+    def search(self, initial_state, m=None, pruning='without', trace=False):
+        atual = initial_state
         while True:
-            if trace: print(f'Estado = {atual.env()}') 
+            if trace:
+                print(f'Estado = {atual.env()}')
             prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 return atual
@@ -45,23 +53,29 @@ class SubidaMontanhaEstocastico (SearchAlgorithm):
     """
 
     def best(self, successors):
+        """
+        Determine the best state from the list of successors based on the heuristic value.
+        Parameters:
+            successors: A list of successor states to evaluate.
+        Returns:
+            The best state with the lowest heuristic value.
+        """
+
         best_state = successors[0]
         for i in successors:
             if i.h() < best_state.h():
                 best_state = i
         return best_state
 
-    def search (self, initialState, trace= False):
-        atual = initialState
+    def search(self, initial_state, m=None, pruning='without', trace=False):
+        atual = initial_state
         while True:
-            if trace: print(f'Estado = {atual.env()}') 
+            if trace:
+                print(f'Estado = {atual.env()}')
             prox = self.best(atual.successors())
             if prox.h() >= atual.h():
                 if atual.is_goal():
                     return atual
-                else: 
-                    atual.randomState()
+                atual.randomState()
             else:
                 atual = prox
-
-
