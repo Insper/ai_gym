@@ -17,7 +17,7 @@
 #
 #
 
-from aigyminsper.search.SearchAlgorithms import BuscaLargura
+from aigyminsper.search.search_algorithms import BuscaLargura
 from .SumOne import SumOne
 from .poi import Poi
 
