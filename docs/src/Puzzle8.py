@@ -69,9 +69,6 @@ class Puzzle8(State):
     
     def cost(self):
         return 1
-
-    def print(self):
-        return str(self.operator)
     
     def env(self):
         return str(self.tabuleiro)

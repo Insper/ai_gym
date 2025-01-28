@@ -66,9 +66,6 @@ class U2(State):
             return 10
         elif self.operator == 'adam;larry':
             return 10
-
-    def print(self):
-        return str(self.operator)
     
     def env(self):
         return str(self.bono)+";"+str(self.edge)+";"+str(self.adam)+";"+str(self.larry)+str(self.cost)
