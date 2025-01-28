@@ -5,8 +5,8 @@ import numpy as np
 class Equacao(State):
 
     def __init__(self, op, number):
+        super().__init__(op)
         self.number = number
-        self.operator = op
 
     def successors(self):
         successors = []

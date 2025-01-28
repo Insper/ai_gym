@@ -6,12 +6,12 @@ import sys
 class VacuumWorldGeneric(State):
 
     def __init__(self, mapa, lin, col, op):
+        super().__init__(op)
         self.mapa = mapa
         self.lin_max = self.mapa.shape[0]-1
         self.col_max = self.mapa.shape[1]-1
         self.lin = lin
         self.col = col
-        self.operator = op
     
     def successors(self):
         sucessors = []
