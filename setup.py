@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aigyminsper",
-    version="0.2.1",
+    version="0.2.2",
     packages=['aigyminsper','aigyminsper.search'],
     author='Fabricio Barth',
     author_email='fabriciojb@insper.edu.br',

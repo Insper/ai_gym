@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] 2025-28-01
+
+### Added
+
+### Changed
+
+* Refactor all code to use the pylint standard
+* Remove the unnecessary code in examples files
+
+### Fixed
+
+
 ## [0.2.0] 2024-09-04
 
 ### Added
