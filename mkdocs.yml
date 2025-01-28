@@ -49,6 +49,10 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - footnotes
 
+plugins: 
+  - git-revision-date-localized
+  - mkdocs-jupyter
+
 
 
 

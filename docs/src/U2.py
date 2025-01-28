@@ -4,7 +4,7 @@ from aigyminsper.search.graph import State
 class U2(State):
 
     def __init__(self, bono, edge, adam, larry, lanterna, op):
-        self.operator = op
+        super().__init__(op)
         #
         # para bono, edge, adam, larry e lanterna FALSE significa lado esquerdo do rio
         # TRUE significa lado direito do rio

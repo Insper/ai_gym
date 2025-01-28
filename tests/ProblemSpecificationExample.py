@@ -4,8 +4,7 @@ from aigyminsper.search.graph import State
 class ProblemSpecification(State):
 
     def __init__(self, op):
-        # You must use this name for the operator!
-        self.operator = op
+        super().__init__(op)
         #TODO
     
     def successors(self):

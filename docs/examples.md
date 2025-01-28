@@ -1,12 +1,12 @@
 # Examples
 
-Abaixo são descritos os problemas que podem ser resolvidos com esta biblioteca.
+Abaixo são apresentados alguns exemplos de problemas que podem ser resolvidos com esta biblioteca.
 
 ## Aspirador de Pó
 
 O método `main` da classe `VacuumWorldGeneric.py` deve receber um arquivo texto que descreve a situação do ambiente e as posições do robô como parâmetros. Por exemplo, para o seguinte ambiente: 
 
-<img src="img/mundo_ex_1.png">
+<img src="../img/mundo_ex_1.png">
 
 O seguinte arquivo de configuração será entregue: 
 
@@ -44,7 +44,7 @@ dir; limpar; dir; limpar; dir; baixo; baixo; limpar; esq; limpar; esq; limpar; e
 
 Considere um novo exemplo:
 
-<img src="img/mundo_ex_2.png">
+<img src="../img/mundo_ex_2.png">
 
 Para este exemplo o arquivo de configuração precisa ter este conteúdo:
 
@@ -88,5 +88,5 @@ O arquivo [U2.py](src/U2.py) implementa uma solução possível para este proble
 O arquivo [Puzzle8.py](src/Puzzle8.py) implementa um solucionador para o jogo Puzzle8:
 
 <p align="center">
-<img src="img/fig03-04.png" alt="Grafo" width="400"/>
+<img src="../img/fig03-04.png" alt="Grafo" width="400"/>
 </p>
