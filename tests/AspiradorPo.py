@@ -4,8 +4,7 @@ from aigyminsper.search.graph import State
 class AspiradorPo(State):
 
     def __init__(self, op, posicao, s_esq, s_dir):
-        # You must use this name for the operator!
-        self.operator = op
+        super().__init__(op)
         # DIR; ESQ
         self.posicao_robo = posicao
         # LIMPO; SUJO

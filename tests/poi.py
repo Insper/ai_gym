@@ -5,7 +5,7 @@ from aigyminsper.search.search_algorithms import BuscaProfundidade,BuscaCustoUni
 class Poi(State):
 
     def __init__(self, op, origem, poi, goal):
-        self.operator = op
+        super().__init__(op)
         self.origem = origem
         self.poi = poi
         self.goal = goal

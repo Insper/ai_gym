@@ -8,7 +8,7 @@ class Puzzle8(State):
     objetivo = [[1,2,3],[8,0,4],[7,6,5]]
 
     def __init__(self, tabuleiro, op):
-        self.operator = op
+        super().__init__(op)
         self.tabuleiro = tabuleiro
     
     def onde_esta_N(tabuleiro, n):

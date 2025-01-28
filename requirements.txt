@@ -5,4 +5,9 @@ mkdocs-material
 numpy
 pylint
 setuptools
+mkdocs-jupyter
+mkdocs-git-revision-date-localized-plugin
+markdown
+pymdown-extensions
+pretty_html_table
 
