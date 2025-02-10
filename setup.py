@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aigyminsper",
-    version="0.2.2",
+    version="0.2.3",
     packages=['aigyminsper','aigyminsper.search'],
     author='Fabricio Barth',
     author_email='fabriciojb@insper.edu.br',
@@ -11,4 +11,5 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/insper/ai_gym/",
     license='MIT',
+    data_files=[('dist', ['ABOUT.md'])]
 )
