@@ -8,7 +8,7 @@ of the SearchAlgorithm class.
 
 import json
 from collections import deque
-from typing import Any
+from typing import Any, List, Literal
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -41,16 +41,30 @@ class SearchAlgorithm:
     trace_graph: nx.DiGraph = nx.DiGraph()
     trace_edge_labels: dict[tuple,str] = {}
 
-    def search(self, initial_state, m=None, pruning='without', trace=False):
+    def search(self,
+            initial_state,
+            m=None,
+            pruning: Literal["without", "father-son", "general"]='without',
+            trace=False,
+            trace_fullscreen: bool = False,
+            trace_rotate_labels: bool = True,
+            trace_display_as_states: bool = False,
+            trace_display_at_depth: int = 0,
+            trace_hidden_labels: list[str] | None = None,
+            ):
         """
         This method implements a search algorithm.
 
         Parameters:
             initial_state: the initial state of the search.
             m: the maximum depth for depth-limited search.
-            pruning: a string that defines the pruning option.
-            The pruning options are: without, father-son and general.
+            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
             trace: a boolean that defines if the trace is printed or not.
+            trace_fullscreen: if graph tracing view should open in fullscreen.
+            trace_rotate_labels: if graph tracing edge labels be rotated.
+            trace_display_as_states: if graph tracing should show the states instead of node tree.
+            trace_display_at_depth: search depth that graph tracing display should start.
+            trace_hidden_labels: list of labels in node state to hide in graph tracing.
         """
 
     def print_trace(self, node) -> None:
@@ -62,21 +76,46 @@ class SearchAlgorithm:
         """
         print(f"Path (State {node.state.env()}): {node.show_path()} -- Cost: {node.g}")
 
-    def graph_trace(self, node: Node, node_successors: list[Node], open_list: deque[Node]) -> None:
+    def graph_trace(
+        self, node: Node,
+        node_successors: list[Node],
+        open_list: deque[Node] | list[Node],
+        trace_fullscreen: bool = False,
+        trace_rotate_labels: bool = True,
+        trace_display_as_states: bool = False,
+        trace_display_at_depth: int = 0,
+        trace_hidden_labels: list[str] | None = None,
+        ) -> None:
         """
-        This method displays a graphical view of the search nodes
+        This method displays a graphical view of the search nodes.
 
         Parameters:
-            node: the current node in the search
-            node_successors: list of the successors of the current node
-            state_is_goal: boolean if the current node is goal state
+            node: the current node in the search.
+            node_successors: list of the successors of the current node.
+            open_list: list or queue of open nodes.
+            trace_fullscreen: if graph tracing view should open in fullscreen.
+            trace_rotate_labels: if graph tracing edge labels be rotated.
+            trace_display_as_states: if graph tracing should show the states instead of node tree.
+            trace_display_at_depth: search depth that graph tracing display should start.
+            trace_hidden_labels: list of labels in node state to hide in graph tracing.
         """
 
-        trace_fullscreen: bool = True
-        trace_rotate_labels: bool = True
-        trace_display_as_states: bool = False
-        trace_display_at_depth: int = 0
-        trace_hidden_labels: list[str] = ["operator", "mapa"]
+        default_trace_hidden_labels: list[str] = [
+            "operator",
+            "operador",
+            "cost",
+            "custo",
+            "goal",
+            "objetivo",
+            "map",
+            "mapa",
+        ]
+        if trace_hidden_labels is None:
+            trace_hidden_labels: list[str] = default_trace_hidden_labels
+        else:
+            for default_trace_hidden_label in default_trace_hidden_labels:
+                trace_hidden_labels.append(default_trace_hidden_label)
+        assert isinstance(trace_hidden_labels, List)
 
         def hide_text(text: str) -> str:
             if trace_display_as_states:
@@ -173,7 +212,7 @@ class SearchAlgorithm:
             pos, with_labels=True,
             node_color=color_map,
             edge_color=edge_color_map,
-            width=edge_width_map
+            width=edge_width_map,
             )
             nx.draw_networkx_edge_labels(
             self.trace_graph,
@@ -212,7 +251,18 @@ class BuscaLargura (SearchAlgorithm):
     This class implements the Breadth-first search algorithm.    
     """
 
-    def search(self, initial_state, m=None, pruning='without', trace=False):
+    def search(
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -232,7 +282,16 @@ class BuscaLargura (SearchAlgorithm):
 
             if n.state.is_goal():
                 if trace:
-                    self.graph_trace(n,[],open_list)
+                    self.graph_trace(
+                    n,
+                    [],
+                    open_list,
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels
+                    )
                 return n
             for i in n.state.successors():
                 new_n = Node(i,n)
@@ -247,7 +306,16 @@ class BuscaLargura (SearchAlgorithm):
                     open_list.append(new_n)
                     states.add(new_n.state.env())
                 if trace:
-                    self.graph_trace(n,[new_n],open_list)
+                    self.graph_trace(
+                    n,
+                    [new_n],
+                    open_list,
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
         return None
 
 
@@ -256,7 +324,18 @@ class BuscaProfundidade (SearchAlgorithm):
     This class implements the Depth-first search (limited)    
     """
 
-    def search (self, initial_state, m=None, pruning='without', trace=False):
+    def search (
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -276,7 +355,16 @@ class BuscaProfundidade (SearchAlgorithm):
 
             if n.state.is_goal():
                 if trace:
-                    self.graph_trace(n,[],open_list)
+                    self.graph_trace(
+                        n,
+                        [],
+                        open_list,
+                        trace_fullscreen,
+                        trace_rotate_labels,
+                        trace_display_as_states,
+                        trace_display_at_depth,
+                        trace_hidden_labels,
+                        )
                 return n
             if n.depth < m:
                 for i in n.state.successors():
@@ -292,7 +380,16 @@ class BuscaProfundidade (SearchAlgorithm):
                         open_list.append(new_n)
                         states.add(new_n.state.env())
                     if trace:
-                        self.graph_trace(n,[new_n],open_list)
+                        self.graph_trace(
+                        n,
+                        [new_n],
+                        open_list,
+                        trace_fullscreen,
+                        trace_rotate_labels,
+                        trace_display_as_states,
+                        trace_display_at_depth,
+                        trace_hidden_labels,
+                        )
         return None
 
 class BuscaProfundidadeIterativa (SearchAlgorithm):
@@ -300,11 +397,32 @@ class BuscaProfundidadeIterativa (SearchAlgorithm):
     This class implements Iterative Deepening Depth-first search
     """
 
-    def search(self, initial_state, m=None, pruning='without', trace=False):
+    def search(
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         n = 1
         algorithm = BuscaProfundidade()
         while True:
-            result = algorithm.search(initial_state, n, pruning, trace)
+            result = algorithm.search(
+            initial_state,
+            n,
+            pruning,
+            trace,
+            trace_fullscreen=trace_fullscreen,
+            trace_rotate_labels=trace_rotate_labels,
+            trace_display_as_states=trace_display_as_states,
+            trace_display_at_depth=trace_display_at_depth,
+            trace_hidden_labels=trace_hidden_labels,
+            )
             if result is not None:
                 return result
             n = n+1
@@ -315,7 +433,18 @@ class BuscaCustoUniforme (SearchAlgorithm):
     This class implements a Uniform cost search algorithm
     """
 
-    def search (self, initial_state, m=None, pruning='without', trace=False):
+    def search (
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -337,7 +466,16 @@ class BuscaCustoUniforme (SearchAlgorithm):
 
             if n.state.is_goal():
                 if trace:
-                    self.graph_trace(n,[],open_list)
+                    self.graph_trace(
+                    n,
+                    [],
+                    open_list,
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
                 return n
             for i in n.state.successors():
                 new_n = Node(i,n)
@@ -352,7 +490,16 @@ class BuscaCustoUniforme (SearchAlgorithm):
                     open_list.append((new_n, new_n.g))
                     states.add(new_n.state.env())
                 if trace:
-                    self.graph_trace(n,[new_n],open_list)
+                    self.graph_trace(
+                    n,
+                    [new_n],
+                    [open_list_item[0] for open_list_item in open_list],
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
         return None
 
 
@@ -361,7 +508,18 @@ class BuscaGananciosa (SearchAlgorithm):
     This class implements a Greddy search algorithm
     """
 
-    def search (self, initial_state, m=None, pruning='without', trace=False):
+    def search (
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -383,7 +541,16 @@ class BuscaGananciosa (SearchAlgorithm):
 
             if n.state.is_goal():
                 if trace:
-                    self.graph_trace(n,[],open_list)
+                    self.graph_trace(
+                    n,
+                    [],
+                    open_list,
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
                 return n
             for i in n.state.successors():
                 new_n = Node(i,n)
@@ -398,7 +565,16 @@ class BuscaGananciosa (SearchAlgorithm):
                     open_list.append((new_n, new_n.h()))
                     states.add(new_n.state.env())
                 if trace:
-                    self.graph_trace(n,[new_n],open_list)
+                    self.graph_trace(
+                    n,
+                    [new_n],
+                    [open_list_item[0] for open_list_item in open_list],
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
         return None
 
 
@@ -407,7 +583,18 @@ class AEstrela (SearchAlgorithm):
     This class implements a A* search algorithm
     """
 
-    def search (self, initial_state, m=None, pruning='without', trace=False):
+    def search (
+        self,
+        initial_state,
+        m = None,
+        pruning = 'without',
+        trace = False,
+        trace_fullscreen = False,
+        trace_rotate_labels = True,
+        trace_display_as_states = False,
+        trace_display_at_depth = 0,
+        trace_hidden_labels = None,
+        ) -> Node | None:
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
@@ -430,7 +617,16 @@ class AEstrela (SearchAlgorithm):
 
             if n.state.is_goal():
                 if trace:
-                    self.graph_trace(n,[],open_list)
+                    self.graph_trace(
+                    n,
+                    [],
+                    open_list,
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
                 return n
 
             # iterate trought all successors
@@ -450,5 +646,14 @@ class AEstrela (SearchAlgorithm):
                     # eh adicionado o conteudo
                     states.add(new_n.state.env())
                 if trace:
-                    self.graph_trace(n,[new_n],open_list)
+                    self.graph_trace(
+                    n,
+                    [new_n],
+                    [open_list_item[0] for open_list_item in open_list],
+                    trace_fullscreen,
+                    trace_rotate_labels,
+                    trace_display_as_states,
+                    trace_display_at_depth,
+                    trace_hidden_labels,
+                    )
         return None
