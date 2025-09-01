@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.4] 2025-31-08
+
+### Added
+
+* Graphical visualization of search algorithm tracing
+
+### Changed
+
+### Fixed
+
+
 ## [0.2.2] 2025-28-01
 
 ### Added
