@@ -116,20 +116,26 @@ class SearchAlgorithm:
             trace_hidden_labels = trace_hidden_labels + default_trace_hidden_labels
         assert isinstance(trace_hidden_labels, List)
 
+        # Hide text outside view to uniquely identify nodes
         hide_text_offset = int((1920*4)/14) + 100  #  Minimum chars to add in 4k screen to hide
         def hide_text(text: str) -> str:
             if trace_display_as_states:
                 return ""
             return text + (" " * hide_text_offset) + "\n\n"
+
+        def format_state(state: dict[str, Any]) -> str:
+            return json.dumps(state).replace("\"",'').replace(':',' ')[1:-1]
+            # return " ".join(f"{k} {v}" for k, v in state.items())
+
         def make_label(n: Node) -> str:
             node_state: dict[str, Any] = n.state.__dict__
+            filtered_state = {
+                x: node_state[x] for x in node_state if x.lower() not in trace_hidden_labels
+            }
             node_state_label: str = (
                 hide_text(n.identifier)
-                + json.dumps(
-                {x: node_state[x] for x in node_state if x not in trace_hidden_labels},
-                )
-                .replace("\"",'').replace(':',' ')[1:-1]
-                )
+                + format_state(filtered_state)
+            )
             return node_state_label
         def make_edge_label(n: Node) -> str:
             return f"{n.state.operator} - cost {n.state.cost()}"
