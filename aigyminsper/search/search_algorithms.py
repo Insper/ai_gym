@@ -111,10 +111,9 @@ class SearchAlgorithm:
             "mapa",
         ]
         if trace_hidden_labels is None:
-            trace_hidden_labels: list[str] = default_trace_hidden_labels
+            trace_hidden_labels = default_trace_hidden_labels.copy()
         else:
-            for default_trace_hidden_label in default_trace_hidden_labels:
-                trace_hidden_labels.append(default_trace_hidden_label)
+            trace_hidden_labels = trace_hidden_labels + default_trace_hidden_labels
         assert isinstance(trace_hidden_labels, List)
 
         def hide_text(text: str) -> str:
