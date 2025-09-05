@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 
-## [0.2.2] 2025-28-01
+## [0.2.2] 2025-01-28
 
 ### Added
 
@@ -37,7 +37,6 @@ All notable changes to this project will be documented in this file.
 * Using sets to lower time complexity on general pruning
 
 ### Fixed
-
 
 ## [0.1.9] 2023-10-02
 

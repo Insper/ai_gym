@@ -80,7 +80,7 @@ class SearchAlgorithm:
         self, node: Node,
         node_successors: list[Node],
         open_list: deque[Node] | list[Node],
-        trace_fullscreen: bool = False,
+        trace_fullscreen: bool = True,
         trace_rotate_labels: bool = True,
         trace_display_as_states: bool = False,
         trace_display_at_depth: int = 0,
