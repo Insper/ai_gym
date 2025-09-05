@@ -8,6 +8,7 @@ of the SearchAlgorithm class.
 
 import json
 from collections import deque
+from platform import system
 from typing import Any, List, Literal
 
 import matplotlib.pyplot as plt
@@ -124,8 +125,7 @@ class SearchAlgorithm:
             return text + (" " * hide_text_offset) + "\n\n"
 
         def format_state(state: dict[str, Any]) -> str:
-            return json.dumps(state).replace("\"",'').replace(':',' ')[1:-1]
-            # return " ".join(f"{k} {v}" for k, v in state.items())
+            return json.dumps(state).replace("\"",'').replace(':',' =')[1:-1].replace(",","\n")
 
         def make_label(n: Node) -> str:
             node_state: dict[str, Any] = n.state.__dict__
@@ -248,7 +248,17 @@ class SearchAlgorithm:
                 markerfacecolor='gray', markersize=15),
                 ])
             if trace_fullscreen:
-                plt.get_current_fig_manager().full_screen_toggle()
+                backend = plt.get_backend()
+                cfm = plt.get_current_fig_manager()
+                if backend.lower() == "wxagg":
+                    cfm.frame.Maximize(True)
+                elif backend.lower() == "tkagg":
+                    if system().lower() == "windows":
+                        cfm.window.state("zoomed")
+                    else:
+                        cfm.resize(*cfm.window.maxsize())
+                elif backend.lower() == "qt4agg":
+                    cfm.window.showMaximized()
             plt.show()
 
 
