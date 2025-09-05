@@ -45,15 +45,15 @@ class SumOne(State):
 
 
 def main():
-    state = SumOne(1, '', 15)
-    #algorithm = BuscaLargura()
-    #result = algorithm.search(state, trace=True)
+    state = SumOne(1, '', 7)
+    algorithm = BuscaLargura()
+    result = algorithm.search(state, trace=True, trace_fullscreen=True)
 
     #algorithm = BuscaProfundidade()
     #result = algorithm.search(state, m=2, trace=True)
 
-    algorithm = BuscaProfundidadeIterativa()
-    result = algorithm.search(state, trace=True)
+    #algorithm = BuscaProfundidadeIterativa()
+    #result = algorithm.search(state, trace=True)
 
     if result != None:
         print('Achou!')
