@@ -1,6 +1,7 @@
 """Module providing classes Node and State."""
 
 from abc import abstractmethod
+from uuid import uuid4
 
 class Node:
     """
@@ -11,7 +12,9 @@ class Node:
         """
         - state: the state represented by the node
         - father_node: the father node of the current node
+        - identifier: unique identifier generated when node is instantiated, used internally
         """
+        self.identifier: str = f"{uuid4()}"
 
         self.state = state
         self.father_node = father_node

@@ -10,4 +10,7 @@ mkdocs-git-revision-date-localized-plugin
 markdown
 pymdown-extensions
 pretty_html_table
+matplotlib
+networkx
+pydot
 

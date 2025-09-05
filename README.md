@@ -22,8 +22,16 @@ Execute:
 ```bash
 pytest 
 ```
-
 You can also run the tests using the VSCode. Just open the `tests` folder and click on the `Run All Tests` button.
+
+Besides, there are some features that must be tested manually, like the trace of the execution of the algorithms. To do that, you can run the following script:
+
+```bash
+export PYTHONPATH=.:$PYTHONPATH
+cd tests/
+python SumOne.py
+python AspiradorPo.py
+```
 
 ## How to upgrade the package
 
