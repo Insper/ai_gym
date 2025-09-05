@@ -42,6 +42,23 @@ class SearchAlgorithm:
     trace_graph: nx.DiGraph = nx.DiGraph()
     trace_edge_labels: dict[tuple,str] = {}
 
+    def search(self, initial_state, m=None, pruning='without', trace=False):
+        """
+        This method implements a search algorithm.
+        This signature was kept because the CSP Algorithms
+
+        Parameters:
+            initialState: the initial state of the search.
+            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            trace: a boolean that defines if the trace if printed or not.
+            initial_state: the initial state of the search.
+            m: the maximum depth for depth-limited search.
+            pruning: a string that defines the pruning option.
+            The pruning options are: without, father-son and general.
+            trace: a boolean that defines if the trace is printed or not.
+        """
+        pass
+
     def search(self,
             initial_state,
             m=None,
