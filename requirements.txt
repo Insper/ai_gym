@@ -13,4 +13,5 @@ pretty_html_table
 matplotlib
 networkx
 pydot
+graphviz
 
