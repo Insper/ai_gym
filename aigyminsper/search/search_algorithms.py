@@ -49,7 +49,8 @@ class SearchAlgorithm:
 
         Parameters:
             initialState: the initial state of the search.
-            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            pruning: a string that defines the pruning option. 
+              The pruning options are: without, father-son and general.
             trace: a boolean that defines if the trace if printed or not.
             initial_state: the initial state of the search.
             m: the maximum depth for depth-limited search.
@@ -57,7 +58,6 @@ class SearchAlgorithm:
             The pruning options are: without, father-son and general.
             trace: a boolean that defines if the trace is printed or not.
         """
-        pass
 
     def search(self,
             initial_state,
@@ -76,7 +76,8 @@ class SearchAlgorithm:
         Parameters:
             initial_state: the initial state of the search.
             m: the maximum depth for depth-limited search.
-            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            pruning: a string that defines the pruning option. 
+              The pruning options are: without, father-son and general.
             trace: a boolean that defines if the trace is printed or not.
             trace_fullscreen: if graph tracing view should open in fullscreen.
             trace_rotate_labels: if graph tracing edge labels be rotated.
@@ -369,6 +370,7 @@ class BuscaProfundidade (SearchAlgorithm):
         trace_display_at_depth = 0,
         trace_hidden_labels = None,
         ) -> Node | None:
+        
         # Define valid pruning options
         valid_pruning_options = ['without', 'father-son', 'general']
         if pruning not in valid_pruning_options:
