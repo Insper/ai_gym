@@ -6,10 +6,13 @@ A* search algorithms. Each algorithm is implemented as a subclass
 of the SearchAlgorithm class.
 """
 
+from __future__ import annotations
+
 import json
+from abc import ABC, abstractmethod
 from collections import deque
 from platform import system
-from typing import Any, List, Literal
+from typing import ClassVar, Literal
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -19,13 +22,13 @@ from networkx.drawing.nx_pydot import graphviz_layout
 from aigyminsper.search.graph import Node
 
 
-def sort_function(val):
+def sort_function(val: tuple[Node, int]) -> int:
     """
     Function to sort the list by g(), h() or f()  
     """
     return val[1]
 
-class SearchAlgorithm:
+class SearchAlgorithm(ABC):
     """
     This class implements an interface for search algorithms.
     This class should not be instantiated.
@@ -40,25 +43,9 @@ class SearchAlgorithm:
     """
 
     trace_graph: nx.DiGraph = nx.DiGraph()
-    trace_edge_labels: dict[tuple,str] = {}
+    trace_edge_labels: ClassVar[dict[tuple,str]] = {}
 
-    def search(self, initial_state, m=None, pruning='without', trace=False):
-        """
-        This method implements a search algorithm.
-        This signature was kept because the CSP Algorithms
-
-        Parameters:
-            initialState: the initial state of the search.
-            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
-            trace: a boolean that defines if the trace if printed or not.
-            initial_state: the initial state of the search.
-            m: the maximum depth for depth-limited search.
-            pruning: a string that defines the pruning option.
-            The pruning options are: without, father-son and general.
-            trace: a boolean that defines if the trace is printed or not.
-        """
-        pass
-
+    @abstractmethod
     def search(self,
             initial_state,
             m=None,
@@ -76,23 +63,26 @@ class SearchAlgorithm:
         Parameters:
             initial_state: the initial state of the search.
             m: the maximum depth for depth-limited search.
-            pruning: a string that defines the pruning option. The pruning options are: without, father-son and general.
+            pruning: a string that defines the pruning option.
+            The pruning options are: without, father-son and general.
             trace: a boolean that defines if the trace is printed or not.
             trace_fullscreen: if graph tracing view should open in fullscreen.
             trace_rotate_labels: if graph tracing edge labels be rotated.
             trace_display_as_states: if graph tracing should show the states instead of node tree.
-            trace_display_at_depth: search depth that graph tracing display should start.
-            trace_hidden_labels: list of labels in node state to hide in graph tracing.
+            trace_display_at_depth: search depth that graph display will start.
+            trace_hidden_labels: list of labels in node state to hide in graph.
         """
 
-    def print_trace(self, node) -> None:
+    def print_trace(self, node: Node) -> None:
         """
         This method prints the trace of the search.
 
         Parameters:
             node: the node that is the solution of the search.
         """
-        print(f"Path (State {node.state.env()}): {node.show_path()} -- Cost: {node.g}")
+        print(
+            f"Path (State {node.state.env()}): {node.show_path()} -- Cost: {node.g}",
+        )
 
     def graph_trace(
         self, node: Node,
@@ -114,8 +104,8 @@ class SearchAlgorithm:
             trace_fullscreen: if graph tracing view should open in fullscreen.
             trace_rotate_labels: if graph tracing edge labels be rotated.
             trace_display_as_states: if graph tracing should show the states instead of node tree.
-            trace_display_at_depth: search depth that graph tracing display should start.
-            trace_hidden_labels: list of labels in node state to hide in graph tracing.
+            trace_display_at_depth: search depth that graph display will start.
+            trace_hidden_labels: list of labels in node state to hide in graph.
         """
 
         default_trace_hidden_labels: list[str] = [
@@ -132,7 +122,9 @@ class SearchAlgorithm:
             trace_hidden_labels = default_trace_hidden_labels.copy()
         else:
             trace_hidden_labels = trace_hidden_labels + default_trace_hidden_labels
-        assert isinstance(trace_hidden_labels, List)
+        if not isinstance(trace_hidden_labels, list):
+            hidden_labels_error = "trace_hidden_labels must be a list."
+            raise TypeError(hidden_labels_error)
 
         # Hide text outside view to uniquely identify nodes
         hide_text_offset = int((1920*4)/14) + 100  #  Minimum chars to add in 4k screen to hide
@@ -141,11 +133,11 @@ class SearchAlgorithm:
                 return ""
             return text + (" " * hide_text_offset) + "\n\n"
 
-        def format_state(state: dict[str, Any]) -> str:
+        def format_state(state: dict[str, object]) -> str:
             return json.dumps(state).replace("\"",'').replace(':',' =')[1:-1].replace(",","\n")
 
         def make_label(n: Node) -> str:
-            node_state: dict[str, Any] = n.state.__dict__
+            node_state: dict[str, str] = n.state.__dict__
             filtered_state = {
                 x: node_state[x] for x in node_state if x.lower() not in trace_hidden_labels
             }
@@ -171,7 +163,7 @@ class SearchAlgorithm:
             for node_sucessor_index, node_sucessor_label in enumerate(node_sucessor_labels):
                 nx.add_path(
                 self.trace_graph,
-                [node_state_label, node_sucessor_label]
+                [node_state_label, node_sucessor_label],
                 )
 
                 node_sucessor = node_successors[node_sucessor_index]
@@ -180,7 +172,7 @@ class SearchAlgorithm:
         else:
             outlining_path: bool = True
             current_node: Node = node
-            parent_node: Node = current_node.father_node
+            parent_node: Node | None = current_node.father_node
             while outlining_path:
                 if parent_node is None:
                     outlining_path = False
@@ -190,7 +182,7 @@ class SearchAlgorithm:
                     label: str = make_edge_label(current_node)
                     highlighted_edges_labels[highlighted_edge] = label
                     current_node = parent_node
-                    parent_node: Node = current_node.father_node
+                    parent_node: Node | None = current_node.father_node
 
         # Categorize graph nodes
         color_map = []
@@ -487,7 +479,7 @@ class BuscaCustoUniforme (SearchAlgorithm):
 
         # Set to keep track of the visited nodes
         states = set()
-        open_list = []
+        open_list: list[tuple[Node, int]] = []
         new_n = Node(initial_state, None)
         open_list.append((new_n, new_n.g))
         while len(open_list) > 0:
