@@ -48,9 +48,16 @@ class SubidaMontanha(SearchAlgorithm):
     def search(
         self,
         initial_state: CspState,
+        /,
         _m: int | None = None,
         _pruning: Literal["without", "father-son", "literal"] = "without",
         trace: bool = False,
+        *,
+        trace_fullscreen: bool = False,
+        trace_rotate_labels: bool = True,
+        trace_display_as_states: bool = False,
+        trace_display_at_depth: int = 0,
+        trace_hidden_labels: list[str] | None = None,
     ) -> CspState:
         atual = initial_state
         while True:
@@ -86,9 +93,16 @@ class SubidaMontanhaEstocastico(SearchAlgorithm):
     def search(
         self,
         initial_state: CspState,
+        /,
         _m: int | None = None,
-        _pruning: Literal["without", "father-son", "literal"] = "without",
+        _pruning: Literal["without", "father-son", "general"] = "without",
         trace: bool = False,
+        *,
+        trace_fullscreen: bool = False,
+        trace_rotate_labels: bool = True,
+        trace_display_as_states: bool = False,
+        trace_display_at_depth: int = 0,
+        trace_hidden_labels: list[str] | None = None,
     ) -> CspState:
         atual = initial_state
         while True:

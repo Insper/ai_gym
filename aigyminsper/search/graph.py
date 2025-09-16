@@ -128,11 +128,13 @@ class HeuristicState(State):
     This class also defines the following non-abstract methods:
     - print: returns a string with the operator that generated the current state
     """
+
     @abstractmethod
     def h(self) -> str:
         """
         Return the heuristic of the current state
         """
+
 
 class CspState(HeuristicState):
     """_summary_
