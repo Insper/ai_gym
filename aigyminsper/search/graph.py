@@ -153,7 +153,7 @@ class CspState(HeuristicState):
     """
 
     @abstractmethod
-    def randomState(self) -> str:
+    def random_state(self) -> str:
         """
         Return random possible state
         """

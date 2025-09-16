@@ -112,6 +112,6 @@ class SubidaMontanhaEstocastico(SearchAlgorithm):
             if prox.h() >= atual.h():
                 if atual.is_goal():
                     return atual
-                atual.randomState()
+                atual.random_state()
             else:
                 atual = prox
