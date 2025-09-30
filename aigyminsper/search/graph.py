@@ -115,7 +115,7 @@ class State(ABC):
 
 
 class HeuristicState(State):
-    """_summary_
+    """
     This class represents a state in a search problem with heuristic.
     This is an abstract class. This class defines the following abstract methods:
     - successors: returns a list of successors of the current state
@@ -137,7 +137,7 @@ class HeuristicState(State):
 
 
 class CspState(HeuristicState):
-    """_summary_
+    """
     This class represents a state in a csp search problem.
     This is an abstract class. This class defines the following abstract methods:
     - successors: returns a list of successors of the current state
