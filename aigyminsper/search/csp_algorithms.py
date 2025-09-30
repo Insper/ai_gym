@@ -10,9 +10,13 @@ This module implements the following search algorithms:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
-from aigyminsper.search.search_algorithms import SearchAlgorithm
+from aigyminsper.search.search_algorithms import (
+    PruningOptions,
+    SearchAlgorithm,
+    TraceOptions,
+)
 
 if TYPE_CHECKING:
     from aigyminsper.search.graph import CspState, Node
@@ -50,15 +54,14 @@ class SubidaMontanha(SearchAlgorithm):
         initial_state: CspState,
         /,
         _m: int | None = None,
-        _pruning: Literal["without", "father-son", "literal"] = "without",
-        trace: bool = False,
+        _pruning: PruningOptions = "without",
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> CspState:
+        _trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(_pruning)
+
         atual = initial_state
         while True:
             if trace:
@@ -95,15 +98,14 @@ class SubidaMontanhaEstocastico(SearchAlgorithm):
         initial_state: CspState,
         /,
         _m: int | None = None,
-        _pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
+        _pruning: PruningOptions = "without",
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> CspState:
+        _trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(_pruning)
+
         atual = initial_state
         while True:
             if trace:

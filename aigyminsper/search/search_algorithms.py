@@ -12,7 +12,7 @@ import json
 from abc import ABC, abstractmethod
 from collections import deque
 from platform import system
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, TypedDict
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -29,6 +29,23 @@ def sort_function(val: tuple[Node, int]) -> int:
     return val[1]
 
 
+class TraceOptions(TypedDict, total=False):
+    """Trace options for the search algorithms."""
+
+    trace_fullscreen: bool
+    trace_rotate_labels: bool
+    trace_display_as_states: bool
+    trace_display_at_depth: int
+    trace_hidden_labels: list[str] | None
+
+
+PruningOptions: PruningOptions = Literal[
+    "without",
+    "father-son",
+    "general",
+]
+
+
 class SearchAlgorithm(ABC):
     """
     This class implements an interface for search algorithms.
@@ -39,7 +56,7 @@ class SearchAlgorithm(ABC):
         - Depth-first search (BuscaProfundidade)
         - Iterative deepening search (BPI)
         - Uniform cost search (CustoUniforme)
-        - Greddy search algorithm (BuscaGananciosa)
+        - Greedy search algorithm (BuscaGananciosa)
         - A* search algorithm (AEstrela)
     """
 
@@ -53,13 +70,9 @@ class SearchAlgorithm(ABC):
         /,
         m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> State:
         """
         This method implements a search algorithm.
@@ -77,6 +90,48 @@ class SearchAlgorithm(ABC):
             trace_display_at_depth: search depth that graph display will start.
             trace_hidden_labels: list of labels in node state to hide in graph.
         """
+
+    def get_trace_options(self, kwargs: dict) -> TraceOptions:
+        """
+        Get the trace options from the keyword arguments.
+
+        Args:
+            kwargs (dict): The keyword arguments from the search method.
+
+        Returns:
+            TraceOptions: The trace options for the search algorithm.
+        """
+
+        trace_options: TraceOptions = {
+            "trace_fullscreen": kwargs.get("trace_fullscreen", False),
+            "trace_rotate_labels": kwargs.get("trace_rotate_labels", True),
+            "trace_display_as_states": kwargs.get(
+                "trace_display_as_states",
+                False,
+            ),
+            "trace_display_at_depth": kwargs.get("trace_display_at_depth", 0),
+            "trace_hidden_labels": kwargs.get("trace_hidden_labels"),
+        }
+        return trace_options
+
+    def validate_pruning_option(self, pruning: str) -> None:
+        """Validates the pruning option.
+
+        Args:
+            pruning (str): The pruning option to validate.
+
+        Raises:
+            ValueError: If the pruning option is invalid.
+        """
+
+        # Define valid pruning options
+        valid_pruning_options = ["without", "father-son", "general"]
+        if pruning not in valid_pruning_options:
+            invalid_prune_error = (
+                f"Invalid pruning option: {pruning}.\n",
+                "Valid options are {valid_pruning_options}",
+            )
+            raise ValueError(invalid_prune_error)
 
     def print_trace(self, node: Node) -> None:
         """
@@ -157,10 +212,11 @@ class SearchAlgorithm(ABC):
             filtered_state = {
                 x: node_state[x]
                 for x in node_state
-                if x.lower() not in trace_hidden_labels
+                if trace_hidden_labels is not None
+                and x.lower() not in trace_hidden_labels
             }
             node_state_label: str = hide_text(n.identifier) + format_state(
-                filtered_state
+                filtered_state,
             )
             return node_state_label
 
@@ -179,7 +235,7 @@ class SearchAlgorithm(ABC):
         highlighted_edges_labels = {}
         if not state_is_goal:
             for node_sucessor_index, node_sucessor_label in enumerate(
-                node_sucessor_labels
+                node_sucessor_labels,
             ):
                 nx.add_path(
                     self.trace_graph,
@@ -340,15 +396,16 @@ class SearchAlgorithm(ABC):
             if trace_fullscreen:
                 backend = plt.get_backend()
                 cfm = plt.get_current_fig_manager()
-                if backend.lower() == "wxagg":
-                    cfm.frame.Maximize(True)
-                elif backend.lower() == "tkagg":
-                    if system().lower() == "windows":
-                        cfm.window.state("zoomed")
-                    else:
-                        cfm.resize(*cfm.window.maxsize())
-                elif backend.lower() == "qt4agg":
-                    cfm.window.showMaximized()
+                if cfm:
+                    if backend.lower() == "wxagg":
+                        cfm.frame.Maximize(True)
+                    elif backend.lower() == "tkagg":
+                        if system().lower() == "windows":
+                            cfm.window.state("zoomed")
+                        else:
+                            cfm.resize(*cfm.window.maxsize())
+                    elif backend.lower() == "qt4agg":
+                        cfm.window.showMaximized()
             plt.show()
 
 
@@ -362,23 +419,13 @@ class BuscaLargura(SearchAlgorithm):
         initial_state: State,
         /,
         _m: int | None = None,
-        pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
+        pruning: PruningOptions = "without",
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        # Define valid pruning options
-        valid_pruning_options = ["without", "father-son", "general"]
-        if pruning not in valid_pruning_options:
-            invalid_prune_error = (
-                f"Invalid pruning option: {pruning}.\n",
-                "Valid options are {valid_pruning_options}",
-            )
-            raise ValueError(invalid_prune_error)
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
         states = set()
@@ -396,11 +443,7 @@ class BuscaLargura(SearchAlgorithm):
                         n,
                         [],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
                 return n
             for i in n.state.successors():
@@ -424,11 +467,7 @@ class BuscaLargura(SearchAlgorithm):
                         n,
                         [new_n],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
         return None
 
@@ -444,20 +483,12 @@ class BuscaProfundidade(SearchAlgorithm):
         /,
         m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        # Define valid pruning options
-        valid_pruning_options = ["without", "father-son", "general"]
-        if pruning not in valid_pruning_options:
-            raise ValueError(
-                f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}"
-            )
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
         states = set()
@@ -475,18 +506,14 @@ class BuscaProfundidade(SearchAlgorithm):
                         n,
                         [],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
                 return n
             if n.depth < m:
                 for i in n.state.successors():
                     new_n = Node(i, n)
                     # without pruning
-                    if pruning == "without":
+                    if pruning == "without":  # noqa: SIM114
                         open_list.append(new_n)
                     # father-son pruning
                     elif pruning == "father-son" and (
@@ -504,11 +531,7 @@ class BuscaProfundidade(SearchAlgorithm):
                             n,
                             [new_n],
                             open_list,
-                            trace_fullscreen,
-                            trace_rotate_labels,
-                            trace_display_as_states,
-                            trace_display_at_depth,
-                            trace_hidden_labels,
+                            **trace_options,
                         )
         return None
 
@@ -524,31 +547,26 @@ class BuscaProfundidadeIterativa(SearchAlgorithm):
         /,
         _m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        n = 1
-        algorithm = BuscaProfundidade()
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
+
+        n: int = 1
+        algorithm: BuscaProfundidade = BuscaProfundidade()
         while True:
             result = algorithm.search(
                 initial_state,
-                n,
-                pruning,
-                trace,
-                trace_fullscreen=trace_fullscreen,
-                trace_rotate_labels=trace_rotate_labels,
-                trace_display_as_states=trace_display_as_states,
-                trace_display_at_depth=trace_display_at_depth,
-                trace_hidden_labels=trace_hidden_labels,
+                m=n,
+                pruning=pruning,
+                trace=trace,
+                **trace_options,
             )
             if result is not None:
                 return result
-            n = n + 1
+            n: int = n + 1
 
 
 class BuscaCustoUniforme(SearchAlgorithm):
@@ -562,20 +580,12 @@ class BuscaCustoUniforme(SearchAlgorithm):
         /,
         _m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        # Define valid pruning options
-        valid_pruning_options = ["without", "father-son", "general"]
-        if pruning not in valid_pruning_options:
-            raise ValueError(
-                f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}"
-            )
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
         states = set()
@@ -595,11 +605,7 @@ class BuscaCustoUniforme(SearchAlgorithm):
                         n,
                         [],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
                 return n
             for i in n.state.successors():
@@ -623,18 +629,14 @@ class BuscaCustoUniforme(SearchAlgorithm):
                         n,
                         [new_n],
                         [open_list_item[0] for open_list_item in open_list],
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
         return None
 
 
 class BuscaGananciosa(SearchAlgorithm):
     """
-    This class implements a Greddy search algorithm
+    This class implements a Greedy search algorithm
     """
 
     def search(
@@ -643,20 +645,12 @@ class BuscaGananciosa(SearchAlgorithm):
         /,
         _m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        # Define valid pruning options
-        valid_pruning_options = ["without", "father-son", "general"]
-        if pruning not in valid_pruning_options:
-            raise ValueError(
-                f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}"
-            )
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
         states = set()
@@ -676,11 +670,7 @@ class BuscaGananciosa(SearchAlgorithm):
                         n,
                         [],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
                 return n
             for i in n.state.successors():
@@ -704,11 +694,7 @@ class BuscaGananciosa(SearchAlgorithm):
                         n,
                         [new_n],
                         [open_list_item[0] for open_list_item in open_list],
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
         return None
 
@@ -724,20 +710,12 @@ class AEstrela(SearchAlgorithm):
         /,
         _m: int | None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
-        trace: bool = False,
         *,
-        trace_fullscreen: bool = False,
-        trace_rotate_labels: bool = True,
-        trace_display_as_states: bool = False,
-        trace_display_at_depth: int = 0,
-        trace_hidden_labels: list[str] | None = None,
+        trace: bool = False,
+        **kwargs: TraceOptions,
     ) -> Node | None:
-        # Define valid pruning options
-        valid_pruning_options = ["without", "father-son", "general"]
-        if pruning not in valid_pruning_options:
-            raise ValueError(
-                f"Invalid pruning option: {pruning}. Valid options are {valid_pruning_options}"
-            )
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
         states = set()
@@ -758,11 +736,7 @@ class AEstrela(SearchAlgorithm):
                         n,
                         [],
                         open_list,
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
                 return n
 
@@ -790,10 +764,6 @@ class AEstrela(SearchAlgorithm):
                         n,
                         [new_n],
                         [open_list_item[0] for open_list_item in open_list],
-                        trace_fullscreen,
-                        trace_rotate_labels,
-                        trace_display_as_states,
-                        trace_display_at_depth,
-                        trace_hidden_labels,
+                        **trace_options,
                     )
         return None
