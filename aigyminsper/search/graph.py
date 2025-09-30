@@ -146,7 +146,7 @@ class CspState(HeuristicState):
     - cost: returns the cost of the current state
     - env: returns the description of the environment of the current state
     - h: returns the heuristic value of the current state
-    - randomState: returns a possible random state
+    - random_state: returns a possible random state
 
     This class also defines the following non-abstract methods:
     - print: returns a string with the operator that generated the current state
