@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [0.2.5] 2025-09-12
+
+### Added
+
+* The graphviz dependency in the README.md file.
+
+### Changed
+
+* The version of the package in the `setup.py` file.
+
+### Fixed
+
+
 ## [0.2.4] 2025-08-31
 
 ### Added

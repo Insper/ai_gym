@@ -58,9 +58,17 @@ twine upload dist/*
 
 ## How to install the package
 
+### On Linux
+
 ```bash
-pip install aigyminsper
+pip install aigyminsper*
 ```
+
+### On Windows or MacOS
+
+Before execute the command `pip install aigyminsper`, please install the **graphviz** software in your machine.
+
+To install the graphviz software, please follow the instructions in the [graphviz](https://graphviz.org/download/) website.
 
 ## Change log
 

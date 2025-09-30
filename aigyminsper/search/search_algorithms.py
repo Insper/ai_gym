@@ -78,6 +78,10 @@ class SearchAlgorithm(ABC):
         This method implements a search algorithm.
 
         Parameters:
+            initialState: the initial state of the search.
+            pruning: a string that defines the pruning option. 
+              The pruning options are: without, father-son and general.
+            trace: a boolean that defines if the trace if printed or not.
             initial_state: the initial state of the search.
             m: the maximum depth for depth-limited search.
             pruning: a string that defines the pruning option.
