@@ -36,8 +36,7 @@ class SubidaMontanha(SearchAlgorithm):
 
     def best(self, successors: list[CspState]) -> CspState:
         """
-        This method finds and returns the best successor based
-        on the heuristic value.
+        This method finds and returns the best successor based on the heuristic value.
         Parameters:
             successors (list): A list of successor states to evaluate.
         Returns:
@@ -79,8 +78,7 @@ class SubidaMontanhaEstocastico(SearchAlgorithm):
 
     def best(self, successors: list[CspState]) -> CspState:
         """
-        Determine the best state from the list of successors based
-        on the heuristic value.
+        Determine the best state from the list of successors based on the heuristic value.
         Parameters:
             successors: A list of successor states to evaluate.
         Returns:

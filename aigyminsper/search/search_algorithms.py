@@ -418,7 +418,7 @@ class BuscaLargura(SearchAlgorithm):
         self,
         initial_state: State,
         /,
-        _m: int | None = None,
+        _m: None = None,
         pruning: PruningOptions = "without",
         *,
         trace: bool = False,
@@ -428,12 +428,12 @@ class BuscaLargura(SearchAlgorithm):
         super().validate_pruning_option(pruning)
 
         # Set to keep track of the visited nodes
-        states = set()
+        states: set[State] = set()
         # Creating a Queue
-        open_list = deque()
+        open_list: deque[Node] = deque()
         open_list.append(Node(initial_state, None))
         while len(open_list) > 0:
-            n = open_list.popleft()
+            n: Node = open_list.popleft()
             if trace:
                 self.print_trace(n)
 
@@ -447,7 +447,7 @@ class BuscaLargura(SearchAlgorithm):
                     )
                 return n
             for i in n.state.successors():
-                new_n = Node(i, n)
+                new_n: Node = Node(i, n)
                 # without pruning
                 if pruning == "without":
                     open_list.append(new_n)
@@ -489,14 +489,17 @@ class BuscaProfundidade(SearchAlgorithm):
     ) -> Node | None:
         trace_options: TraceOptions = super().get_trace_options(kwargs)
         super().validate_pruning_option(pruning)
+        if m is None:
+            msg = "Depth limit 'm' must be provided for depth-limited search."
+            raise ValueError(msg)
 
         # Set to keep track of the visited nodes
-        states = set()
+        states: set[State] = set()
         # Using list as stack
-        open_list = []
+        open_list: list[Node] = []
         open_list.append(Node(initial_state, None))
         while len(open_list) > 0:
-            n = open_list.pop()
+            n: Node = open_list.pop()
             if trace:
                 self.print_trace(n)
 
@@ -511,7 +514,7 @@ class BuscaProfundidade(SearchAlgorithm):
                 return n
             if n.depth < m:
                 for i in n.state.successors():
-                    new_n = Node(i, n)
+                    new_n: Node = Node(i, n)
                     # without pruning
                     if pruning == "without":  # noqa: SIM114
                         open_list.append(new_n)
@@ -545,7 +548,7 @@ class BuscaProfundidadeIterativa(SearchAlgorithm):
         self,
         initial_state: State,
         /,
-        _m: int | None = None,
+        _m: None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
         *,
         trace: bool = False,
@@ -578,7 +581,7 @@ class BuscaCustoUniforme(SearchAlgorithm):
         self,
         initial_state: State,
         /,
-        _m: int | None = None,
+        _m: None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
         *,
         trace: bool = False,
@@ -643,7 +646,7 @@ class BuscaGananciosa(SearchAlgorithm):
         self,
         initial_state: State,
         /,
-        _m: int | None = None,
+        _m: None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
         *,
         trace: bool = False,
@@ -708,7 +711,7 @@ class AEstrela(SearchAlgorithm):
         self,
         initial_state: State,
         /,
-        _m: int | None = None,
+        _m: None = None,
         pruning: Literal["without", "father-son", "general"] = "without",
         *,
         trace: bool = False,
@@ -740,7 +743,7 @@ class AEstrela(SearchAlgorithm):
                     )
                 return n
 
-            # iterate trought all successors
+            # iterate through all successors
             for i in n.state.successors():
                 new_n = Node(i, n)
                 # without pruning
@@ -757,7 +760,7 @@ class AEstrela(SearchAlgorithm):
                 ):
                     open_list.append((new_n, new_n.f()))
                     # nao eh adiciona o estado ao vetor.
-                    # eh adicionado o conteudo
+                    # eh adicionado o conteúdo
                     states.add(new_n.state.env())
                 if trace:
                     self.graph_trace(

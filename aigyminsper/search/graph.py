@@ -21,12 +21,13 @@ class Node:
 
         self.state: State = state
         self.father_node: Node | None = father_node
-        if self.father_node is None:
+        self.depth: int
+        if father_node is None:
             self.depth = 0
             self.g = 0
         else:
             self.depth = father_node.depth + 1
-            self.g = state.cost() + self.father_node.g
+            self.g = state.cost() + father_node.g
 
     def show_path(self) -> str:
         """
