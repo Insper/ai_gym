@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.6] 2026-01-26
+
+### Added
+
+### Changed
+
+### Fixed
+
+Add type hints fix pylint warnings and format files
 
 ## [0.2.5] 2025-09-12
 
