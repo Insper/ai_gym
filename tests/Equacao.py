@@ -32,7 +32,7 @@ class Equacao(State):
     def h(self):
         return 30 - self._equation(self.number)
     
-    def randomState(self):
+    def random_state(self):
         self.number = np.random.uniform(0, 15)
 
 def main():
