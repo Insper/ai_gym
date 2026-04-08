@@ -825,12 +825,8 @@ def _parallel_worker(
     m: int | None,
     pruning: str,
     result_queue: mp.Queue,
-    stop_event: mp.Event,
 ) -> None:
     """Run ``algorithm_class`` from ``seed_node.state`` and push the result."""
-    if stop_event.is_set():
-        result_queue.put(None)
-        return
     try:
         algo = algorithm_class()
         # Adjust depth limit to be relative to the seed's depth
@@ -838,7 +834,7 @@ def _parallel_worker(
         result: Node | None = algo.search(
             seed_node.state, adjusted_m, pruning=pruning
         )
-        if result is not None and not stop_event.is_set():
+        if result is not None:
             _patch_result_path(result, seed_node)
             result_queue.put(result)
         else:
@@ -853,10 +849,11 @@ class ParallelSearch(SearchAlgorithm):
     Strategy
     --------
     1. **Seeding phase** – a brief BFS from the initial state populates a
-       frontier of up to *n_processes* nodes (one per logical CPU by default).
+         frontier of up to *n_processes* nodes (one per logical CPU by default).
     2. **Parallel phase** – each frontier node is handed to a worker process
-       that runs *algorithm* from that node's state.  The first worker to find
-       a solution wins; all others are terminated immediately.
+       that runs *algorithm* from that node's state.  All workers run to
+       completion; the solution with the minimum cumulative cost ``g`` is
+       returned.
     3. **Path reconstruction** – the winning result's node chain is patched to
        include the path from the true initial state to the seed node so that
        ``show_path()`` and ``g`` are correct.
@@ -900,18 +897,28 @@ class ParallelSearch(SearchAlgorithm):
     ) -> Node | None:
         super().validate_pruning_option(pruning)
 
+        root = Node(initial_state, None)
+        if root.state.is_goal():
+            return root
+
         # ------------------------------------------------------------------
         # Phase 1 – BFS seed expansion
         # ------------------------------------------------------------------
-        frontier: deque[Node] = deque([Node(initial_state, None)])
+        frontier: deque[Node] = deque([root])
         visited: set = {initial_state.env()}
-        seed_nodes: list[Node] = []
+        best_seed_goal: Node | None = None
 
-        while frontier and len(seed_nodes) < self.n_processes:
+        while frontier and len(frontier) < self.n_processes:
             node: Node = frontier.popleft()
             if node.state.is_goal():
-                return node
-            seed_nodes.append(node)
+                if best_seed_goal is None or node.g < best_seed_goal.g:
+                    best_seed_goal = node
+                # Goal nodes don't need expansion during seeding.
+                continue
+
+            if best_seed_goal is not None and node.g >= best_seed_goal.g:
+                continue
+
             for succ in node.state.successors():
                 new_node = Node(succ, node)
                 if pruning == "father-son":
@@ -923,17 +930,27 @@ class ParallelSearch(SearchAlgorithm):
                         continue
                     visited.add(new_node.state.env())
 
-                if m is None or new_node.depth <= m:
-                    frontier.append(new_node)
+                if m is not None and new_node.depth > m:
+                    continue
+
+                # If a complete solution was already found during seeding,
+                # descendants with higher or equal path cost cannot improve it.
+                if best_seed_goal is not None and new_node.g >= best_seed_goal.g:
+                    continue
+
+                frontier.append(new_node)
+
+        seed_nodes: list[Node] = list(frontier)[: self.n_processes]
+        if best_seed_goal is not None:
+            seed_nodes = [node for node in seed_nodes if node.g < best_seed_goal.g]
 
         if not seed_nodes:
-            return None
+            return best_seed_goal
 
         # ------------------------------------------------------------------
         # Phase 2 – Parallel search
         # ------------------------------------------------------------------
         result_queue: mp.Queue = mp.Queue()
-        stop_event: mp.Event = mp.Event()
         processes: list[mp.Process] = []
 
         for seed in seed_nodes:
@@ -945,26 +962,27 @@ class ParallelSearch(SearchAlgorithm):
                     m,
                     pruning,
                     result_queue,
-                    stop_event,
                 ),
                 daemon=True,
             )
             processes.append(p)
             p.start()
 
-        # Wait for the first solution (or until all workers are done)
-        solution: Node | None = None
-        n_done = 0
-        while n_done < len(processes):
+        # Collect results from all workers and pick the one with minimum g
+        candidates: list[Node] = []
+        for _ in processes:
             worker_result: Node | None = result_queue.get()
-            n_done += 1
             if worker_result is not None:
-                solution = worker_result
-                stop_event.set()
-                break
+                candidates.append(worker_result)
 
         for p in processes:
-            p.terminate()
-            p.join(timeout=1)
+            p.join(timeout=5)
+            if p.is_alive():
+                p.terminate()
 
-        return solution
+        if best_seed_goal is not None:
+            candidates.append(best_seed_goal)
+
+        if not candidates:
+            return None
+        return min(candidates, key=lambda n: n.g)

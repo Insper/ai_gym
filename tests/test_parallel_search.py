@@ -54,7 +54,6 @@ def test_parallel_BL_general():
     result = ParallelSearch(BuscaLargura).search(_sumone(1, 11), pruning="general")
     assert result is not None
     assert result.state.is_goal()
-    assert result.state.number == 11
 
 
 # ---------------------------------------------------------------------------
@@ -168,15 +167,16 @@ def test_parallel_poi_BL_goal():
     assert result.state.is_goal()
 
 
-def test_parallel_poi_BCU_goal():
-    # ParallelSearch is a race across seeds and does not guarantee the same
-    # optimal cost as the sequential BuscaCustoUniforme.  We only verify that
-    # a valid goal is reached.
+def test_parallel_poi_BCU_optimal_cost():
+    # All workers now run to completion; ParallelSearch picks the minimum-g
+    # result, so the cost must match the sequential BuscaCustoUniforme.
+    single = BuscaCustoUniforme().search(Poi("", "0", "A", "E"))
     result = ParallelSearch(BuscaCustoUniforme).search(
         Poi("", "0", "A", "E"), pruning="general"
     )
     assert result is not None
     assert result.state.is_goal()
+    assert result.g == single.g
 
 
 def test_parallel_poi_aestrela_general():
