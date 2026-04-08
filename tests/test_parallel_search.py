@@ -186,6 +186,15 @@ def test_parallel_poi_aestrela_general():
     assert result.state.is_goal()
 
 
+def test_parallel_poi_aestrela_general_low_process_count():
+    state = Poi("", "0", "A", "E")
+    result = ParallelSearch(AEstrela, n_processes=1).search(
+        state, pruning="general"
+    )
+    assert result is not None
+    assert result.state.is_goal()
+
+
 # ---------------------------------------------------------------------------
 # n_processes parameter
 # ---------------------------------------------------------------------------
