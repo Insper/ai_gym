@@ -914,9 +914,15 @@ class ParallelSearch(SearchAlgorithm):
             seed_nodes.append(node)
             for succ in node.state.successors():
                 new_node = Node(succ, node)
-                if pruning != "without" and new_node.state.env() in visited:
-                    continue
-                visited.add(new_node.state.env())
+                if pruning == "father-son":
+                    # Only prune direct parent <-> child repetitions
+                    if new_node.state.env() == node.state.env():
+                        continue
+                elif pruning == "general":
+                    if new_node.state.env() in visited:
+                        continue
+                    visited.add(new_node.state.env())
+
                 if m is None or new_node.depth <= m:
                     frontier.append(new_node)
 
