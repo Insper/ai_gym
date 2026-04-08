@@ -9,6 +9,7 @@ of the SearchAlgorithm class.
 from __future__ import annotations
 
 import json
+import multiprocessing as mp
 from abc import ABC, abstractmethod
 from collections import deque
 from platform import system
@@ -774,3 +775,214 @@ class AEstrela(SearchAlgorithm):
                         **trace_options,
                     )
         return None
+
+
+# ---------------------------------------------------------------------------
+# Parallel search helpers (module-level so they can be pickled by multiprocessing)
+# ---------------------------------------------------------------------------
+
+def _patch_result_path(result: Node, seed_node: Node) -> None:
+    """Reconnect the worker's result chain to the full path from the initial state.
+
+    After a worker runs a search starting from ``seed_node.state``, its root
+    node has ``father_node = None``.  This function:
+
+    1. Finds that root node.
+    2. Sets its ``father_node`` to ``seed_node.father_node`` so the path reads
+       *initial → … → seed_state → … → goal* without duplication.
+    3. Adds ``seed_node.g`` to every node in the worker chain so cumulative
+       costs are correct, and adds ``seed_node.depth`` to every depth value.
+    """
+    if seed_node.father_node is None:
+        # seed IS the root — no patching needed
+        return
+
+    # Collect nodes from result back to the worker's root
+    chain: list[Node] = []
+    current: Node = result
+    while True:
+        chain.append(current)
+        if current.father_node is None:
+            break
+        current = current.father_node
+    worker_root: Node = current
+
+    # Relink worker root to seed's parent (seed's state is already represented
+    # by worker_root, so we skip seed itself to avoid duplication)
+    worker_root.father_node = seed_node.father_node
+
+    # Fix cumulative cost and depth for every node in the worker chain
+    g_offset: int = seed_node.g
+    depth_offset: int = seed_node.depth
+    for node in chain:
+        node.g += g_offset
+        node.depth += depth_offset
+
+
+def _parallel_worker(
+    algorithm_class: type[SearchAlgorithm],
+    seed_node: Node,
+    m: int | None,
+    pruning: str,
+    result_queue: mp.Queue,
+) -> None:
+    """Run ``algorithm_class`` from ``seed_node.state`` and push the result."""
+    try:
+        algo = algorithm_class()
+        # Adjust depth limit to be relative to the seed's depth
+        adjusted_m = (m - seed_node.depth) if m is not None else None
+        result: Node | None = algo.search(
+            seed_node.state, adjusted_m, pruning=pruning
+        )
+        if result is not None:
+            _patch_result_path(result, seed_node)
+            result_queue.put(result)
+        else:
+            result_queue.put(None)
+    except Exception:  # noqa: BLE001
+        result_queue.put(None)
+
+
+class ParallelSearch(SearchAlgorithm):
+    """Parallel search that distributes work across all CPU cores.
+
+    Strategy
+    --------
+    1. **Seeding phase** – a brief BFS from the initial state populates a
+         frontier of up to *n_processes* nodes (one per logical CPU by default).
+    2. **Parallel phase** – each frontier node is handed to a worker process
+       that runs *algorithm* from that node's state.  All workers run to
+       completion; the solution with the minimum cumulative cost ``g`` is
+       returned.
+    3. **Path reconstruction** – the winning result's node chain is patched to
+       include the path from the true initial state to the seed node so that
+       ``show_path()`` and ``g`` are correct.
+
+    Parameters
+    ----------
+    algorithm:
+        Any ``SearchAlgorithm`` subclass to use inside each worker.
+        Defaults to :class:`BuscaLargura`.
+    n_processes:
+        Number of parallel workers.  Defaults to ``os.cpu_count()``.
+
+    Example
+    -------
+    >>> solver = ParallelSearch(AEstrela)
+    >>> result = solver.search(MyInitialState(), pruning="general")
+    >>> print(result.show_path())
+    """
+
+    def __init__(
+        self,
+        algorithm: type[SearchAlgorithm] = None,  # type: ignore[assignment]
+        n_processes: int | None = None,
+    ) -> None:
+        self.algorithm: type[SearchAlgorithm] = (
+            algorithm if algorithm is not None else BuscaLargura
+        )
+        self.n_processes: int = (
+            n_processes if n_processes is not None else (mp.cpu_count() or 1)
+        )
+
+    def search(
+        self,
+        initial_state: State,
+        /,
+        m: int | None = None,
+        pruning: PruningOptions = "without",
+        *,
+        trace: bool = False,
+        **kwargs: TraceOptions,
+    ) -> Node | None:
+        super().validate_pruning_option(pruning)
+
+        root = Node(initial_state, None)
+        if root.state.is_goal():
+            return root
+
+        # ------------------------------------------------------------------
+        # Phase 1 – BFS seed expansion
+        # ------------------------------------------------------------------
+        frontier: deque[Node] = deque([root])
+        visited: set = {initial_state.env()}
+        best_seed_goal: Node | None = None
+
+        while frontier and len(frontier) < self.n_processes:
+            node: Node = frontier.popleft()
+            if node.state.is_goal():
+                if best_seed_goal is None or node.g < best_seed_goal.g:
+                    best_seed_goal = node
+                # Goal nodes don't need expansion during seeding.
+                continue
+
+            if best_seed_goal is not None and node.g >= best_seed_goal.g:
+                continue
+
+            for succ in node.state.successors():
+                new_node = Node(succ, node)
+                if pruning == "father-son":
+                    # Only prune direct parent <-> child repetitions
+                    if new_node.state.env() == node.state.env():
+                        continue
+                elif pruning == "general":
+                    if new_node.state.env() in visited:
+                        continue
+                    visited.add(new_node.state.env())
+
+                if m is not None and new_node.depth > m:
+                    continue
+
+                # If a complete solution was already found during seeding,
+                # descendants with higher or equal path cost cannot improve it.
+                if best_seed_goal is not None and new_node.g >= best_seed_goal.g:
+                    continue
+
+                frontier.append(new_node)
+
+        seed_nodes: list[Node] = list(frontier)[: self.n_processes]
+        if best_seed_goal is not None:
+            seed_nodes = [node for node in seed_nodes if node.g < best_seed_goal.g]
+
+        if not seed_nodes:
+            return best_seed_goal
+
+        # ------------------------------------------------------------------
+        # Phase 2 – Parallel search
+        # ------------------------------------------------------------------
+        result_queue: mp.Queue = mp.Queue()
+        processes: list[mp.Process] = []
+
+        for seed in seed_nodes:
+            p = mp.Process(
+                target=_parallel_worker,
+                args=(
+                    self.algorithm,
+                    seed,
+                    m,
+                    pruning,
+                    result_queue,
+                ),
+                daemon=True,
+            )
+            processes.append(p)
+            p.start()
+
+        # Collect results from all workers and pick the one with minimum g
+        candidates: list[Node] = []
+        for _ in processes:
+            worker_result: Node | None = result_queue.get()
+            if worker_result is not None:
+                candidates.append(worker_result)
+
+        for p in processes:
+            p.join(timeout=5)
+            if p.is_alive():
+                p.terminate()
+
+        if best_seed_goal is not None:
+            candidates.append(best_seed_goal)
+
+        if not candidates:
+            return None
+        return min(candidates, key=lambda n: n.g)

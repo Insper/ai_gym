@@ -90,3 +90,41 @@ O arquivo [Puzzle8.py](src/Puzzle8.py) implementa um solucionador para o jogo Pu
 <p align="center">
 <img src="../img/fig03-04.png" alt="Grafo" width="400"/>
 </p>
+
+## Parallel Search
+
+For large or computationally expensive problems you can use `ParallelSearch` to
+distribute the workload across all CPU cores of the machine.  The wrapper
+accepts any existing search algorithm as its first argument.
+
+The example below solves the 8-Puzzle in parallel using A\*:
+
+```python
+from aigyminsper.search.search_algorithms import ParallelSearch, AEstrela
+from Puzzle8 import Puzzle8  # or any other State subclass
+
+if __name__ == '__main__':
+    initial = Puzzle8('', [7, 2, 4, 5, 0, 6, 8, 3, 1])
+    solver = ParallelSearch(AEstrela)
+    result = solver.search(initial, pruning='general')
+    if result is not None:
+        print(result.show_path())
+        print('Total cost:', result.g)
+    else:
+        print('No solution found')
+```
+
+You can also wrap simpler algorithms — for instance, `BuscaLargura` for
+problems that do not have a heuristic function defined:
+
+```python
+from aigyminsper.search.search_algorithms import ParallelSearch, BuscaLargura
+
+solver = ParallelSearch(BuscaLargura, n_processes=8)
+result = solver.search(initial_state, pruning='general')
+```
+
+> **Note:** `ParallelSearch` is a best-effort parallel race.  Cost-optimal
+> algorithms (`BuscaCustoUniforme`, `AEstrela`) are not guaranteed to return
+> the globally optimal path when used inside `ParallelSearch` because each
+> worker only explores its own sub-tree.

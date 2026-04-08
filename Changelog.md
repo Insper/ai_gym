@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] 2026-04-08
+
+### Added
+
+A wrapper that runs any other search algorithm in parallel, 
+distributing the workload across all CPU cores of the machine.
+
+### Changed
+
+### Fixed
+
 ## [0.2.6] 2026-01-26
 
 ### Added

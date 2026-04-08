@@ -9,6 +9,7 @@ Exposes the main classes of the search module:
 - BuscaCustoUniforme: the class that implements the Uniform cost search algorithm.
 - BuscaGananciosa: the class that implements the Greedy search algorithm.
 - AEstrela: the class that implements the A* search algorithm.
+- ParallelSearch: parallel search that distributes work across all CPU cores.
 - SubidaMontanha: the class that implements the Hill Climbing search algorithm.
 - SubidaMontanhaEstocastico: the class that implements the
   Stochastic Hill Climbing search algorithm.
@@ -23,6 +24,7 @@ from .search_algorithms import (
     BuscaCustoUniforme,
     BuscaGananciosa,
     AEstrela,
+    ParallelSearch,
 )
 from .csp_algorithms import SubidaMontanha, SubidaMontanhaEstocastico
 
@@ -35,6 +37,7 @@ __all__ = [
     "BuscaCustoUniforme",
     "BuscaGananciosa",
     "AEstrela",
+    "ParallelSearch",
     "SubidaMontanha",
     "SubidaMontanhaEstocastico",
 ]

@@ -41,7 +41,10 @@ class Node:
         """
         Return the heuristic value of the current node
         """
-        return self.state.h()
+        heuristic = getattr(self.state, "h", None)
+        if callable(heuristic):
+            return heuristic()
+        return 0
 
     def f(self) -> int:
         """

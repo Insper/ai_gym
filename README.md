@@ -33,6 +33,13 @@ python SumOne.py
 python AspiradorPo.py
 ```
 
+or: 
+
+```bash
+python tests/SumOne.py
+python tests/AspiradorPo.py
+```
+
 ## How to upgrade the package
 
 If you need to upgrade the package, please follow these steps: 

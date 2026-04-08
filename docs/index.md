@@ -8,10 +8,11 @@ This library implements the following algorithms:
 1. Depth-first search 
 1. Iterative deepening search 
 1. Uniform cost search 
-1. Greddy search algorithm
+1. Greedy search algorithm
 1. A* search algorithm 
 1. Hill climbing search algorithm
-1. Stocastic hill climbing search algorithm
+1. Stochastic hill climbing search algorithm
+1. Parallel search (distributes work across all CPU cores)
 
 This library also has a common interface for agents, allowing you to easily create and deploy agents that solve problems by searching.
 
