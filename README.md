@@ -32,6 +32,7 @@ cd tests/
 python SumOne.py
 python AspiradorPo.py
 ```
+> NOT WORKING
 
 or: 
 
@@ -109,5 +110,13 @@ There is a GitHub Action that will deploy the documentation in the GitHub Pages.
 * Commit your Changes (git commit -m 'Add some AmazingFeature)
 * Push to the Branch (git push origin feature/AmazingFeature)
 * Open a Pull Request
+
+
+
+
+COMMENTS:
+
+To run the graphc visualization is needed a graphc GUI, and the executable dot (part of the graphz)
+
 
 
