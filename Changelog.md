@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.1] 2026-08-10
 
+### Added
+
+A tutorial on how to install the trace feature
+
+### Changed
+
+### Fixed
+
+Fixed multiples instances of diplay on tracing to one display and later updating
+
 ## [0.3.0] 2026-04-08
 
 ### Added
