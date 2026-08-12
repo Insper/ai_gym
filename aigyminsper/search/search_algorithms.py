@@ -63,6 +63,9 @@ class SearchAlgorithm(ABC):
 
     trace_graph: nx.DiGraph = nx.DiGraph()
     trace_edge_labels: ClassVar[dict[tuple, str]] = {}
+    trace_fig = None
+    trace_ax = None
+
 
     @abstractmethod
     def search(
@@ -311,10 +314,36 @@ class SearchAlgorithm(ABC):
             graph_title: str = (
                 "Evaluated state is not goal, generating successors"
             )
-        plt.title(graph_title)
+        
 
         # Draw graph as tree
         if node.depth >= trace_display_at_depth:
+            if (
+                self.trace_fig is None
+                or not plt.fignum_exists(self.trace_fig.number)
+            ):
+                plt.ion()
+                self.trace_fig, self.trace_ax = plt.subplots()
+
+                if trace_fullscreen:
+                    manager = self.trace_fig.canvas.manager
+                    if manager is not None:
+                        backend = plt.get_backend().lower()
+
+                        if backend == "wxagg":
+                            manager.frame.Maximize(True)
+                        elif backend == "tkagg":
+                            if system().lower() == "windows":
+                                manager.window.state("zoomed")
+                            else:
+                                manager.resize(*manager.window.maxsize())
+                        elif backend in ("qtagg", "qt5agg", "qt4agg"):
+                            manager.window.showMaximized()
+
+                plt.show(block=False)
+
+            self.trace_ax.clear()
+            self.trace_ax.set_title(graph_title)
             if trace_display_as_states:
                 pos = nx.planar_layout(self.trace_graph)
             else:
@@ -326,12 +355,14 @@ class SearchAlgorithm(ABC):
                 node_color=color_map,
                 edge_color=edge_color_map,
                 width=edge_width_map,
+                ax=self.trace_ax
             )
             nx.draw_networkx_edge_labels(
                 self.trace_graph,
                 pos,
                 self.trace_edge_labels,
                 rotate=trace_rotate_labels,
+                ax=self.trace_ax
             )
             nx.draw_networkx_edge_labels(
                 self.trace_graph,
@@ -339,8 +370,9 @@ class SearchAlgorithm(ABC):
                 highlighted_edges_labels,
                 rotate=trace_rotate_labels,
                 font_color="r",
+                ax=self.trace_ax
             )
-            plt.legend(
+            self.trace_ax.legend(
                 handles=[
                     Line2D(
                         [0],
@@ -398,20 +430,22 @@ class SearchAlgorithm(ABC):
                     ),
                 ],
             )
-            if trace_fullscreen:
-                backend = plt.get_backend()
-                cfm = plt.get_current_fig_manager()
-                if cfm:
-                    if backend.lower() == "wxagg":
-                        cfm.frame.Maximize(True)
-                    elif backend.lower() == "tkagg":
-                        if system().lower() == "windows":
-                            cfm.window.state("zoomed")
-                        else:
-                            cfm.resize(*cfm.window.maxsize())
-                    elif backend.lower() == "qt4agg":
-                        cfm.window.showMaximized()
-            plt.show()
+            # if trace_fullscreen:
+            #     backend = plt.get_backend()
+            #     cfm = plt.get_current_fig_manager()
+            #     if cfm:
+            #         if backend.lower() == "wxagg":
+            #             cfm.frame.Maximize(True)
+            #         elif backend.lower() == "tkagg":
+            #             if system().lower() == "windows":
+            #                 cfm.window.state("zoomed")
+            #             else:
+            #                 cfm.resize(*cfm.window.maxsize())
+            #         elif backend.lower() == "qt4agg":
+            #             cfm.window.showMaximized()
+            self.trace_fig.canvas.draw_idle()
+            self.trace_fig.canvas.flush_events()
+            plt.pause(0.01)
 
 
 class BuscaLargura(SearchAlgorithm):
