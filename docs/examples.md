@@ -64,6 +64,8 @@ O programa que está implementado em [VacuumWorldGeneric.py](src/VacuumWorldGene
 
 A única tarefa que o programa deve fazer é se existir solução então retornar uma sequência de ações ótima para o problema. Se não existir solução então informar que não existe solução.
 
+[**ACESSAR IMPLEMENTAÇÃO**](src/VacuumWorldGeneric.py)
+
 ## Banda U2
 
 A banda U2 tem um concerto que começa daqui a 17 minutos e

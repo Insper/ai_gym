@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] 2026-08-12
+
+### Added
+
+Heuristic and CPS State descritpion
+Prunning descriptions
+A redirect to Examples page
+
+### Changed
+
+Algorithm -> Class table refacted with a more descriptive usage
+
+### Fixed
+
+Wrong type of algorithm shown on the algorithm usage example
+
 ## [0.3.1] 2026-08-10
 
 ### Added
