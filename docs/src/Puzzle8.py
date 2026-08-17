@@ -8,16 +8,32 @@ class Puzzle8(State):
     objetivo = [[1,2,3],[8,0,4],[7,6,5]]
 
     def __init__(self, tabuleiro, op):
+        """
+        In the init method, we set the initial variables:
+        tabuleiro: A square NumPy array representing where each of the numbers is on the tabuleiro
+            ex: [[2, 1, 3],
+                 [0, 8, 4]
+                 [6, 5, 7]]
+            note: It is not a list of lists, but rather a NumPy array!! and 0 represents no number
+        op: the operation that led to the current state
+            ex: If the state has just started, op = ' '; if the blank space moved right, op='direita', if left, op='esquerda' and so on
+        """
         super().__init__(op)
         self.tabuleiro = tabuleiro
     
     def onde_esta_N(tabuleiro, n):
+        """
+        This helper function searches where a number is on the tabuleiro
+        """
         for i in range(0,3):
             for j in range(0,3):
                 if tabuleiro[i][j] == n:
                     return i, j
 
     def copia_tabuleiro(self):
+        """
+        This helper function create a copy of the tabuleiro
+        """
         resultado = [[0,0,0],[0,0,0],[0,0,0]]
         for i in range(0,3):
             for j in range(0,3):
@@ -25,6 +41,26 @@ class Puzzle8(State):
         return resultado
 
     def successors(self):
+        """
+        When generating the successors, we follow the flow below:
+        1 - We create an empty list of successors `sucessors = []`
+        2 - We list the possible actions and ask: what conditions must be met to execute an action?
+        3 - We create conditional statements for each action
+        4 - When a condition is satisfied, we create a new state with the new characteristics resulting from the action and add it to the successors
+        5 - We return the successors
+
+        In Puzzle8, the flow would be
+        1 - `sucessors = []`
+        2 - possible action: move the empty space (left, right, up, down)
+        3 - to move up the empty space can't be on the first line
+            to move down the empty space can't be on the last line
+            to move left the empty space can't be on the first column
+            to move right the empty space can't be on the last column
+        4 - when the empty space move, we copy the map and swap the empty space location with the number on the direction it moved
+            then we append the State with this new tabuleiro, and the operation used in the condition
+                ex: append Puzzle8(new_tabuleiro, 'esquerda')
+        5 - `return sucessors`
+        """
         sucessors = []
         lin, col = Puzzle8.onde_esta_N(self.tabuleiro, 0)
         # zero para cima
@@ -58,6 +94,17 @@ class Puzzle8(State):
         return sucessors
     
     def is_goal(self):
+        """
+        Is goal method checks if a State is the goal state,
+        so it returns True if it is the goal state and False otherwise
+
+        In the Puzzle8, the goal state is the configuration where the tabuleiro must be exactly as below
+        tabuleiro = [[1,2,3],
+                     [8,0,4],
+                     [7,6,5]]
+
+        This is, the variable objective set on the beginning of the class
+        """
         for i in range(0,3):
             for j in range(0,3):
                 if self.tabuleiro[i][j] != self.objetivo[i][j]:
@@ -65,15 +112,50 @@ class Puzzle8(State):
         return True
     
     def description(self):
+        """
+        Descriptions helps undestand the enviroment the State are basing from,
+
+        In the 8 Puzzle the game is well know and self descripted
+        """
         return "8 Puzzle"
     
     def cost(self):
+        """
+        The cost() function is the function that dictitate how much resources the agent will use
+        to reach this State given an specific action
+
+        In the Puzzle8, moving the empty space to any direction cost the same (1)
+        """
+        
         return 1
     
     def env(self):
+        """
+        env stands for Enviroment, it is a function that describes the actual
+        state using it's variables.
+
+        The description the State can be sumerized by its tabuleiro
+        """
         return str(self.tabuleiro)
 
     def h(self):
+        """
+        h() function is called Heuristic,
+        Heuristics are an estimate cost mapped from the current state
+        to the goal state
+
+        It helps the search algorithm to reach the goal state "easier"
+        than testing all possibilities at random
+
+        The rule is, the lower the heuristics, the nearer from the goal!
+        
+        In the Puzzle8, the h1() and h2() are diferent aproachs
+        h1() says that the less cells in the wrong place, the nearer from the goal
+        h2() says that the nearer each cell is from it's desired location, the nearer from the goal
+
+        These two heuristics represents diferent visualizations of the problem,
+        as many others can also exist
+        """
         return self.h1()
         #return self.h2()
 
@@ -121,6 +203,10 @@ class Puzzle8(State):
     # referência: https://pt.stackoverflow.com/questions/333702/como-verificar-se-o-sliding-puzzle-%C3%A9-solucion%C3%A1vel 
     #
     def tem_solucao(tabuleiro):
+        """
+        Helper function to check if the given initial state has a solution,
+        as in this problem, some initial states are unsolvables
+        """
         count = 0
         lista = []
         for lin in range(0,3):
@@ -137,6 +223,9 @@ class Puzzle8(State):
             return False
         
     def show_path(self):
+        """
+        Helper function to use the search algorithm AEstrela
+        """
         algorithm = AEstrela()
         if not Puzzle8.tem_solucao(self.tabuleiro):
             return 'Nao tem solucao' 

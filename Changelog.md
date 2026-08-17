@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] 2026-08-17
+
+### Added
+
+Added detailed to methods in VacuumWorldGeneric.py example
+Added detailed descriptions to methods in U2.py example
+Added detailed to methods in Puzzle8.py example
+
+### Changed
+
+### Fixed
+
 ## [0.3.2] 2026-08-12
 
 ### Added
