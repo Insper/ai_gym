@@ -30,7 +30,6 @@ Algorithm -> Class table refacted with a more descriptive usage
 
 Wrong type of algorithm shown on the algorithm usage example
 
-
 ## [0.3.1] 2026-08-10
 
 ### Added
