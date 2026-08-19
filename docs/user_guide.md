@@ -121,15 +121,15 @@ from aigyminsper.search.search_algorithms import BuscaLargura
 
 
 def main():
-    print('Usando o algoritimo de Busca em Largura')
-    state = MyAgent('init', ...)
+    print('Using Breath First search')
+    state = MyAgent('', ...)
     algorithm = BuscaLargura()
     result = algorithm.search(state)
     if result != None:
-        print('Achou!')
+        print('Found!')
         print(result.show_path())
     else:
-        print('Nao achou solucao')
+        print('No solution')
 
 
 if __name__ == '__main__':
