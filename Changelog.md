@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] 2026-08-19
+
+### Added
+
+Added a stop function to the trace graph
+
+### Changed
+
+Changed examples text to english
+
+### Fixed
+
+Fixed AEstrela tuple return to trace_graph function
+
 ## [0.3.3] 2026-08-17
 
 ### Added
