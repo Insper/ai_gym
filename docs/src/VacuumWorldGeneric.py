@@ -1,4 +1,4 @@
-from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa, AEstrela
 from aigyminsper.search.graph import State
 import numpy
 import sys
@@ -159,11 +159,11 @@ def main(file_map_path, lin, col):
     state = VacuumWorldGeneric(mapa, lin, col, '')
 
     #print('Busca em AEstrela')
-    #algorithm = AEstrela()
+    algorithm = AEstrela()
     
     print('Busca Profundidade Iterativa')
     # Create search algorithm object
-    algorithm = BuscaProfundidadeIterativa()
+    # algorithm = BuscaProfundidadeIterativa()
 
     # Executes the search
     result = algorithm.search(state, trace=True)
