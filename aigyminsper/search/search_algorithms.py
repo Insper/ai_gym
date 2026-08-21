@@ -119,6 +119,7 @@ class SearchAlgorithm(ABC):
             ),
             "trace_display_at_depth": kwargs.get("trace_display_at_depth", 0),
             "trace_hidden_labels": kwargs.get("trace_hidden_labels"),
+            "trace_hold_graph": kwargs.get("trace_hold_graph", True)
         }
         return trace_options
 
@@ -162,6 +163,7 @@ class SearchAlgorithm(ABC):
         trace_display_as_states: bool = False,
         trace_display_at_depth: int = 0,
         trace_hidden_labels: list[str] | None = None,
+        trace_hold_graph: bool = True
     ) -> None:
         """
         This method displays a graphical view of the search nodes.
@@ -446,6 +448,16 @@ class SearchAlgorithm(ABC):
             self.trace_fig.canvas.draw_idle()
             self.trace_fig.canvas.flush_events()
             plt.pause(0.01)
+
+            if state_is_goal and trace_hold_graph:
+                plt.ioff()
+                plt.show()
+
+
+    def hold_trace(self) -> None:
+        """Keep the final trace window open until it is closed."""
+        plt.ioff()
+        plt.show()
 
 
 class BuscaLargura(SearchAlgorithm):
@@ -777,7 +789,7 @@ class AEstrela(SearchAlgorithm):
                     self.graph_trace(
                         n,
                         [],
-                        open_list,
+                        [n[0] for n in open_list],
                         **trace_options,
                     )
                 return n

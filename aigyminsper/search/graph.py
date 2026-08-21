@@ -117,7 +117,6 @@ class State(ABC):
         Return the description of the environment of the current state
         """
 
-
 class HeuristicState(State):
     """
     This class represents a state in a search problem with heuristic.

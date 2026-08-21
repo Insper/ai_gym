@@ -1,4 +1,4 @@
-from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa
+from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa, AEstrela
 from aigyminsper.search.graph import State
 import numpy
 import sys
@@ -9,7 +9,7 @@ class VacuumWorldGeneric(State):
 
     def __init__(self, mapa, lin, col, op):
         """
-        In the init method, we initialize the initial variables:
+        In the init method, we set the initial variables:
         mapa: A square binary NumPy array representing the map
             ex: [[0, 1, 1, 1],
                  [0, 0, 1, 1]
@@ -146,20 +146,27 @@ class VacuumWorldGeneric(State):
 
 
 def convert_file_to_map(file_map_path):
+    """
+    Simple function that translate .txt file to a numpy array 
+    """
     return numpy.loadtxt(open(file_map_path, "rb"), delimiter=";")
 
 def main(file_map_path, lin, col):
     mapa = convert_file_to_map(file_map_path)
     print(mapa)
+
+    # Creates initial State
     state = VacuumWorldGeneric(mapa, lin, col, '')
 
     #print('Busca em AEstrela')
-    #algorithm = AEstrela()
+    algorithm = AEstrela()
     
     print('Busca Profundidade Iterativa')
-    algorithm = BuscaProfundidadeIterativa()
-    
-    result = algorithm.search(state)
+    # Create search algorithm object
+    # algorithm = BuscaProfundidadeIterativa()
+
+    # Executes the search
+    result = algorithm.search(state, trace=True)
     if result != None:
         print('Achou!')
         print(result.show_path())
