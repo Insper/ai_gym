@@ -40,9 +40,10 @@ class VacuumWorldGeneric(State):
         In the Vacuum World, the flow would be
         1 - `sucessors = []`
         2 - possible actions: move (left, right, up, down); clean; I can only move if there's a tile to move to, I can only clean if I'm on a dirt tile
-        3 - for movement, verify next position available, if it is add to sucessors. verify if the floor is dirt, if it is clean
+        3 - for movement, verify next position available, if it is add to sucessors. verify if the floor is dirt, if it is, add to sucessors
         4 - if moving, set the lin or col to the next, and copy the map, then append VacuumWorldGeneric(new_map, next_lin, next_col, "left") to the sucessors
-            if cleaning, copy the map, and the lin and col to the new State, change the copy map tile to clean and append VacuumWorldGeneric(new_map, lin, col, "clean") to the sucessors
+            if cleaning, copy the map, and the lin and col to the new State, change the copy map tile to clean (state 0) and append VacuumWorldGeneric(new_map, lin, col, "clean") to the sucessors
+        5 - `return sucessors`
         """
 
         sucessors = []
@@ -76,6 +77,17 @@ class VacuumWorldGeneric(State):
         return sucessors
     
     def is_goal(self):
+        """
+        Is goal method checks if a State is the goal state,
+        so it returns True if it is the goal state and False otherwise
+
+        In the VacuumWorldGeneric, the goal is achieve if all tiles 
+        in the `mapa` variable is clean, that is, if all tiles is equal to zero
+        otherwise it is false
+
+        obs: sometimes is easier and faster to check if something is false,
+        then to check if it is true 
+        """
         for y in self.mapa:
             for x in y:
                 if x != 0:
@@ -83,6 +95,21 @@ class VacuumWorldGeneric(State):
         return True
 
     def h(self):
+        """
+        h() function is called Heuristic,
+        Heuristics are an estimate cost mapped from the current state
+        to the goal state
+
+        It helps the search algorithm to reach the goal state "easier"
+        than testing all possibilities at random
+
+        The rule is, the lower the heuristics, the nearer from the goal!
+        
+        In the VacuumWorldGeneric a great heuristic is the number of cells
+        that are not clean in the state.
+
+        The less cells dirt, the nearer from the goal state.
+        """
         count = 0
         for y in self.mapa:
             for x in y:
@@ -91,12 +118,30 @@ class VacuumWorldGeneric(State):
         return count
     
     def description(self):
+        """
+        Descriptions helps undestand the enviroment the State are basing from,
+        In the Vacuum World Generic, the agent is trying to maitain clean all times
+        from the world
+        """
         return "Agente genérico para o problema do aspirador de pó"
     
     def cost(self):
+        """
+        The cost() function is the function that dictitate how much resources the agent will use
+        to reach this State given an specific action
+
+        In the vaccum world generic, moving left, right, up, down or cleaning all costs `1`
+        """
         return 1
     
     def env(self):
+        """
+        env stands for Enviroment, it is a function that describes the actual
+        state using it's variables.
+
+        In the Vacuum World Generic the enviroment is a combination of it's
+        map, the agent's position in the line and the agent's position in the column
+        """
         return str(self.mapa)+" "+str(self.lin)+" "+str(self.col)
 
 
