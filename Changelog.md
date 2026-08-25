@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] 2026-08-25
+
+### Added
+
+### Changed
+
+Removed all documentations and code related to parallel search
+
+### Fixed
+
+
 ## [0.3.3] 2026-08-21
 
 ### Added
