@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] 2026-08-21
+
+### Added
+
+Added a stop function to the trace graph
+Added detailed to methods in VacuumWorldGeneric.py example
+Added detailed descriptions to methods in U2.py example
+Added detailed to methods in Puzzle8.py example
+
+### Changed
+
+Changed examples text to english
+
+### Fixed
+
+Fixed AEstrela tuple return to trace_graph function
+
+## [0.3.2] 2026-08-12
+
+### Added
+
+Heuristic and CPS State descritpion
+Prunning descriptions
+A redirect to Examples page
+
+### Changed
+
+Algorithm -> Class table refacted with a more descriptive usage
+
+### Fixed
+
+Wrong type of algorithm shown on the algorithm usage example
+
+## [0.3.1] 2026-08-10
+
+### Added
+
+A tutorial on how to install the trace feature
+
+### Changed
+
+### Fixed
+
+Fixed multiples instances of diplay on tracing to one display and later updating
+
 ## [0.3.0] 2026-04-08
 
 ### Added

@@ -15,6 +15,70 @@ pip install -r requirements.txt
 
 To quit the virtual environment, type `deactivate`. If you already have the virtual environment configured then type `source venv/bin/activate`.
 
+## How to implement the trace function
+
+First install the needed application
+
+Graph visualizer application
+```cmd
+# Windows
+winget install graphviz
+
+# Debian / Ubuntu / Linux Mint
+sudo apt update
+sudo apt install graphviz
+```
+> Check your distro relatice
+
+Then test it
+
+```cmd
+# Windows
+where.exe dot
+
+# Linux
+which dot
+
+# Inside the venv
+dot -V
+```
+
+
+Then finaly test if matplotlib has an interative backend
+
+Check
+```
+python -c "import matplotlib; print(matplotlib.get_backend())"
+```
+
+if you get an "Agg" you may not have an graphc display associated
+
+We recomend the QtAgg backend, follow the instructions below to install it
+
+```
+# Install in the virtual enviroment
+python -m pip install PyQt6
+
+# Verify
+python -m pip install PyQt6
+
+# You should get a "PyQt6 OK"
+
+# then export it's backend
+
+# Windows
+$env:MPLBACKEND="QtAgg"
+
+# Linux
+export MPLBACKEND=QtAgg
+```
+
+Then test it
+```
+# On root folder
+python tests/AspiradorPo.py
+```
+
 ## How to test the project
 
 Execute:
@@ -109,5 +173,3 @@ There is a GitHub Action that will deploy the documentation in the GitHub Pages.
 * Commit your Changes (git commit -m 'Add some AmazingFeature)
 * Push to the Branch (git push origin feature/AmazingFeature)
 * Open a Pull Request
-
-

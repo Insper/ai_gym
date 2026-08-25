@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aigyminsper",
-    version="0.3.0",
+    version="0.3.3",
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[
         "graphviz ==0.21",

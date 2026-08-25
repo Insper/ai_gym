@@ -59,7 +59,7 @@ def main():
     state = AspiradorPo('','ESQ','SUJO','SUJO')
     #state = AspiradorPo('','ESQ','LIMPO','LIMPO')
     #algorithm = BuscaProfundidadeIterativa()
-    algorithm = BuscaLargura()
+    algorithm = BuscaProfundidadeIterativa()
     result = algorithm.search(state, trace=True, trace_fullscreen=True)
     if result != None:
         print('Achou!')
