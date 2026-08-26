@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - main
-    schedule:
-      - cron: '17 6 * * *'
-    workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -23,9 +20,5 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - name: Fetch contributor data
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
       - run: pip install -r requirements.txt
       - run: mkdocs gh-deploy --force
