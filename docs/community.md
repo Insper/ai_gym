@@ -1,5 +1,13 @@
 # Community
 
-Who is working in this project. Who is using it. How to get in touch with them.
+AI Gym is built by people who share code, ideas, bug reports, and improvements.
+## Contributors
 
-How to contribute to the project. How to report bugs. How to request new features.
+<div id="contributors" class="contributors" aria-live="polite"> <p class="contributors__status">Loading contributors...</p> </div>
+
+<noscript> Enable JavaScript to see the contributor list, or visit the [GitHub contributors page](https://github.com/Insper/ai_gym/graphs/contributors). </noscript>
+
+## Join the community
+
+Want to contribute? You can help by improving the documentation, fixing a bug,
+adding an example, or proposing a new feature.

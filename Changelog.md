@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] 2026-08-25
+
+### Added
+
+Script that fetches contributors data
+Custom script to add dinamicaly the contributors to the HTML
+
+### Changed
+
+Improved custom.css
+Add cron job to build and fetch data on build
+
+### Fixed
+
 ## [0.3.3] 2026-08-21
 
 ### Added
