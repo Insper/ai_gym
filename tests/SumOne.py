@@ -1,4 +1,4 @@
-from aigyminsper.search.search_algorithms import BuscaLargura, BuscaProfundidade, BuscaProfundidadeIterativa, ParallelSearch
+from aigyminsper.search.search_algorithms import BuscaLargura, BuscaProfundidade, BuscaProfundidadeIterativa
 from aigyminsper.search.graph import State
 
 class SumOne(State):
@@ -46,16 +46,12 @@ class SumOne(State):
 
 def main():
     
-    #state = SumOne(1, '', 7)
+    state = SumOne(1, '', 7)
     #algorithm = BuscaLargura()
     #result = algorithm.search(state, trace=True, trace_fullscreen=True)
 
-    result = ParallelSearch(BuscaProfundidadeIterativa).search(
-        SumOne(1, '', 1100), pruning="general"
-    )
-
-    #algorithm = BuscaProfundidade()
-    #result = algorithm.search(state, m=2, trace=True)
+    algorithm = BuscaProfundidade()
+    result = algorithm.search(state, m=2, trace=True)
 
     #algorithm = BuscaProfundidadeIterativa()
     #result = algorithm.search(state, trace=True)

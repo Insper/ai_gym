@@ -6,13 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-Script that fetches contributors data
-Custom script to add dinamicaly the contributors to the HTML
-
 ### Changed
 
+Removed all documentations and code related to parallel search
 Improved custom.css
 Add cron job to build and fetch data on build
+Script that fetches contributors data
+Custom script to add dinamicaly the contributors to the HTML
 
 ### Fixed
 
