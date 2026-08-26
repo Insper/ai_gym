@@ -17,3 +17,74 @@ img.event-picture {
     width: 40px !important;
     height: 40px !important;
 }
+
+#contributors {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+}
+
+@media screen and (max-width: 760px) {
+    #contributors {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #contributors {
+        grid-template-columns: 1fr;
+    }
+}
+
+#contributors__status,
+#contributors__error {
+    grid-column: 1 / -1;
+}
+
+#contributors__error {
+    padding: 1rem;
+    border-left: 0.2rem solid var(--md-default-fg-color--lighter);
+}
+
+.contributor-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 0;
+    padding: 0.9rem;
+    color: var(--md-default-fg-color) !important;
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 0.4rem;
+    transition: border-color 150ms, transform 150ms, box-shadow 150ms;
+}
+
+.contributor-card:hover {
+    border-color: var(--md-accent-fg-color);
+    box-shadow: var(--md-shadow-z1);
+    transform: translateY(-2px);
+}
+
+.contributor-card__avatar {
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+    border-radius: 50%;
+}
+
+.contributor-card__details {
+    min-width: 0;
+}
+
+.contributor-card__name {
+    display: block;
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.contributor-card__count {
+    color: var(--md-default-fg-color--light);
+    font-size: 0.75rem;
+}

@@ -18,6 +18,7 @@ nav:
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.0.0/js-yaml.min.js
   - js/markdown-enhancer.js
+  - js/community.js
   - javascripts/mathjax.js
 #  - https://polyfill.io/v3/polyfill.min.js?features=es6 - There are a major suply-chain security incident with this domain
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
