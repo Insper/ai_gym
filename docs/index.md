@@ -12,7 +12,6 @@ This library implements the following algorithms:
 1. A* search algorithm 
 1. Hill climbing search algorithm
 1. Stochastic hill climbing search algorithm
-1. Parallel search (distributes work across all CPU cores)
 
 This library also has a common interface for agents, allowing you to easily create and deploy agents that solve problems by searching.
 

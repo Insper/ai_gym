@@ -148,8 +148,6 @@ The available algorithms and their corresponding characteristics:
 | A*                       | `AEstrela`                   | `HeuristicState`             |                         Yes |            Yes | Optimality depends on heuristic assumptions |
 | Hill climbing            | `SubidaMontanha`             | `HeuristicState`             |                           — |            Yes | Local search; can get stuck                 |
 | Stochastic hill climbing | `SubidaMontanhaEstocastico`  | `CspState`             |                           — |            Yes | Local/stochastic search                     |
-| Parallel                 | `ParallelSearch`             | Depends on wrapped algorithm |                     Depends |        Depends | Global optimality may be lost               |
-
 
 All algorithms except `SubidaMontanha` and `SubidaMontanhaEstocastico` accept a `pruning` argument:
 
@@ -166,49 +164,3 @@ result = algorithm.search(state, pruning='general')  # 'without', 'father-son', 
 **father-son** — prevents immediate backtracking between a state and its parent, if that matches your implementation.
 
 **general** — tracks previously visited environments and prevents/reduces repeated exploration, presumably based on env().
-
-## Parallel Search
-
-`ParallelSearch` is a wrapper that runs any other search algorithm in parallel,
-distributing work across all logical CPUs of the machine.
-
-It works in two phases:
-
-1. **Seeding** – a short BFS explores the initial state and collects one
-   frontier node per available CPU.
-2. **Parallel race** – each frontier node is handed to an independent worker
-   process running the wrapped algorithm.  The first worker to find a solution
-   wins; all other workers are stopped immediately.
-
-The returned node has the full path from the initial state to the goal, and
-`show_path()` / `g` work exactly like on any other result node.
-
-```python
-from aigyminsper.search.search_algorithms import ParallelSearch, AEstrela
-
-def main():
-    state = AgentSpecification('')
-    # Wrap any algorithm — defaults to BuscaLargura when omitted
-    algorithm = ParallelSearch(AEstrela)
-    result = algorithm.search(state, pruning='general')
-    if result is not None:
-        print('Found!')
-        print(result.show_path())
-        print('Total cost:', result.g)
-    else:
-        print('No solution found')
-
-if __name__ == '__main__':
-    main()
-```
-
-You can also control the number of worker processes explicitly:
-
-```python
-algorithm = ParallelSearch(AEstrela, n_processes=4)
-```
-
-> **Note:** `ParallelSearch` splits the search space across seeds and does not
-> guarantee a globally optimal solution when wrapping cost-optimal algorithms
-> such as `BuscaCustoUniforme` or `AEstrela`.  For optimal guarantees use the
-> single-process versions of those algorithms.
