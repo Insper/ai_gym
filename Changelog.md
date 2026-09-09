@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] 2026-09-02
+
+### Added
+
+Replay function that simulates the graph search after the search has been done. (Faster than live tracing)
+
+### Changed
+
+### Fixed
+
 ## [0.3.4] 2026-08-25
 
 ### Added
