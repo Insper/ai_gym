@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.4] 2026-09-02
+## [0.3.6] 2026-09-02
+
+### Added
+
+### Changed
+
+### Fixed
+
+makelabel function getting a tuple instead of a node
+
+
+
+## [0.3.5] 2026-09-02
 
 ### Added
 
