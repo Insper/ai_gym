@@ -14,4 +14,4 @@ matplotlib
 networkx
 pydot
 graphviz
-
+PyQt6
