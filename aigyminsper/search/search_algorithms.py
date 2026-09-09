@@ -132,6 +132,9 @@ class SearchAlgorithm(ABC):
             instead of node tree.
             trace_display_at_depth: search depth that graph display will start.
             trace_hidden_labels: list of labels in node state to hide in graph.
+            trace_hold_graph: set if graph will be holded in the end or auto close
+            trace_live: set if graph will be displayed in parallel (live) or in the end of the search
+            trace_delay: set the delay on oppening each node in the `trace_live = false` mode.
         """
 
     def get_trace_options(self, kwargs: dict) -> TraceOptions:
@@ -260,6 +263,8 @@ class SearchAlgorithm(ABC):
             )
 
         def make_label(n: Node) -> str:
+            if (isinstance(n, tuple)):
+                n = n[0]
             node_state: dict[str, str] = n.state.__dict__
             filtered_state = {
                 x: node_state[x]
@@ -1494,3 +1499,84 @@ class AEstrela(SearchAlgorithm):
                     )
         return None
 
+
+
+# class BuscaBidirecional(SearchAlgorithm):
+#     """
+#     This class implements the Two-way strategy with Busca em Largura.
+#     """
+#     def search(
+#             self,
+#             initial_state: State,
+#             final_state: State,
+#             /,
+#             _m: None = None,
+#             pruning: Literal["without", "father-son", "general"] = "without",
+#             *,
+#             trace: bool = False,
+#             **kwargs: TraceOptions,
+#         ) -> Node | None:
+#         trace_options: TraceOptions = super().get_trace_options(kwargs)
+#         super().validate_pruning_option(pruning)
+
+#         def reverse_hierarchy(n: Node):
+#             l: list[Node] = [n]
+#             while (father:=n.father_node) is not None:
+#                 l.append(father)
+
+#             new_n = n
+#             i = 1
+#             while i < len(l):
+#                 new_n. 
+            
+
+#         # Set to keep track of the visited nodes
+#         states: set[State] = set()
+#         # Creating a Queue
+#         open_list_start: deque[Node] = deque()
+#         open_list_end: deque[Node] = deque()
+#         open_list_start.append(Node(initial_state, None))
+#         open_list_end.append(Node(final_state), None)
+#         goal: set[State] = set()
+#         while len(open_list_end) > 0 and len(open_list_start) > 0:
+#             n_start: Node = open_list_start.popleft()
+#             n_end: Node = open_list_end.popleft()
+
+#             if n_start in goal:
+#                 pass
+                
+#             for i in n_start.state.successors():
+#                 new_n: Node = Node(i, n_start)
+#                 # without pruning
+#                 if pruning == "without":
+#                     open_list_start.append(new_n)
+#                 # father-son pruning
+#                 elif pruning == "father-son" and (
+#                     new_n.state.env() != n_start.state.env()
+#                 ):
+#                     open_list_start.append(new_n)
+#                 # general pruning
+#                 elif pruning == "general" and (
+#                     new_n.state.env() not in states
+#                 ):
+#                     open_list_start.append(new_n)
+#                     states.add(new_n.state.env())
+
+#             for i in n_end.state.successors():
+#                 new_n: Node = Node(i, n_end)
+#                 # without pruning
+#                 if pruning == "without":
+#                     open_list_end.append(new_n)
+#                 # father-son pruning
+#                 elif pruning == "father-son" and (
+#                     new_n.state.env() != n_end.state.env()
+#                 ):
+#                     open_list_end.append(new_n)
+#                 # general pruning
+#                 elif pruning == "general" and (
+#                     new_n.state.env() not in states
+#                 ):
+#                     open_list_end.append(new_n)
+#                     states.add(new_n.state.env())
+
+            
