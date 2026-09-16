@@ -8,6 +8,11 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      # Setting tests to run without a display
+      MPLBACKEND: Agg
+      QT_QPA_PLATFORM: offscreen
+
     steps:
     - uses: actions/checkout@v4
 
@@ -19,12 +24,11 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
     
-    - name: Install graphviz, dependencies and virtual display
-      run: sudo apt-get update && sudo apt-get install -y graphviz libegl1 libgl1 libxkbcommon-x11-0 xvfb
+    - name: Install graphviz
+      run: sudo apt-get update && sudo apt-get install -y graphviz libegl1 libgl1
 
     - name: Run pylint
       run: pylint aigyminsper --fail-under=9.0
 
     - name: Run tests
-      # Running with a virtual display
-      run: xvfb-run -a pytest
+      run: pytest
