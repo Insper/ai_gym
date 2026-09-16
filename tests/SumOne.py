@@ -25,6 +25,9 @@ class SumOne(State):
     def cost(self):
         return 1
 
+    def h(self):
+        return self.number - self.goal
+
 
     def env(self):
         #
