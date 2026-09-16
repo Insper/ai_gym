@@ -2,16 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.7] 2026-09-16
+
+### Added
+
+Add PyQt9 to pylint backend compatibility packages
+Add tests to trace functions (replay and live tracing)
+Add graphviz installation to test yml
+Add a simple heuristic to the SumOne implementation state
+
+### Changed
+
+Added a one second stop before closing when no holding graphs on trace function
+Changed global trace variables to local
+
+### Fixed
+
 ## [0.3.6] 2026-09-02
 
 ### Added
 
-### Changed
 
+### Changed
 ### Fixed
 
 makelabel function getting a tuple instead of a node
-
 
 
 ## [0.3.5] 2026-09-02
