@@ -1,5 +1,7 @@
 # AIGYM
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
+
 The goal of this library is to provide a set of tools to help you to learn the basics of Artificial Intelligence. In other words, the goal of this library is to help you to learn how to build agents that solve problems by searching.
 
 This library implements the following algorithms:
@@ -9,7 +11,7 @@ This library implements the following algorithms:
 1. Iterative deepening search 
 1. Uniform cost search 
 1. Greedy search algorithm
-1. A* search algorithm 
+1. A* search algorithm
 1. Hill climbing search algorithm
 1. Stochastic hill climbing search algorithm
 
