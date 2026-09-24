@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aigyminsper",
-    version="0.3.5",
+    version="0.3.7",
     packages=['aigyminsper','aigyminsper.search'],
     install_requires=[
         "graphviz ==0.21",
@@ -10,6 +10,7 @@ setup(
         "networkx ==3.5",
         "pydot ==4.0.1",
         "pyparsing ==3.2.3",
+        "PyQt6==6.11.0"
     ],
     author='Fabricio Barth',
     author_email='fabriciojb@insper.edu.br',

@@ -9,19 +9,18 @@ of the SearchAlgorithm class.
 from __future__ import annotations
 
 import json
-import multiprocessing as mp
 from abc import ABC, abstractmethod
 from collections import deque
 from platform import system
-from typing import ClassVar, Literal, TypedDict
+from typing import Literal, TypedDict
+from time import sleep
 
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.lines import Line2D
-from matplotlib.colors import to_rgba
 from networkx.drawing.nx_pydot import graphviz_layout
 
-from PyQt6.QtCore import QLineF, QRectF, Qt, QTimer, QPoint
+from PyQt6.QtCore import QLineF, Qt, QTimer, QPoint
 from PyQt6.QtGui import QBrush, QColor, QFont, QPen
 from PyQt6.QtWidgets import (
     QApplication,
@@ -36,6 +35,7 @@ from PyQt6.QtWidgets import (
     QWidget,
     QGraphicsItem,
 )
+
 
 
 from aigyminsper.search.graph import Node, State
@@ -68,7 +68,13 @@ PruningOptions: PruningOptions = Literal[
 ]
 
 class ZoomableGraphicsView(QGraphicsView):
+    """
+        Class for zoomable view
+    """
     def wheelEvent(self, event) -> None:
+        """
+            Wheel event to zoom in and out
+        """
         zoom_factor = 1.15
 
         if event.angleDelta().y() < 0:
@@ -94,13 +100,13 @@ class SearchAlgorithm(ABC):
         - Greedy search algorithm (BuscaGananciosa)
         - A* search algorithm (AEstrela)
     """
-
-    trace_graph: nx.DiGraph = nx.DiGraph()
-    trace_edge_labels: ClassVar[dict[tuple, str]] = {}
-    trace_fig = None
-    trace_ax = None
-    trace_frames: list[dict] = []
-
+    def __init__(self):
+        super().__init__()
+        self.trace_graph: nx.DiGraph = nx.DiGraph()
+        self.trace_edge_labels: dict[tuple, str] = {}
+        self.trace_fig = None
+        self.trace_ax = None
+        self.trace_frames: list[dict] = []
 
     @abstractmethod
     def search(
@@ -132,6 +138,9 @@ class SearchAlgorithm(ABC):
             instead of node tree.
             trace_display_at_depth: search depth that graph display will start.
             trace_hidden_labels: list of labels in node state to hide in graph.
+            trace_hold_graph: set if graph will be holded in the end or auto close
+            trace_live:(true) graph will be displayed in parallel (live) or in the end of the search
+            trace_delay: set the delay on oppening each node in the `trace_live = false` mode.
         """
 
     def get_trace_options(self, kwargs: dict) -> TraceOptions:
@@ -260,6 +269,8 @@ class SearchAlgorithm(ABC):
             )
 
         def make_label(n: Node) -> str:
+            if isinstance(n, tuple):
+                n = n[0]
             node_state: dict[str, str] = n.state.__dict__
             filtered_state = {
                 x: node_state[x]
@@ -372,7 +383,7 @@ class SearchAlgorithm(ABC):
             graph_title: str = (
                 "Evaluated state is not goal, generating successors"
             )
-        
+
 
         # Draw graph as tree
         if node.depth >= trace_display_at_depth:
@@ -402,7 +413,7 @@ class SearchAlgorithm(ABC):
 
             self.trace_ax.clear()
             self.trace_ax.set_title(graph_title)
-            
+
             if trace_display_as_states:
                 pos = nx.planar_layout(self.trace_graph)
             else:
@@ -509,12 +520,16 @@ class SearchAlgorithm(ABC):
             if state_is_goal and trace_hold_graph:
                 plt.ioff()
                 plt.show()
+            elif state_is_goal and not trace_hold_graph:
+                sleep(1)
+                plt.close('all')
 
     def replay_trace(
         self,
         *,
         trace_rotate_labels: bool = True,
         trace_delay: float = 0.1,
+        trace_hold_graph: bool = True
     ) -> None:
         """Replay the recorded search using an incremental Qt graphics scene."""
 
@@ -574,7 +589,7 @@ class SearchAlgorithm(ABC):
             prog="dot",
         )
 
-        
+
 
         pos = {
             data["trace_key"]: indexed_positions[index]
@@ -607,7 +622,7 @@ class SearchAlgorithm(ABC):
             "edge": QColor("#242424"),
             "text": QColor("#111111"),
         }
-        
+
 
         legend_widget = QFrame()
         legend_widget.setObjectName("traceLegend")
@@ -708,7 +723,7 @@ class SearchAlgorithm(ABC):
             scene_point = view.mapToScene(viewport_point)
             legend_proxy.setPos(scene_point)
             legend_proxy.show()
-        
+
 
         def display_label(label: str) -> str:
             """Remove the whitespace identifier used by the Matplotlib trace."""
@@ -958,6 +973,9 @@ class SearchAlgorithm(ABC):
                         if label_group is not None:
                             label_group.setVisible(True)
 
+                if not trace_hold_graph:
+                    sleep(1)
+                    app.exit()
                 return
 
             frame = self.trace_frames[frame_index]
@@ -1141,7 +1159,8 @@ class BuscaLargura(SearchAlgorithm):
                     if not trace_options["trace_live"]:
                         self.replay_trace(
                             trace_rotate_labels=trace_options["trace_rotate_labels"],
-                            trace_delay=trace_options["trace_delay"]
+                            trace_delay=trace_options["trace_delay"],
+                            trace_hold_graph=trace_options["trace_hold_graph"]
                         )
 
                 return n
@@ -1214,7 +1233,8 @@ class BuscaProfundidade(SearchAlgorithm):
                     if not trace_options["trace_live"]:
                         self.replay_trace(
                             trace_rotate_labels=trace_options["trace_rotate_labels"],
-                            trace_delay=trace_options["trace_delay"]
+                            trace_delay=trace_options["trace_delay"],
+                            trace_hold_graph=trace_options["trace_hold_graph"]
                         )
                 return n
             if n.depth < m:
@@ -1319,7 +1339,8 @@ class BuscaCustoUniforme(SearchAlgorithm):
                     if not trace_options["trace_live"]:
                         self.replay_trace(
                             trace_rotate_labels=trace_options["trace_rotate_labels"],
-                            trace_delay=trace_options["trace_delay"]
+                            trace_delay=trace_options["trace_delay"],
+                            trace_hold_graph=trace_options["trace_hold_graph"]
                         )
                 return n
             for i in n.state.successors():
@@ -1390,7 +1411,8 @@ class BuscaGananciosa(SearchAlgorithm):
                     if not trace_options["trace_live"]:
                         self.replay_trace(
                             trace_rotate_labels=trace_options["trace_rotate_labels"],
-                            trace_delay=trace_options["trace_delay"]
+                            trace_delay=trace_options["trace_delay"],
+                            trace_hold_graph=trace_options["trace_hold_graph"]
                         )
                 return n
             for i in n.state.successors():
@@ -1462,7 +1484,8 @@ class AEstrela(SearchAlgorithm):
                     if not trace_options["trace_live"]:
                         self.replay_trace(
                             trace_rotate_labels=trace_options["trace_rotate_labels"],
-                            trace_delay=trace_options["trace_delay"]
+                            trace_delay=trace_options["trace_delay"],
+                            trace_hold_graph=trace_options["trace_hold_graph"]
                         )
                 return n
 
@@ -1493,4 +1516,3 @@ class AEstrela(SearchAlgorithm):
                         **trace_options,
                     )
         return None
-
