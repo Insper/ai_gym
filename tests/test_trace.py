@@ -14,12 +14,16 @@ def test_buscaLarguraLive():
     algorithm = BuscaLargura()
     result = algorithm.search(state, trace=True, trace_live=True, trace_hold_graph=False)
     assert result.show_path() == ' ; +2  ; +2  ; +2 '
+    assert not algorithm.trace_frames
+    assert algorithm.trace_graph.number_of_nodes() == 0
 
 def test_buscaLarguraReplay():
     state = SumOne(1, '', 7)
     algorithm = BuscaLargura()
     result = algorithm.search(state, trace=True, trace_live=False, trace_hold_graph=False, trace_delay=0)
     assert result.show_path() == ' ; +2  ; +2  ; +2 '
+    assert not algorithm.trace_frames
+    assert algorithm.trace_graph.number_of_nodes() == 0
 
 def test_buscaProfundidadeLive():
     state = SumOne(1, '', 7)
