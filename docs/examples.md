@@ -92,3 +92,28 @@ O arquivo [Puzzle8.py](src/Puzzle8.py) implementa um solucionador para o jogo Pu
 <p align="center">
 <img src="../img/fig03-04.png" alt="Grafo" width="400"/>
 </p>
+
+## Noughts & Crosses
+
+The [NoughtsNCrosses.py](src/NoughtsNCrosses.py) example models a complete
+3×3 Noughts & Crosses (tic-tac-toe) game for the `MinMax` algorithm. Player X
+is represented by `1` and maximizes the utility value; player O is represented
+by `-1` and minimizes it. Empty squares use `0`.
+
+Each state stores the immutable board and the player whose turn comes next.
+The `successors()` method creates one state for every empty square, while
+`cost()` returns a large positive or negative utility for a win and a simple
+line-based estimate when the depth limit is reached.
+
+Run the example from the project root:
+
+```bash
+python -m docs.src.NoughtsNCrosses
+```
+
+The example lets MinMax control both players and prints each selected move.
+To visualize the decision tree, change the final call to `play(trace=True)`.
+MinMax limits the displayed tree to two levels by default so that deeper game
+searches remain readable; the complete selected path is still highlighted.
+
+[**VIEW IMPLEMENTATION**](src/NoughtsNCrosses.py)
