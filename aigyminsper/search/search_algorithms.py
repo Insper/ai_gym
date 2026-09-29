@@ -14,6 +14,7 @@ from collections import deque
 from platform import system
 from typing import Literal, TypedDict
 from time import sleep
+import math
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -59,6 +60,7 @@ class TraceOptions(TypedDict, total=False):
     trace_hold_graph: bool = True
     trace_live: bool = False
     trace_delay: float = 0.001
+    trace_max_depth: int | None
 
 
 PruningOptions: PruningOptions = Literal[
@@ -154,6 +156,11 @@ class SearchAlgorithm(ABC):
             TraceOptions: The trace options for the search algorithm.
         """
 
+        # An algorithm instance may be reused for several searches. Start
+        # every search with independent trace state, even if an earlier
+        # search ended without finding a goal.
+        self.clear_trace()
+
         trace_options: TraceOptions = {
             "trace_fullscreen": kwargs.get("trace_fullscreen", False),
             "trace_rotate_labels": kwargs.get("trace_rotate_labels", True),
@@ -165,9 +172,19 @@ class SearchAlgorithm(ABC):
             "trace_hidden_labels": kwargs.get("trace_hidden_labels"),
             "trace_hold_graph": kwargs.get("trace_hold_graph", True),
             "trace_live": kwargs.get("trace_live", False),
-            "trace_delay": kwargs.get("trace_delay", 0.1)
+            "trace_delay": kwargs.get("trace_delay", 0.1),
+            "trace_max_depth": kwargs.get("trace_max_depth"),
         }
         return trace_options
+
+    def clear_trace(self) -> None:
+        """Discard all graph and replay state from the previous search."""
+
+        self.trace_graph.clear()
+        self.trace_edge_labels.clear()
+        self.trace_frames.clear()
+        self.trace_fig = None
+        self.trace_ax = None
 
     def validate_pruning_option(self, pruning: str) -> None:
         """Validates the pruning option.
@@ -211,7 +228,10 @@ class SearchAlgorithm(ABC):
         trace_hidden_labels: list[str] | None = None,
         trace_hold_graph: bool = True,
         trace_live: bool = False,
-        trace_delay: float = 0.001
+        trace_delay: float = 0.001,
+        trace_max_depth: int | None = None,
+        trace_terminal: bool | None = None,
+        trace_highlight_path: bool | None = None,
     ) -> None:
         """
         This method displays a graphical view of the search nodes.
@@ -228,6 +248,11 @@ class SearchAlgorithm(ABC):
             trace_hold_graph: set if graph auto-close on show the results in the end
             trace_live: set if graph will show as the search goes, or just in the end
             trace_delay: set the dalay of expanding nodes
+            trace_max_depth: maximum tree depth recorded by algorithms that
+                support bounded traces, such as MinMax.
+            trace_terminal: override whether this is a terminal evaluation.
+            trace_highlight_path: override whether the path to this node is the
+                final path and should be highlighted.
         """
 
         default_trace_hidden_labels: list[str] = [
@@ -287,30 +312,40 @@ class SearchAlgorithm(ABC):
             return f"{n.state.operator} - cost {n.state.cost()}"
 
         # Get node states
-        state_is_goal = node.state.is_goal()
+        state_is_terminal = (
+            node.state.is_goal()
+            if trace_terminal is None
+            else trace_terminal
+        )
+        highlight_path = (
+            state_is_terminal
+            if trace_highlight_path is None
+            else trace_highlight_path
+        )
         node_state_label: str = make_label(node)
         node_sucessor_labels: list[str] = [
             make_label(node_sucessor) for node_sucessor in node_successors
         ]
 
         # Add nodes to graph
+        self.trace_graph.add_node(node_state_label)
         highlighted_edges: list[tuple[str, str]] = []
         highlighted_edges_labels = {}
-        if not state_is_goal:
-            for node_sucessor_index, node_sucessor_label in enumerate(
-                node_sucessor_labels,
-            ):
-                nx.add_path(
-                    self.trace_graph,
-                    [node_state_label, node_sucessor_label],
-                )
+        for node_sucessor_index, node_sucessor_label in enumerate(
+            node_sucessor_labels,
+        ):
+            nx.add_path(
+                self.trace_graph,
+                [node_state_label, node_sucessor_label],
+            )
 
-                node_sucessor = node_successors[node_sucessor_index]
-                label: str = make_edge_label(node_sucessor)
-                self.trace_edge_labels[
-                    (node_state_label, node_sucessor_label)
-                ] = label
-        else:
+            node_sucessor = node_successors[node_sucessor_index]
+            label: str = make_edge_label(node_sucessor)
+            self.trace_edge_labels[
+                (node_state_label, node_sucessor_label)
+            ] = label
+
+        if highlight_path:
             outlining_path: bool = True
             current_node: Node = node
             parent_node: Node | None = current_node.father_node
@@ -325,6 +360,8 @@ class SearchAlgorithm(ABC):
                     highlighted_edges.append(highlighted_edge)
                     label: str = make_edge_label(current_node)
                     highlighted_edges_labels[highlighted_edge] = label
+                    nx.add_path(self.trace_graph, highlighted_edge)
+                    self.trace_edge_labels[highlighted_edge] = label
                     current_node = parent_node
                     parent_node: Node | None = current_node.father_node
 
@@ -339,7 +376,8 @@ class SearchAlgorithm(ABC):
                 "current": node_state_label,
                 "successors": node_sucessor_labels.copy(),
                 "open": set(in_memory_nodes_label),
-                "goal": state_is_goal,
+                "goal": highlight_path,
+                "terminal": state_is_terminal,
                 "highlighted_edges": highlighted_edges.copy(),
             }
         )
@@ -349,10 +387,8 @@ class SearchAlgorithm(ABC):
 
         for index, graph_node in enumerate(self.trace_graph):
             if graph_node == node_state_label:
-                color_map.append("purple")
-            elif (index == 0) or (
-                state_is_goal and graph_node == node_state_label
-            ):
+                color_map.append("green" if highlight_path else "purple")
+            elif index == 0:
                 color_map.append("green")
             elif (
                 graph_node in node_sucessor_labels
@@ -377,10 +413,13 @@ class SearchAlgorithm(ABC):
         ]
 
         # Explain search action
-        if state_is_goal:
-            graph_title: str = "Evaluated state is goal"
+        graph_title: str = "Searching with " + self.__class__.__name__ + "\n"
+        if highlight_path:
+            graph_title += "Selected result and principal variation"
+        elif state_is_terminal:
+            graph_title += "Evaluated terminal or depth-cutoff state"
         else:
-            graph_title: str = (
+            graph_title += (
                 "Evaluated state is not goal, generating successors"
             )
 
@@ -517,12 +556,15 @@ class SearchAlgorithm(ABC):
             self.trace_fig.canvas.flush_events()
             plt.pause(0.01)
 
-            if state_is_goal and trace_hold_graph:
+            if highlight_path and trace_hold_graph:
                 plt.ioff()
                 plt.show()
-            elif state_is_goal and not trace_hold_graph:
+            elif highlight_path and not trace_hold_graph:
                 sleep(1)
                 plt.close('all')
+
+        if highlight_path:
+            self.clear_trace()
 
     def replay_trace(
         self,
@@ -534,6 +576,7 @@ class SearchAlgorithm(ABC):
         """Replay the recorded search using an incremental Qt graphics scene."""
 
         if not self.trace_frames:
+            self.clear_trace()
             return
 
         app = QApplication.instance()
@@ -1110,7 +1153,10 @@ class SearchAlgorithm(ABC):
         render_next_frame()
         timer.start()
 
-        app.exec()
+        try:
+            app.exec()
+        finally:
+            self.clear_trace()
 
 
     def hold_trace(self) -> None:
@@ -1263,6 +1309,9 @@ class BuscaProfundidade(SearchAlgorithm):
                         )
         return None
 
+    def __str__(self):
+        return "Depth First Search (DFS)"
+
 
 class BuscaProfundidadeIterativa(SearchAlgorithm):
     """
@@ -1295,6 +1344,9 @@ class BuscaProfundidadeIterativa(SearchAlgorithm):
             if result is not None:
                 return result
             n: int = n + 1
+
+    def __str__(self):
+        return "Iterative Deepening Depth First Search (IDDFS)"
 
 
 class BuscaCustoUniforme(SearchAlgorithm):
@@ -1368,6 +1420,9 @@ class BuscaCustoUniforme(SearchAlgorithm):
                     )
         return None
 
+    def __str__(self):
+        return "Uniform Cost Search (UCS)"
+
 
 class BuscaGananciosa(SearchAlgorithm):
     """
@@ -1439,6 +1494,9 @@ class BuscaGananciosa(SearchAlgorithm):
                         **trace_options,
                     )
         return None
+
+    def __str__(self):
+        return "Greedy Search (GS)"
 
 
 class AEstrela(SearchAlgorithm):
@@ -1516,3 +1574,206 @@ class AEstrela(SearchAlgorithm):
                         **trace_options,
                     )
         return None
+
+    def __str__(self):
+        return "AStar"
+
+class MinMax(SearchAlgorithm):
+    """
+        This class implements min-max algorithm
+        For this algorithm, cost function of State class is the utility function
+    """
+
+    def search(
+        self,
+        initial_state: State,
+        /,
+        start: Literal[0, 1] = 0,
+        m: int | None = None,
+        pruning: PruningOptions = "without",
+        *,
+        trace: bool = False,
+        **kwargs: TraceOptions,
+    ) -> Node | None:
+        """
+            start: (0) player start; (1) opponent start
+        """
+        trace_options: TraceOptions = super().get_trace_options(kwargs)
+        super().validate_pruning_option(pruning)
+
+        if trace and trace_options["trace_max_depth"] is None:
+            # MinMax trees grow factorially. Two levels keep the graph
+            # readable while the final principal variation still shows
+            # the complete selected path.
+            trace_options["trace_max_depth"] = 2
+
+        initial_node = Node(initial_state, None)
+
+        if start == 0:
+            result = self._max_value(
+                initial_node,
+                trace_options,
+                trace,
+                m,
+            )
+        else:
+            result = self._min_value(
+                initial_node,
+                trace_options,
+                trace,
+                m,
+            )
+
+        if trace and result is not None:
+            self.graph_trace(
+                result,
+                [],
+                [],
+                trace_terminal=True,
+                trace_highlight_path=True,
+                **trace_options,
+            )
+
+            if not trace_options["trace_live"]:
+                self.replay_trace(
+                    trace_rotate_labels=trace_options["trace_rotate_labels"],
+                    trace_delay=trace_options["trace_delay"],
+                    trace_hold_graph=trace_options["trace_hold_graph"],
+                )
+
+        return result
+
+    def _min_value(
+        self,
+        node: Node,
+        trace_options: TraceOptions,
+        trace: bool = False,
+        m: int | None = None,
+        k: int = 0,
+    ) -> Node | None:
+        terminal = node.get_state().is_goal() or (
+            m is not None and k >= m
+        )
+        if terminal:
+            if trace and self._trace_in_depth(node, trace_options):
+                self.graph_trace(
+                    node,
+                    [],
+                    [],
+                    trace_terminal=True,
+                    trace_highlight_path=False,
+                    **trace_options,
+                )
+            return node
+
+        v = math.inf
+        next_node: Node | None = None
+        successors = [
+            Node(state, node) for state in node.get_state().successors()
+        ]
+
+        if trace and self._trace_in_depth(node, trace_options):
+            visible_successors = (
+                successors
+                if self._trace_expands_node(node, trace_options)
+                else []
+            )
+            self.graph_trace(
+                node,
+                visible_successors,
+                visible_successors,
+                trace_terminal=not visible_successors,
+                trace_highlight_path=False,
+                **trace_options,
+            )
+
+        for new_n in successors:
+            aux_node = self._max_value(
+                new_n,
+                trace_options,
+                trace,
+                m=m,
+                k=k + 1,
+            )
+            if aux_node is not None and aux_node.get_state().cost() < v:
+                v = aux_node.get_state().cost()
+                next_node = aux_node
+
+        return next_node
+
+    def _max_value(
+        self,
+        node: Node,
+        trace_options: TraceOptions,
+        trace: bool = False,
+        m: int | None = None,
+        k: int = 0,
+    ) -> Node | None:
+        terminal = node.get_state().is_goal() or (
+            m is not None and k >= m
+        )
+        if terminal:
+            if trace and self._trace_in_depth(node, trace_options):
+                self.graph_trace(
+                    node,
+                    [],
+                    [],
+                    trace_terminal=True,
+                    trace_highlight_path=False,
+                    **trace_options,
+                )
+            return node
+
+        v = -math.inf
+        next_node: Node | None = None
+        successors = [
+            Node(state, node) for state in node.get_state().successors()
+        ]
+
+        if trace and self._trace_in_depth(node, trace_options):
+            visible_successors = (
+                successors
+                if self._trace_expands_node(node, trace_options)
+                else []
+            )
+            self.graph_trace(
+                node,
+                visible_successors,
+                visible_successors,
+                trace_terminal=not visible_successors,
+                trace_highlight_path=False,
+                **trace_options,
+            )
+
+        for new_n in successors:
+            aux_node = self._min_value(
+                new_n,
+                trace_options,
+                trace,
+                m=m,
+                k=k + 1,
+            )
+            if aux_node is not None and aux_node.get_state().cost() > v:
+                v = aux_node.get_state().cost()
+                next_node = aux_node
+
+        return next_node
+
+    @staticmethod
+    def _trace_in_depth(
+        node: Node,
+        trace_options: TraceOptions,
+    ) -> bool:
+        max_depth = trace_options["trace_max_depth"]
+        return max_depth is None or node.depth <= max_depth
+
+    @staticmethod
+    def _trace_expands_node(
+        node: Node,
+        trace_options: TraceOptions,
+    ) -> bool:
+        max_depth = trace_options["trace_max_depth"]
+        return max_depth is None or node.depth < max_depth
+
+    def __str__(self):
+        return "Min Max algorithm (MM)"
