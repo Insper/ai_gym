@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
+
 # AIGYM
 
 The goal of this libray is provide a set of tools to help you to learn Artificial Intelligence.
