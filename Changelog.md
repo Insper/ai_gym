@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 * Refactored all documentation pages into a consistent bilingual structure.
 * Localized the left navigation and search configuration for each language.
 * Grouped all source-code pages under an Examples → Implementations navigation section.
+* Moved the graphical tracing guide into its own bilingual navigation page.
 * Localized implementation comments and docstrings in Portuguese while keeping the original source in English.
 * Renamed the 8 Puzzle helper and heuristic methods with descriptive English names.
 
