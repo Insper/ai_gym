@@ -22,6 +22,7 @@ nav:
           - U2 Bridge: implementations/U2.md
           - 8 Puzzle: implementations/Puzzle8.md
           - Noughts & Crosses: implementations/NoughtsNCrosses.md
+  - Trace Feature: trace.md
   - Community: community.md
 
 extra_javascript:

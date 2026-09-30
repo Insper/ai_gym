@@ -1,7 +1,11 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
 # AI Gym
 
 AI Gym is a teaching library for learning the foundations of Artificial
 Intelligence through search problems and agents.
+
+
+The goal of this library is to provide a set of tools to help you to learn the basics of Artificial Intelligence. In other words, the goal of this library is to help you to learn how to build agents that solve problems by searching.
 
 ## Available algorithms
 
@@ -24,62 +28,8 @@ reuse the same problem representation with compatible strategies.
 pip install aigyminsper
 ```
 
-## Graphical tracing
+## Documentation
 
-The trace feature displays the search tree as an algorithm evaluates states.
-It requires the Graphviz executable and a graphical Matplotlib backend.
+In this page you can find the documentation for the library, including [how to use it](./user_guide.md), [examples](./examples.md), and how to [contribute to the project](./community.md).
 
-### Install Graphviz
-
-=== "Windows"
-
-    ```powershell
-    winget install graphviz
-    where.exe dot
-    ```
-
-=== "Debian / Ubuntu / Linux Mint"
-
-    ```bash
-    sudo apt update
-    sudo apt install graphviz
-    which dot
-    ```
-
-### Configure the graphical backend
-
-Check the current Matplotlib backend:
-
-```bash
-python -c "import matplotlib; print(matplotlib.get_backend())"
-```
-
-If it reports `Agg`, install PyQt6 and select the Qt backend:
-
-```bash
-python -m pip install PyQt6
-python -c "from PyQt6 import QtWidgets; print('PyQt6 OK')"
-```
-
-=== "Windows PowerShell"
-
-    ```powershell
-    $env:MPLBACKEND="QtAgg"
-    ```
-
-=== "Linux"
-
-    ```bash
-    export MPLBACKEND=QtAgg
-    ```
-
-### Enable tracing
-
-```python
-algorithm = BuscaLargura()
-result = algorithm.search(state, trace=True)
-```
-
-Useful options include `trace_live=True`, `trace_fullscreen=True`,
-`trace_hold_graph=False`, and `trace_delay=0.02`. MinMax also accepts
-`trace_max_depth` to keep large game trees readable.
+This library has a trace feature that allows you to visualize the search tree and the algorithm's progress. You can find more information about how to install and use the trace feature in the [trace documentation](./trace.md).
