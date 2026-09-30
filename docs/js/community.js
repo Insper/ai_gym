@@ -5,6 +5,14 @@
   if (!container) return;
 
   const contributorPage = "https://github.com/Insper/ai_gym/graphs/contributors";
+  const isPortuguese = document.documentElement.lang.startsWith("pt");
+  const script = Array.from(document.scripts).find((item) =>
+    item.src.endsWith("/js/community.js")
+  );
+  const contributorData = new URL(
+    "../assets/data/contributors.json",
+    script ? script.src : document.baseURI,
+  );
 
   function makeCard(contributor) {
     const card = document.createElement("a");
@@ -31,14 +39,21 @@
     const count = document.createElement("span");
     count.className = "contributor-card__count";
     const commits = contributor.contributions;
-    count.textContent = `${commits} ${commits === 1 ? "contribution" : "contributions"}`;
+    const contributionLabel = isPortuguese
+      ? commits === 1
+        ? "contribuição"
+        : "contribuições"
+      : commits === 1
+        ? "contribution"
+        : "contributions";
+    count.textContent = `${commits} ${contributionLabel}`;
 
     details.append(name, count);
     card.append(avatar, details);
     return card;
   }
 
-  fetch("../assets/data/contributors.json")
+  fetch(contributorData)
     .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
@@ -49,11 +64,17 @@
     .catch(() => {
       const message = document.createElement("p");
       message.className = "contributors__error";
-      message.append("Contributor data is temporarily unavailable. ");
+      message.append(
+        isPortuguese
+          ? "Os dados dos colaboradores estão temporariamente indisponíveis. "
+          : "Contributor data is temporarily unavailable. ",
+      );
 
       const link = document.createElement("a");
       link.href = contributorPage;
-      link.textContent = "View contributors on GitHub.";
+      link.textContent = isPortuguese
+        ? "Ver colaboradores no GitHub."
+        : "View contributors on GitHub.";
       message.append(link);
       container.replaceChildren(message);
     });

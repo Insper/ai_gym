@@ -4,14 +4,14 @@ from aigyminsper.search.graph import State
 class U2(State):
 
     def __init__(self, bono, edge, adam, larry, lanterna, op):
-        """Initialize each person's side, the flashlight, and the last move.
+        """Inicializa o lado de cada pessoa, a lanterna e o último movimento.
 
-        False represents the left side of the bridge and True represents the
-        right side. ``op`` identifies who crossed to produce this state.
+        False representa o lado esquerdo da ponte e True representa o lado
+        direito. ``op`` identifica quem atravessou para produzir este estado.
         """
         super().__init__(op)
         #
-        # False means the left side and True means the right side.
+        # False significa o lado esquerdo e True significa o lado direito.
         #
         self.bono = bono
         self.edge = edge
@@ -20,7 +20,7 @@ class U2(State):
         self.lanterna = lanterna
 
     def successors(self):
-        """Return every valid one-person or two-person bridge crossing."""
+        """Retorna cada travessia válida de uma ou duas pessoas."""
         sucessors = []
         if self.bono == self.lanterna:
             sucessors.append(U2(not self.bono, self.edge, self.adam, self.larry, not self.lanterna, 'bono'))
@@ -45,15 +45,15 @@ class U2(State):
         return sucessors
     
     def is_goal(self):
-        """Return whether everyone and the flashlight reached the right side."""
+        """Retorna se todos e a lanterna chegaram ao lado direito."""
         return self.bono & self.edge & self.adam & self.larry & self.lanterna
     
     def description(self):
-        """Describe the minimum-cost bridge-crossing problem."""
+        """Descreve o problema de travessia da ponte com custo mínimo."""
         return "Problema de custo minimo usando os integrantes da banda U2"
     
     def cost(self):
-        """Return the crossing time of the slowest person in the move."""
+        """Retorna o tempo de travessia da pessoa mais lenta no movimento."""
         if self.operator == 'bono':
             return 1
         elif self.operator == 'edge':
@@ -76,7 +76,7 @@ class U2(State):
             return 10
     
     def env(self):
-        """Identify a state from every person's side of the bridge."""
+        """Identifica o estado pelo lado da ponte em que cada pessoa está."""
         return str(self.bono)+";"+str(self.edge)+";"+str(self.adam)+";"+str(self.larry)+str(self.cost)
 
 def main():

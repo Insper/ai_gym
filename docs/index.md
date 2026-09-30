@@ -1,95 +1,85 @@
-# AIGYM
+# AI Gym
 
-The goal of this library is to provide a set of tools to help you to learn the basics of Artificial Intelligence. In other words, the goal of this library is to help you to learn how to build agents that solve problems by searching.
+AI Gym is a teaching library for learning the foundations of Artificial
+Intelligence through search problems and agents.
 
-This library implements the following algorithms:
+## Available algorithms
 
-1. Breadth-first search 
-1. Depth-first search 
-1. Iterative deepening search 
-1. Uniform cost search 
-1. Greedy search algorithm
-1. A* search algorithm 
-1. MinMax adversarial search algorithm
-1. Hill climbing search algorithm
-1. Stochastic hill climbing search algorithm
+1. Breadth-first search
+2. Depth-first search
+3. Iterative deepening search
+4. Uniform-cost search
+5. Greedy search
+6. A* search
+7. MinMax adversarial search
+8. Hill climbing
+9. Stochastic hill climbing
 
-This library also has a common interface for agents, allowing you to easily create and deploy agents that solve problems by searching.
+All search algorithms share a common state interface, making it possible to
+reuse the same problem representation with compatible strategies.
 
-## How to install the library
+## Installation
 
 ```bash
 pip install aigyminsper
 ```
 
-# Trace Feature
+## Graphical tracing
 
-## What it is
+The trace feature displays the search tree as an algorithm evaluates states.
+It requires the Graphviz executable and a graphical Matplotlib backend.
 
-The trace feature is a graphical interface where you can see the algorithm searching and building the search tree, it is useful if you want a more descriptive visualization
+### Install Graphviz
 
-## How to install
+=== "Windows"
 
-The trace feature uses an application called Graphviz, which helps create graphs.
-To use it, it is needed to install its executable 
+    ```powershell
+    winget install graphviz
+    where.exe dot
+    ```
 
-To install it, run:
-```
-# On Windows
-# Windows
-winget install graphviz
+=== "Debian / Ubuntu / Linux Mint"
 
-# Debian / Ubuntu / Linux Mint
-sudo apt update
-sudo apt install graphviz
-```
+    ```bash
+    sudo apt update
+    sudo apt install graphviz
+    which dot
+    ```
 
-Check if the installation was successuful 
-```
-# Windows
-where.exe dot
+### Configure the graphical backend
 
-# Linux
-which dot
-```
+Check the current Matplotlib backend:
 
-And finally, with the library installed, check if you have a proper display for Matplotlib
-
-run:
-```
+```bash
 python -c "import matplotlib; print(matplotlib.get_backend())"
 ```
 
-If you get anything other than "Agg" you're fine, if not we recommend you to install QtAgg backend
+If it reports `Agg`, install PyQt6 and select the Qt backend:
 
-To install it run inside the venv:
-```
+```bash
 python -m pip install PyQt6
-```
-
-Then verify
-```
 python -c "from PyQt6 import QtWidgets; print('PyQt6 OK')"
 ```
-You should get a "PyQt6 OK"
 
-Then export it to the environment
+=== "Windows PowerShell"
 
-```
-# On Windows
-$env:MPLBACKEND="QtAgg"
+    ```powershell
+    $env:MPLBACKEND="QtAgg"
+    ```
 
-# On Linux
-export MPLBACKEND=QtAgg
-```
+=== "Linux"
 
-## How to use it
+    ```bash
+    export MPLBACKEND=QtAgg
+    ```
 
-When running the search function, add `trace=True` in its call.
-```
-# Example
+### Enable tracing
+
+```python
 algorithm = BuscaLargura()
 result = algorithm.search(state, trace=True)
 ```
 
-If you want full screen add `trace_fullscreen=True` as well
+Useful options include `trace_live=True`, `trace_fullscreen=True`,
+`trace_hold_graph=False`, and `trace_delay=0.02`. MinMax also accepts
+`trace_max_depth` to keep large game trees readable.

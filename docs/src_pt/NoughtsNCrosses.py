@@ -1,4 +1,4 @@
-"""Noughts & Crosses (tic-tac-toe) example using MinMax."""
+"""Exemplo de Jogo da Velha usando MinMax."""
 
 from __future__ import annotations
 
@@ -11,14 +11,14 @@ from aigyminsper.search.search_algorithms import MinMax
 ROWS = 3
 COLUMNS = 3
 WIN_SEQUENCE = 3
-# MinMax maximizes positive values for X and minimizes them for O.
+# O MinMax maximiza valores positivos para X e minimiza valores para O.
 MAX_PLAYER = 1
 MIN_PLAYER = -1
 EMPTY = 0
 
 
 class NoughtsNCrosses(State):
-    """Immutable game position where X maximizes and O minimizes utility."""
+    """Posição imutável em que X maximiza e O minimiza a utilidade."""
 
     def __init__(
         self,
@@ -26,10 +26,10 @@ class NoughtsNCrosses(State):
         player: int = MAX_PLAYER,
         op: str = "",
     ) -> None:
-        """Create a position and identify which player moves next.
+        """Cria uma posição e identifica qual jogador fará a próxima jogada.
 
-        ``board`` uses ``1`` for X, ``-1`` for O, and ``0`` for an empty
-        square. ``op`` describes the move that produced this state.
+        ``board`` usa ``1`` para X, ``-1`` para O e ``0`` para uma casa
+        vazia. ``op`` descreve a jogada que produziu este estado.
         """
         super().__init__(op)
         self.board = board or tuple(
@@ -45,24 +45,24 @@ class NoughtsNCrosses(State):
             raise ValueError("player must be 1 (X) or -1 (O).")
 
     def successors(self) -> list[NoughtsNCrosses]:
-        """Return one new state for every legal move by the current player.
+        """Retorna um novo estado para cada jogada válida do jogador atual.
 
-        A terminal position has no children. Otherwise, each empty square
-        creates a copied board containing the current player's mark. The next
-        state changes the player so MinMax alternates between X and O.
+        Uma posição terminal não possui filhos. Caso contrário, cada casa
+        vazia cria uma cópia do tabuleiro com a marca do jogador atual. O novo
+        estado troca o jogador para que o MinMax alterne entre X e O.
         """
-        # A finished game must not expand into additional positions.
+        # Um jogo encerrado não deve gerar outras posições.
         if self.is_goal():
             return []
 
         states = []
-        # Each empty square represents one possible move from this position.
+        # Cada casa vazia representa uma jogada possível nesta posição.
         for row in range(ROWS):
             for column in range(COLUMNS):
                 if self.board[row][column] != EMPTY:
                     continue
 
-                # Copy the immutable board, make the move, and freeze it again.
+                # Copia o tabuleiro imutável, faz a jogada e o congela novamente.
                 new_board = [list(line) for line in self.board]
                 new_board[row][column] = self.player
                 states.append(
@@ -75,21 +75,21 @@ class NoughtsNCrosses(State):
         return states
 
     def is_goal(self) -> bool:
-        """Return whether the position is a win or a draw.
+        """Retorna se a posição representa vitória ou empate.
 
-        A winner ends the game immediately. With no winner, a full board is a
-        draw and is also terminal.
+        Um vencedor encerra o jogo imediatamente. Sem vencedor, um tabuleiro
+        cheio representa empate e também é um estado terminal.
         """
         return self.winner() != EMPTY or all(
             cell != EMPTY for row in self.board for cell in row
         )
 
     def cost(self) -> int:
-        """Return terminal utility or a heuristic at a depth cutoff.
+        """Retorna a utilidade terminal ou uma heurística no limite de profundidade.
 
-        Winning states receive values that dominate every heuristic score.
-        For unfinished games, occupying the center is useful and each row,
-        column, or diagonal is scored by how close it is to becoming a win.
+        Estados vencedores recebem valores que dominam qualquer pontuação
+        heurística. Em jogos inacabados, ocupar o centro é vantajoso e cada
+        linha, coluna ou diagonal é avaliada pela proximidade de uma vitória.
         """
         winner = self.winner()
         if winner == MAX_PLAYER:
@@ -97,33 +97,33 @@ class NoughtsNCrosses(State):
         if winner == MIN_PLAYER:
             return -1_000_000
 
-        # Prefer the center, which belongs to four possible winning lines.
+        # Prefere o centro, que pertence a quatro possíveis linhas vencedoras.
         score = 6 * self.board[ROWS // 2][COLUMNS // 2]
         return score + sum(
             self._window_score(window) for window in self._windows()
         )
 
     def description(self) -> str:
-        """Describe the adversarial problem represented by this state."""
+        """Descreve o problema adversarial representado por este estado."""
         return (
             "Noughts & Crosses: X maximizes utility and O minimizes it. "
             "Three equal pieces in a row, column, or diagonal win."
         )
 
     def env(self) -> str:
-        """Uniquely identify both the board and the next player.
+        """Identifica unicamente o tabuleiro e o próximo jogador.
 
-        Including the player prevents equal boards with different turns from
-        being treated as the same search state.
+        Incluir o jogador impede que tabuleiros iguais com turnos diferentes
+        sejam tratados como o mesmo estado de busca.
         """
         cells = "".join(str(cell + 1) for row in self.board for cell in row)
         return f"{cells}#{self.player}"
 
     def winner(self) -> int:
-        """Return 1 for X, -1 for O, or 0 when nobody has won.
+        """Retorna 1 para X, -1 para O ou 0 quando ninguém venceu.
 
-        Because X is 1 and O is -1, summing a line detects three identical
-        marks without separate checks for every board direction.
+        Como X vale 1 e O vale -1, somar uma linha detecta três símbolos iguais
+        sem verificações separadas para cada direção do tabuleiro.
         """
         for window in self._windows():
             total = sum(window)
@@ -134,7 +134,7 @@ class NoughtsNCrosses(State):
         return EMPTY
 
     def __str__(self) -> str:
-        """Render the numeric board as X, O, and empty-square symbols."""
+        """Exibe o tabuleiro numérico com símbolos X, O e casas vazias."""
         symbols = {EMPTY: ".", MAX_PLAYER: "X", MIN_PLAYER: "O"}
         rows = [
             " | ".join(symbols[cell] for cell in row) for row in self.board
@@ -142,13 +142,13 @@ class NoughtsNCrosses(State):
         return "\n---------\n".join(rows)
 
     def _windows(self) -> Iterable[tuple[int, ...]]:
-        """Yield all rows, columns, and diagonals that can contain a win."""
-        # Rows are already stored as tuples in the board.
+        """Produz todas as linhas, colunas e diagonais que podem conter vitória."""
+        # As linhas já estão armazenadas como tuplas no tabuleiro.
         yield from self.board
-        # Build each column by selecting the same index from every row.
+        # Monta cada coluna selecionando o mesmo índice de todas as linhas.
         for column in range(COLUMNS):
             yield tuple(self.board[row][column] for row in range(ROWS))
-        # Finish with the main diagonal and the opposite diagonal.
+        # Finaliza com a diagonal principal e a diagonal oposta.
         yield tuple(self.board[index][index] for index in range(ROWS))
         yield tuple(
             self.board[index][COLUMNS - index - 1] for index in range(ROWS)
@@ -156,11 +156,11 @@ class NoughtsNCrosses(State):
 
     @staticmethod
     def _window_score(window: tuple[int, ...]) -> int:
-        """Estimate a line without rewarding lines blocked by both players.
+        """Estima uma linha sem premiar linhas bloqueadas pelos dois jogadores.
 
-        Two marks and one empty square are more urgent than one mark and two
-        empty squares. O's immediate threat is slightly stronger so X blocks
-        it instead of choosing an equally attractive attacking line.
+        Duas marcas e uma casa vazia são mais urgentes do que uma marca e duas
+        casas vazias. A ameaça imediata de O recebe peso um pouco maior para X
+        bloqueá-la em vez de escolher uma linha de ataque igualmente atraente.
         """
         max_count = window.count(MAX_PLAYER)
         min_count = window.count(MIN_PLAYER)
@@ -180,10 +180,10 @@ class NoughtsNCrosses(State):
 
 
 def first_move(result):
-    """Return the state immediately below the root of a MinMax result path.
+    """Retorna o estado logo abaixo da raiz do caminho resultante do MinMax.
 
-    MinMax returns the evaluated leaf. Following parent nodes upward reveals
-    the first move selected from the current board.
+    O MinMax retorna a folha avaliada. Percorrer os nós pais para cima revela
+    a primeira jogada escolhida a partir do tabuleiro atual.
     """
     child = result
     while (
@@ -195,11 +195,11 @@ def first_move(result):
 
 
 def play(maximum_turns: int = 9, depth: int = 4, trace: bool = False) -> None:
-    """Play X and O with MinMax until a win, draw, or turn limit.
+    """Joga com X e O via MinMax até vitória, empate ou limite de turnos.
 
-    ``start=0`` selects the maximizing turn for X and ``start=1`` selects the
-    minimizing turn for O. ``depth`` limits how far each decision looks ahead,
-    while ``trace`` enables the search-tree visualization.
+    ``start=0`` seleciona o turno maximizador de X e ``start=1`` seleciona o
+    turno minimizador de O. ``depth`` limita a profundidade de cada decisão,
+    enquanto ``trace`` ativa a visualização da árvore de busca.
     """
     state = NoughtsNCrosses()
     algorithm = MinMax()
@@ -208,7 +208,7 @@ def play(maximum_turns: int = 9, depth: int = 4, trace: bool = False) -> None:
     print(state)
 
     for turn in range(1, maximum_turns + 1):
-        # Ask MinMax for the best path for whichever player moves next.
+        # Solicita ao MinMax o melhor caminho para o próximo jogador.
         result = algorithm.search(
             state,
             start=0 if state.player == MAX_PLAYER else 1,
@@ -220,7 +220,7 @@ def play(maximum_turns: int = 9, depth: int = 4, trace: bool = False) -> None:
         if result is None:
             break
 
-        # Only the first move in the chosen path is played before searching again.
+        # Joga apenas o primeiro movimento antes de executar uma nova busca.
         state = first_move(result)
         print(f"\nTurn {turn}: {state.operator}")
         print(state)

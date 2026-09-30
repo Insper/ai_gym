@@ -2,6 +2,7 @@ pytest
 twine
 mkdocs
 mkdocs-material
+mkdocs-static-i18n
 numpy
 pylint
 setuptools
