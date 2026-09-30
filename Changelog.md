@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 
 * Fixed contributor data loading, styling, and translated labels on both Community pages.
 * Restored syntax-highlighted implementation pages after enabling localized documentation.
+* Fixed missing MathJax assets and removed the obsolete Markdown Enhancer reference.
+* Fixed page-relative sitemap requests produced by localized language links.
 
 ## [0.3.8] 2026-09-29
 
