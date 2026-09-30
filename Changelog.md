@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.3.9] 2026-09-29
+
+### Added
+
+* Added a documented Noughts & Crosses example and MinMax entries to the algorithm lists.
+* Added English and Brazilian Portuguese documentation trees with a page-aware language selector.
+* Added `mkdocs-static-i18n` to build and switch between the localized pages.
+* Added detailed English and Portuguese commentary to the Noughts & Crosses implementation.
+
+### Changed
+
+* Refactored all documentation pages into a consistent bilingual structure.
+* Localized the left navigation and search configuration for each language.
+* Grouped all source-code pages under an Examples → Implementations navigation section.
+* Localized implementation comments and docstrings in Portuguese while keeping the original source in English.
+* Renamed the 8 Puzzle helper and heuristic methods with descriptive English names.
+
+### Fixed
+
+* Fixed contributor data loading, styling, and translated labels on both Community pages.
+* Restored syntax-highlighted implementation pages after enabling localized documentation.
+
 ## [0.3.8] 2026-09-29
 
 ### Added
