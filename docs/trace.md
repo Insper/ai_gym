@@ -1,69 +1,83 @@
-# Trace Feature
+# Graphical tracing
 
-The trace feature is a graphical interface where you can see the algorithm searching and building the search tree, it is useful if you want a more descriptive visualization
+The trace feature displays the search tree while an algorithm evaluates and
+expands states. It requires the Graphviz executable and a graphical Matplotlib
+backend.
 
-## How to install
+## Install Graphviz
 
-The trace feature uses an application called Graphviz, which helps create graphs.
-To use it, it is needed to install its executable 
+=== "Windows"
 
-To install it, run:
-```
-# On Windows
-# Windows
-winget install graphviz
+    ```powershell
+    winget install graphviz
+    where.exe dot
+    ```
 
-# Debian / Ubuntu / Linux Mint
-sudo apt update
-sudo apt install graphviz
-```
+=== "Debian / Ubuntu / Linux Mint"
 
-Check if the installation was successuful 
-```
-# Windows
-where.exe dot
+    ```bash
+    sudo apt update
+    sudo apt install graphviz
+    which dot
+    ```
 
-# Linux
-which dot
-```
+## Configure the graphical backend
 
-And finally, with the library installed, check if you have a proper display for Matplotlib
+Check the current Matplotlib backend:
 
-run:
-```
+```bash
 python -c "import matplotlib; print(matplotlib.get_backend())"
 ```
 
-If you get anything other than "Agg" you're fine, if not we recommend you to install QtAgg backend
+If the command reports `Agg`, install PyQt6 inside the virtual environment and
+select the Qt backend:
 
-To install it run inside the venv:
-```
+```bash
 python -m pip install PyQt6
-```
-
-Then verify
-```
 python -c "from PyQt6 import QtWidgets; print('PyQt6 OK')"
 ```
-You should get a "PyQt6 OK"
 
-Then export it to the environment
+=== "Windows PowerShell"
 
-```
-# On Windows
-$env:MPLBACKEND="QtAgg"
+    ```powershell
+    $env:MPLBACKEND="QtAgg"
+    ```
 
-# On Linux
-export MPLBACKEND=QtAgg
-```
+=== "Linux"
 
-## How to use it
+    ```bash
+    export MPLBACKEND=QtAgg
+    ```
 
-When running the search function, add `trace=True` in its call.
-```
-# Example
+## Enable tracing
+
+Pass `trace=True` when calling an algorithm's `search` method:
+
+```python
 algorithm = BuscaLargura()
 result = algorithm.search(state, trace=True)
 ```
 
-If you want full screen add `trace_fullscreen=True` as well
+The most useful options are:
+
+| Option | Description |
+| --- | --- |
+| `trace_live=True` | Updates the graph while the search runs instead of replaying it afterward. |
+| `trace_fullscreen=True` | Opens the visualization in full-screen mode. |
+| `trace_hold_graph=False` | Closes the visualization when the trace finishes. |
+| `trace_delay=0.02` | Sets the delay, in seconds, between replayed frames. |
+| `trace_max_depth=2` | Limits the displayed tree depth for algorithms such as MinMax. |
+
+For example, the following call replays a bounded trace and closes it when the
+replay ends:
+
+```python
+result = algorithm.search(
+    state,
+    trace=True,
+    trace_live=False,
+    trace_hold_graph=False,
+    trace_delay=0.02,
+    trace_max_depth=2,
+)
+```
