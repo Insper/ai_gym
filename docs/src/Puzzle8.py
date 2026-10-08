@@ -1,4 +1,3 @@
-from unittest import result
 from aigyminsper.search.search_algorithms import AEstrela
 from aigyminsper.search.graph import State
 import math

@@ -8,7 +8,7 @@ Aigyminsper provides different state classes for different kinds of search probl
 
 | State class      | Purpose                                                                             | Typical algorithms                                 |
 | ---------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `State`          | Basic state-space representation                                                    | BFS, DFS, iterative deepening, uniform-cost search |
+| `State`          | Basic state-space representation                                                    | BFS, DFS, iterative deepening, uniform-cost search, MinMax |
 | `HeuristicState` | State with heuristic information about the distance or quality relative to the goal | Greedy search, A*, hill climbing                   |
 | `CspState`       | State representation for constraint-satisfaction problems                           | CSP-oriented search algorithms                     |
 
@@ -146,13 +146,23 @@ The available algorithms and their corresponding characteristics:
 | Uniform cost             | `BuscaCustoUniforme`         | `State`                      |                         Yes |             No | Appropriate for varying action costs        |
 | Greedy                   | `BuscaGananciosa`            | `HeuristicState`             | No/implementation-dependent |            Yes | Not generally optimal                       |
 | A*                       | `AEstrela`                   | `HeuristicState`             |                         Yes |            Yes | Optimality depends on heuristic assumptions |
+| MinMax                   | `MinMax`                     | `State`                      | Utility function             |       Optional | Alternates maximizing and minimizing turns  |
 | Hill climbing            | `SubidaMontanha`             | `HeuristicState`             |                           — |            Yes | Local search; can get stuck                 |
 | Stochastic hill climbing | `SubidaMontanhaEstocastico`  | `CspState`             |                           — |            Yes | Local/stochastic search                     |
 
-All algorithms except `SubidaMontanha` and `SubidaMontanhaEstocastico` accept a `pruning` argument:
+The graph-search algorithms accept a `pruning` argument:
 
 ```python
 result = algorithm.search(state, pruning='general')  # 'without', 'father-son', or 'general'
+```
+
+MinMax instead uses `start=0` for the maximizing player, `start=1` for the
+minimizing player, and `m` as an optional search-depth limit:
+
+```python
+from aigyminsper.search.search_algorithms import MinMax
+
+result = MinMax().search(state, start=0, m=4)
 ```
 
 > For examples on real usages of the flow above see [Examples](./examples.md) page.

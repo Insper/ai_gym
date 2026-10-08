@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [0.3.8] 2026-09-29
+
+### Added
+
+* Added the MinMax adversarial search algorithm with live and replay tracing.
+* Added Noughts & Crosses and Connect Four game-state examples and MinMax tests.
+
+### Changed
+
+* Limited MinMax traces to two displayed decision levels by default while preserving the complete selected path.
+* Moved trace cleanup into the shared search-algorithm lifecycle so every algorithm starts and ends with clean trace state.
+
+### Fixed
+
+* Prevented stale graph frames from leaking into later searches when an algorithm instance is reused.
+* Prevented depth-four Noughts & Crosses replay from appearing frozen while laying out thousands of nodes.
+
 ## [0.3.7] 2026-09-16
 
 ### Added

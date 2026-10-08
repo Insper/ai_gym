@@ -11,7 +11,8 @@ This library implements the following algorithms:
 1. Iterative deepening search 
 1. Uniform cost search 
 1. Greedy search algorithm
-1. A* search algorithm
+1. A* search algorithm 
+1. MinMax adversarial search algorithm
 1. Hill climbing search algorithm
 1. Stochastic hill climbing search algorithm
 
