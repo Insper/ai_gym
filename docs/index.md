@@ -5,6 +5,8 @@ AI Gym is a teaching library for learning the foundations of Artificial
 Intelligence through search problems and agents.
 
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
+
 The goal of this library is to provide a set of tools to help you to learn the basics of Artificial Intelligence. In other words, the goal of this library is to help you to learn how to build agents that solve problems by searching.
 
 ## Available algorithms
