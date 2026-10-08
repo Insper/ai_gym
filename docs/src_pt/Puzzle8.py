@@ -7,28 +7,28 @@ class Puzzle8(State):
     objetivo = [[1,2,3],[8,0,4],[7,6,5]]
 
     def __init__(self, tabuleiro, op):
-        """Initialize the puzzle board and the move that produced it.
+        """Inicializa o tabuleiro e o movimento que o produziu.
 
-        tabuleiro: A square array representing the position of every tile
+        tabuleiro: uma matriz quadrada que representa a posição de cada peça
             ex: [[2, 1, 3],
                  [0, 8, 4]
                  [6, 5, 7]]
-            note: 0 represents the empty space.
-        op: the operation that led to the current state
+            observação: 0 representa o espaço vazio.
+        op: operação que levou ao estado atual
         """
         super().__init__(op)
         self.tabuleiro = tabuleiro
     
     @staticmethod
     def find_number(board, number):
-        """Find the row and column containing a tile."""
+        """Encontra a linha e a coluna que contêm uma peça."""
         for i in range(0,3):
             for j in range(0,3):
                 if board[i][j] == number:
                     return i, j
 
     def copy_board(self):
-        """Create a copy of the board."""
+        """Cria uma cópia do tabuleiro."""
         resultado = [[0,0,0],[0,0,0],[0,0,0]]
         for i in range(0,3):
             for j in range(0,3):
@@ -36,31 +36,31 @@ class Puzzle8(State):
         return resultado
 
     def successors(self):
-        """Return every board produced by a valid empty-space movement."""
+        """Retorna cada tabuleiro produzido por um movimento válido do vazio."""
         sucessors = []
         lin, col = Puzzle8.find_number(self.tabuleiro, 0)
-        # Move the empty space up
+        # Move o espaço vazio para cima
         if lin > 0 and self.operator != 'baixo':
             novo = self.copy_board()
             temp = self.tabuleiro[lin-1][col]
             novo[lin][col] = temp
             novo[lin-1][col] = 0
             sucessors.append(Puzzle8(novo,'cima'))
-        # Move the empty space down
+        # Move o espaço vazio para baixo
         if lin < 2 and self.operator != 'cima':
             novo = self.copy_board()
             temp = self.tabuleiro[lin+1][col]
             novo[lin][col] = temp
             novo[lin+1][col] = 0
             sucessors.append(Puzzle8(novo,"baixo"))
-        # Move the empty space left
+        # Move o espaço vazio para a esquerda
         if col > 0 and self.operator != 'direita':
             novo = self.copy_board()
             temp = self.tabuleiro[lin][col-1]
             novo[lin][col] = temp
             novo[lin][col-1] = 0
             sucessors.append(Puzzle8(novo,"esquerda"))
-        # Move the empty space right
+        # Move o espaço vazio para a direita
         if col < 2 and self.operator != 'esquerda':
             novo = self.copy_board()
             temp = self.tabuleiro[lin][col+1]
@@ -70,7 +70,7 @@ class Puzzle8(State):
         return sucessors
     
     def is_goal(self):
-        """Return whether the board matches the target configuration.
+        """Retorna se o tabuleiro corresponde à configuração objetivo.
 
         tabuleiro = [[1,2,3],
                      [8,0,4],
@@ -83,28 +83,28 @@ class Puzzle8(State):
         return True
     
     def description(self):
-        """Describe the represented problem."""
+        """Descreve o problema representado."""
         return "8 Puzzle"
     
     def cost(self):
-        """Assign unit cost to every empty-space movement."""
+        """Atribui custo unitário a cada movimento do espaço vazio."""
         
         return 1
     
     def env(self):
-        """Identify the state from its board configuration."""
+        """Identifica o estado pela configuração do tabuleiro."""
         return str(self.tabuleiro)
 
     def h(self):
-        """Estimate distance using the selected puzzle heuristic."""
+        """Estima a distância usando a heurística selecionada."""
         return self.misplaced_tiles()
         #return self.euclidean_distance()
 
     #
-    # Number of misplaced tiles
+    # Quantidade de peças fora do lugar
     #
     def misplaced_tiles(self):
-        """Count tiles that are outside their target positions."""
+        """Conta as peças que estão fora de suas posições objetivo."""
         count = 0
         if self.tabuleiro[0][0] != 1:
             count = count + 1
@@ -127,10 +127,10 @@ class Puzzle8(State):
         return count
     
     #
-    # Euclidean distance
+    # Distância euclidiana
     #
     def euclidean_distance(self):
-        """Sum each tile's straight-line distance from its target."""
+        """Soma a distância em linha reta de cada peça até o objetivo."""
         count = 0
         for num in range(0,8):
             lin_ideal, col_ideal = Puzzle8.find_number(self.objetivo, num)
@@ -139,14 +139,14 @@ class Puzzle8(State):
         return count
 
     #
-    # Count the inversions required to order the numerical sequence.
-    # An even count is solvable and an odd count is unsolvable.
+    # Conta as inversões necessárias para ordenar a sequência numérica.
+    # Uma quantidade par é solucionável e uma quantidade ímpar não é.
     # 
-    # Reference: https://pt.stackoverflow.com/questions/333702/como-verificar-se-o-sliding-puzzle-%C3%A9-solucion%C3%A1vel
+    # Referência: https://pt.stackoverflow.com/questions/333702/como-verificar-se-o-sliding-puzzle-%C3%A9-solucion%C3%A1vel
     #
     @staticmethod
     def has_solution(board):
-        """Return whether the given initial board has a solution."""
+        """Retorna se o tabuleiro inicial fornecido possui solução."""
         count = 0
         lista = []
         for lin in range(0,3):
@@ -163,7 +163,7 @@ class Puzzle8(State):
             return False
         
     def show_path(self):
-        """Solve the puzzle with A* and return the resulting path."""
+        """Resolve o quebra-cabeça com A* e retorna o caminho encontrado."""
         algorithm = AEstrela()
         if not Puzzle8.has_solution(self.tabuleiro):
             return 'Nao tem solucao' 

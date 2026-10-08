@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <script>
+    // Material derives a sitemap URL from each page-specific language link.
+    // Point those requests back to MkDocs' single sitemap at the site root.
+    (() => {
+      const originalFetch = window.fetch.bind(window)
+      const sitemap = new URL("{{ base_url }}/sitemap.xml", document.baseURI)
+
+      window.fetch = (resource, options) => {
+        const requested = resource instanceof Request ? resource.url : resource
+        const url = new URL(requested, document.baseURI)
+
+        if (url.pathname.endsWith("/sitemap.xml") && url.href !== sitemap.href) {
+          return originalFetch(sitemap, options)
+        }
+        return originalFetch(resource, options)
+      }
+    })()
+  </script>
+{% endblock %}

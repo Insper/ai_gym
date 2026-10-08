@@ -1,24 +1,30 @@
-# AIGYM
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
+# AI Gym
+
+AI Gym is a teaching library for learning the foundations of Artificial
+Intelligence through search problems and agents.
+
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22944028.svg)](https://doi.org/10.5281/zenodo.22944028)
 
 The goal of this library is to provide a set of tools to help you to learn the basics of Artificial Intelligence. In other words, the goal of this library is to help you to learn how to build agents that solve problems by searching.
 
-This library implements the following algorithms:
+## Available algorithms
 
-1. Breadth-first search 
-1. Depth-first search 
-1. Iterative deepening search 
-1. Uniform cost search 
-1. Greedy search algorithm
-1. A* search algorithm 
-1. MinMax adversarial search algorithm
-1. Hill climbing search algorithm
-1. Stochastic hill climbing search algorithm
+1. Breadth-first search
+2. Depth-first search
+3. Iterative deepening search
+4. Uniform-cost search
+5. Greedy search
+6. A* search
+7. MinMax adversarial search
+8. Hill climbing
+9. Stochastic hill climbing
 
-This library also has a common interface for agents, allowing you to easily create and deploy agents that solve problems by searching.
+All search algorithms share a common state interface, making it possible to
+reuse the same problem representation with compatible strategies.
 
-## How to install the library
+## Installation
 
 ```bash
 pip install aigyminsper

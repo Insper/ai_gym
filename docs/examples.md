@@ -1,14 +1,11 @@
 # Examples
 
-Abaixo são apresentados alguns exemplos de problemas que podem ser resolvidos com esta biblioteca.
+These examples demonstrate how to model different search problems with AI Gym.
 
-## Aspirador de Pó
+## Vacuum world
 
-O método `main` da classe `VacuumWorldGeneric.py` deve receber um arquivo texto que descreve a situação do ambiente e as posições do robô como parâmetros. Por exemplo, para o seguinte ambiente: 
-
-<img src="../img/mundo_ex_1.png">
-
-O seguinte arquivo de configuração será entregue: 
+`VacuumWorldGeneric.py` receives a text file describing dirty rooms and the
+robot's initial position. In the map, `0` means clean and `1` means dirty.
 
 ```text
 0;1;1;1
@@ -16,37 +13,18 @@ O seguinte arquivo de configuração será entregue:
 1;1;1;1
 ```
 
-onde `0` significa **limpo** e `1` **sujo**.
-
-E o seguinte comando deve ser executado:
+Run the example with the configuration file, row, and column:
 
 ```bash
-python VacuumWorldGeneric.py configuracao.txt 0 0
-``` 
-
-As ações que o robô (agente) sabe executar são: 
-
-* *esq*: ir para a esquerda;
-* *dir*: ir para a direita;
-* *baixo*: ir para baixo;
-* *cima*: ir para cima;
-* *limpar*: limpar o quarto onde está.
-
-Ao executar o comando acima, o programa deverá gerar uma sequência de ações que fará com que o robô saia do **estado inicial** e chegue em um **estado final** válido. Um estado final válido é um estado onde todos os quartos (quadrados) estão limpos. 
-
-Uma sequência de ações válidas para resolver o estado acima é: 
-
-```
-dir; limpar; dir; limpar; dir; baixo; baixo; limpar; esq; limpar; esq; limpar; esq; limpar
+python docs/src/VacuumWorldGeneric.py configuration.txt 0 0
 ```
 
-## Um outro exemplo 
+The available actions move left, right, up, or down, or clean the current
+room. A valid solution reaches a state in which every room is clean.
 
-Considere um novo exemplo:
+![First vacuum-world map](img/mundo_ex_1.png)
 
-<img src="../img/mundo_ex_2.png">
-
-Para este exemplo o arquivo de configuração precisa ter este conteúdo:
+Another configuration can start the robot on row 2, column 3:
 
 ```text
 0;1;1;1
@@ -54,56 +32,43 @@ Para este exemplo o arquivo de configuração precisa ter este conteúdo:
 1;1;1;1
 ```
 
-E a chamada para o programa: 
-
 ```bash
-python VacuumWorldGeneric.py configuracao.txt 2 3
+python docs/src/VacuumWorldGeneric.py configuration.txt 2 3
 ```
 
-O programa que está implementado em [VacuumWorldGeneric.py](src/VacuumWorldGeneric.py) não se preocupa com a validação dos dados de entrada. Assume-se que os dados de entrada estão corretos, por exemplo, a posição do robô é uma posição válida. 
+![Second vacuum-world map](img/mundo_ex_2.png)
 
-A única tarefa que o programa deve fazer é se existir solução então retornar uma sequência de ações ótima para o problema. Se não existir solução então informar que não existe solução.
+[View implementation](implementations/VacuumWorldGeneric.md)
 
-[**ACESSAR IMPLEMENTAÇÃO**](src/VacuumWorldGeneric.py)
+## U2 bridge problem
 
-## Banda U2
+The four members of U2 must cross a bridge in 17 minutes. It is night, they
+have one flashlight, and no more than two people can cross together. Bono,
+Edge, Adam, and Larry take 1, 2, 5, and 10 minutes respectively. A pair moves
+at the slower person's speed.
 
-A banda U2 tem um concerto que começa daqui a 17 minutos e
-  todos precisam cruzar uma ponte par chegar lá. Todos os 4
-  participantes estão do mesmo lado da ponte. É noite. Só
-  há uma lanterna. A ponte suporta, no máximo, duas
-  pessoas. Qualquer pessoa que passe, uma ou duas, deve passar com a
-  lanterna na mão. A lanterna deve ser levada de um lado para outro
-  e não ser jogada. Cada membro da banda tem um tempo diferente
-  para passar de um lado para o outro. O par deve andar no tempo do
-  menos veloz: Bono: 1 minuto para passar; Edge: 2 minutos para
-  passar; Adam: 5 minutos para passar; e Larry: 10 minutos para
-  passar.
+The objective is to move everyone and the flashlight to the other side with
+the lowest total cost.
 
-O problema consiste em ter os quatro elementos da banda do outro lado
-da ponte no menor tempo possível.
-
-O arquivo [U2.py](src/U2.py) implementa uma solução possível para este problema. 
+[View implementation](implementations/U2.md)
 
 ## 8 Puzzle
 
-O arquivo [Puzzle8.py](src/Puzzle8.py) implementa um solucionador para o jogo Puzzle8:
+The 8 Puzzle example uses A* to arrange numbered tiles into the target state.
 
-<p align="center">
-<img src="../img/fig03-04.png" alt="Grafo" width="400"/>
-</p>
+![8 Puzzle search graph](img/fig03-04.png){ width="400" }
+
+[View implementation](implementations/Puzzle8.md)
 
 ## Noughts & Crosses
 
-The [NoughtsNCrosses.py](src/NoughtsNCrosses.py) example models a complete
-3×3 Noughts & Crosses (tic-tac-toe) game for the `MinMax` algorithm. Player X
-is represented by `1` and maximizes the utility value; player O is represented
-by `-1` and minimizes it. Empty squares use `0`.
+The Noughts & Crosses example models a complete 3×3 tic-tac-toe game for
+`MinMax`. X is represented by `1` and maximizes utility; O is represented by
+`-1` and minimizes it; empty squares use `0`.
 
-Each state stores the immutable board and the player whose turn comes next.
-The `successors()` method creates one state for every empty square, while
-`cost()` returns a large positive or negative utility for a win and a simple
-line-based estimate when the depth limit is reached.
+Each state stores an immutable board and the next player. `successors()`
+creates one state for every empty square. `cost()` returns a large terminal
+utility for a win and a line-based estimate at the depth limit.
 
 Run the example from the project root:
 
@@ -111,9 +76,8 @@ Run the example from the project root:
 python -m docs.src.NoughtsNCrosses
 ```
 
-The example lets MinMax control both players and prints each selected move.
-To visualize the decision tree, change the final call to `play(trace=True)`.
-MinMax limits the displayed tree to two levels by default so that deeper game
-searches remain readable; the complete selected path is still highlighted.
+To display the decision tree, change the final call to `play(trace=True)`.
+MinMax displays two levels by default while preserving the complete selected
+path. Increase `trace_max_depth` only for small game trees.
 
-[**VIEW IMPLEMENTATION**](src/NoughtsNCrosses.py)
+[View implementation](implementations/NoughtsNCrosses.md)

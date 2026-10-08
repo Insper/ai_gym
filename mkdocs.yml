@@ -4,7 +4,11 @@ repo_name: AIGYM
 site_url: https://insper.github.io/ai_gym/
 
 theme:
-    name: 'material'
+  name: material
+  custom_dir: overrides
+  language: en
+  features:
+    - content.code.copy
 
 extra_css:
   - css/custom.css
@@ -17,8 +21,6 @@ nav:
   - 'Community': community.md
 
 extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.0.0/js-yaml.min.js
-  - js/markdown-enhancer.js
   - js/community.js
   - javascripts/mathjax.js
 #  - https://polyfill.io/v3/polyfill.min.js?features=es6 - There are a major suply-chain security incident with this domain
@@ -33,6 +35,10 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.details
   - pymdownx.tabbed
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.superfences
   - pymdownx.magiclink
   - pymdownx.critic:
@@ -44,16 +50,41 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.smartsymbols
   - pymdownx.snippets:
-      base_path: "docs/_snippets"
+      base_path: docs
       check_paths: true
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - footnotes
 
-plugins: 
-  - mkdocs-jupyter
-
-
-
-
+plugins:
+  - search
+  - mkdocs-jupyter:
+      include:
+        - "*.ipynb"
+        - "*.md"
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: pt
+          name: Português
+          build: true
+          nav_translations:
+            Home: Início
+            User Guide: Guia do usuário
+            Examples: Exemplos
+            Overview: Visão geral
+            Implementations: Implementações
+            Vacuum World: Mundo do Aspirador
+            U2 Bridge: Ponte do U2
+            8 Puzzle: Quebra-cabeça de 8 peças
+            Noughts & Crosses: Jogo da Velha
+            Trace Feature: Rastreamento gráfico
+            Community: Comunidade

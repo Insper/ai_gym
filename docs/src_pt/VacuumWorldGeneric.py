@@ -2,58 +2,58 @@ from aigyminsper.search.search_algorithms import BuscaProfundidadeIterativa, AEs
 from aigyminsper.search.graph import State
 import numpy
 import sys
-# Import the required libraries.
-# This example uses the base State class and compatible search algorithms.
+# Importa as bibliotecas necessárias.
+# Este exemplo utiliza a classe base State e algoritmos de busca compatíveis.
 
 class VacuumWorldGeneric(State):
 
     def __init__(self, mapa, lin, col, op):
-        """Initialize the vacuum-world state.
+        """Inicializa o estado do mundo do aspirador.
 
-        mapa: A rectangular binary NumPy array representing the map
+        mapa: uma matriz binária NumPy retangular que representa o mapa
             ex: [[0, 1, 1, 1],
                  [0, 0, 1, 1]
                  [1, 1, 1, 1]]
-            note: This is a NumPy array rather than a list of lists.
-        lin: the agent's horizontal position (row)
-        col: the agent's vertical position (column)
-        op: the operation that led to the current state
-            ex: If the agent moved left, op = 'esq'.
+            observação: é uma matriz NumPy, não uma lista de listas.
+        lin: posição horizontal do agente (linha)
+        col: posição vertical do agente (coluna)
+        op: operação que levou ao estado atual
+            ex.: se o agente moveu para a esquerda, op = 'esq'.
         """
 
         super().__init__(op)
         self.mapa = mapa
-        self.lin_max = self.mapa.shape[0]-1 # Maximum row the agent can reach
-        self.col_max = self.mapa.shape[1]-1 # Maximum column the agent can reach
+        self.lin_max = self.mapa.shape[0]-1 # Linha máxima que o agente pode alcançar
+        self.col_max = self.mapa.shape[1]-1 # Coluna máxima que o agente pode alcançar
         self.lin = lin
         self.col = col
     
     def successors(self):
-        """Return states produced by every valid movement or cleaning action."""
+        """Retorna os estados produzidos por cada movimento ou limpeza válida."""
 
         sucessors = []
 
-        # Move left
+        # Move para a esquerda
         if self.col - 1 >= 0:
             new = self.mapa.copy()
             sucessors.append(VacuumWorldGeneric(new, self.lin, self.col-1, 'esq'))
 
-        # Move right
+        # Move para a direita
         if self.col + 1 <= self.col_max:
             new = self.mapa.copy()
             sucessors.append(VacuumWorldGeneric(new, self.lin, self.col+1, 'dir'))
 
-        # Move up
+        # Move para cima
         if self.lin - 1 >=0:
             new = self.mapa.copy()
             sucessors.append(VacuumWorldGeneric(new, self.lin-1, self.col, 'cima'))
 
-        # Move down
+        # Move para baixo
         if self.lin + 1 <= self.lin_max:
             new = self.mapa.copy()
             sucessors.append(VacuumWorldGeneric(new, self.lin+1, self.col, 'baixo'))
 
-        # Clean the current room
+        # Limpa o cômodo atual
         if self.mapa[self.lin][self.col] == 1:
             new = self.mapa.copy()
             new[self.lin][self.col] = 0 
@@ -62,7 +62,7 @@ class VacuumWorldGeneric(State):
         return sucessors
     
     def is_goal(self):
-        """Return whether every room in the map is clean."""
+        """Retorna se todos os cômodos do mapa estão limpos."""
         for y in self.mapa:
             for x in y:
                 if x != 0:
@@ -70,7 +70,7 @@ class VacuumWorldGeneric(State):
         return True
 
     def h(self):
-        """Estimate the remaining work by counting dirty rooms."""
+        """Estima o trabalho restante contando os cômodos sujos."""
         count = 0
         for y in self.mapa:
             for x in y:
@@ -79,37 +79,37 @@ class VacuumWorldGeneric(State):
         return count
     
     def description(self):
-        """Describe the problem represented by this state."""
+        """Descreve o problema representado por este estado."""
         return "Agente genérico para o problema do aspirador de pó"
     
     def cost(self):
-        """Assign unit cost to movement and cleaning actions."""
+        """Atribui custo unitário às ações de movimento e limpeza."""
         return 1
     
     def env(self):
-        """Identify a state from its map and the agent's position."""
+        """Identifica o estado pelo mapa e pela posição do agente."""
         return str(self.mapa)+" "+str(self.lin)+" "+str(self.col)
 
 
 def convert_file_to_map(file_map_path):
-    """Convert a semicolon-separated text file into a NumPy array."""
+    """Converte um arquivo separado por ponto e vírgula em uma matriz NumPy."""
     return numpy.loadtxt(open(file_map_path, "rb"), delimiter=";")
 
 def main(file_map_path, lin, col):
     mapa = convert_file_to_map(file_map_path)
     print(mapa)
 
-    # Creates initial State
+    # Cria o estado inicial
     state = VacuumWorldGeneric(mapa, lin, col, '')
 
     #print('Busca em AEstrela')
     algorithm = AEstrela()
     
     print('Busca Profundidade Iterativa')
-    # Create search algorithm object
+    # Cria o objeto do algoritmo de busca
     # algorithm = BuscaProfundidadeIterativa()
 
-    # Executes the search
+    # Executa a busca
     result = algorithm.search(state, trace=True)
     if result != None:
         print('Achou!')

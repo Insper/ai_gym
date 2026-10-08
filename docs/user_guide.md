@@ -1,176 +1,118 @@
 # User Guide
 
-## Choosing a State class
+## Choosing a state class
 
-The state class defines how a problem is represented and what information is available to the search algorithm. A state typically represents one configuration of the problem, while successors() defines the configurations that can be reached from it.
+A state represents one configuration of a problem. Its `successors()` method
+describes the configurations that can be reached from it.
 
-Aigyminsper provides different state classes for different kinds of search problems
+| State class | Purpose | Typical algorithms |
+| --- | --- | --- |
+| `State` | Basic state-space or game representation | BFS, DFS, iterative deepening, uniform cost, MinMax |
+| `HeuristicState` | State with an estimate of distance or quality | Greedy, A*, hill climbing |
+| `CspState` | State for constraint-satisfaction and stochastic problems | Stochastic hill climbing |
 
-| State class      | Purpose                                                                             | Typical algorithms                                 |
-| ---------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `State`          | Basic state-space representation                                                    | BFS, DFS, iterative deepening, uniform-cost search, MinMax |
-| `HeuristicState` | State with heuristic information about the distance or quality relative to the goal | Greedy search, A*, hill climbing                   |
-| `CspState`       | State representation for constraint-satisfaction problems                           | CSP-oriented search algorithms                     |
+### Basic state
 
-
-In order to create a basic agent you can implement the `State` interface as shown below (relative to the choosen state class):
+Implement the `State` interface for ordinary search problems:
 
 ```python
 from aigyminsper.search.graph import State
 
-class MyAgent(State):
 
-    def __init__(self, op):
-        super().__init__(op)
-        # You must define how to represent the state
+class MyAgent(State):
+    def __init__(self, operator, value):
+        super().__init__(operator)
+        self.value = value
 
     def successors(self):
-        successors = []
-        # you must define how to generate the successors for each operator (action)
-        return successors
+        return []  # Return reachable MyAgent states.
 
     def is_goal(self):
-        # You must define the goal state
-        pass
+        return False
 
     def description(self):
         return "Problem description"
 
     def cost(self):
-        # Return the cost of each operator (action)
         return 1
 
     def env(self):
-        #
-        # This methos is used to return a description of the state (environment).
-        # This method is used to print the state of the environment. This representation is used in the pruning method of the search algorithms.
-        pass
+        # This value must uniquely represent the relevant state.
+        return str(self.value)
 ```
 
-For heuristics algorithms using the HeuristicState you must implement all of the above methods in adition to the method `h()` bellow
+`env()` is used by pruning strategies. Two states that should be treated as
+equivalent must return the same value.
+
+### Heuristic state
+
+Heuristic algorithms additionally use `h()`:
 
 ```python
 from aigyminsper.search.graph import HeuristicState
 
-class MyAgent(HeuristicState):
 
-    def __init__(self, op):
-        super().__init__(op)
-        # You must define how to represent the state
-
-    def successors(self): ...
-
-    def is_goal(self): ...
-
-    def description(self): ...
-
-    def cost(self): ...
-
-    def env(self): ...
+class MyHeuristicAgent(HeuristicState):
+    # Implement successors(), is_goal(), description(), cost(), and env().
 
     def h(self):
-        """
-        Return the heuristic of the current state
-        """
-        
+        return 0  # Estimate the remaining distance or state quality.
 ```
 
-And for Constraint Satisfaction Problem (CSP) you must use as well the method `random_state()` (if needed)
+`CspState` extends this interface with `random_state()` when a local stochastic
+algorithm needs to generate another candidate.
 
-```python
-from aigyminsper.search.graph import HeuristicState
-
-class MyAgent(HeuristicState):
-
-    def __init__(self, op):
-        super().__init__(op)
-        # You must define how to represent the state
-
-    def successors(self): ...
-
-    def is_goal(self): ...
-
-    def description(self): ...
-
-    def cost(self): ...
-
-    def env(self): ...
-
-    def h(self):
-        """
-        Return the heuristic of the current state
-        """
-
-    def random_state(self):
-        """
-        Return random possible state
-        """
-        
-```
-
-> Obs: You can use just the `State` class and implement the needed method if you want to
-
-You, as a developer, must implement the methods `successors`, `is_goal`, `description`, `cost`, and `env`, and describe how the world must be represented.
-
-## Choosing the Search Algorithm
-
-The next step is define the best algorithm to solve the problem.
+## Choosing a search algorithm
 
 ```python
 from aigyminsper.search.search_algorithms import BuscaLargura
 
 
-def main():
-    print('Using Breath First search')
-    state = MyAgent('', ...)
-    algorithm = BuscaLargura()
-    result = algorithm.search(state)
-    if result != None:
-        print('Found!')
-        print(result.show_path())
-    else:
-        print('No solution')
+state = MyAgent("", initial_value)
+result = BuscaLargura().search(state)
 
-
-if __name__ == '__main__':
-    main()
+if result is not None:
+    print(result.show_path())
+else:
+    print("No solution")
 ```
 
-The available algorithms and their corresponding characteristics:
+| Algorithm | Class | State type | Cost | Heuristic | Main consideration |
+| --- | --- | --- | ---: | ---: | --- |
+| Breadth-first | `BuscaLargura` | `State` | No | No | Can require substantial memory |
+| Depth-first | `BuscaProfundidade` | `State` | No | No | Requires a depth limit |
+| Iterative deepening | `BuscaProfundidadeIterativa` | `State` | No | No | Repeats depth-limited searches |
+| Uniform cost | `BuscaCustoUniforme` | `State` | Yes | No | Handles varying action costs |
+| Greedy | `BuscaGananciosa` | `HeuristicState` | No | Yes | Is not generally optimal |
+| A* | `AEstrela` | `HeuristicState` | Yes | Yes | Optimality depends on the heuristic |
+| MinMax | `MinMax` | `State` | Utility | Optional | Alternates maximizing and minimizing turns |
+| Hill climbing | `SubidaMontanha` | `HeuristicState` | — | Yes | Can stop at a local optimum |
+| Stochastic hill climbing | `SubidaMontanhaEstocastico` | `CspState` | — | Yes | Uses randomized local search |
 
-| Algorithm                | Class                        | State type                   |                   Uses cost | Uses heuristic | Important constraint                        |
-| ------------------------ | ---------------------------- | ---------------------------- | --------------------------: | -------------: | ------------------------------------------- |
-| Breadth-first            | `BuscaLargura`               | `State`                      |                          No |             No | Memory-intensive                            |
-| Depth-first              | `BuscaProfundidade`          | `State`                      |                          No |             No | Requires/configures a depth limit           |
-| Iterative deepening      | `BuscaProfundidadeIterativa` | `State`                      |                          No |             No | Repeats depth-limited searches              |
-| Uniform cost             | `BuscaCustoUniforme`         | `State`                      |                         Yes |             No | Appropriate for varying action costs        |
-| Greedy                   | `BuscaGananciosa`            | `HeuristicState`             | No/implementation-dependent |            Yes | Not generally optimal                       |
-| A*                       | `AEstrela`                   | `HeuristicState`             |                         Yes |            Yes | Optimality depends on heuristic assumptions |
-| MinMax                   | `MinMax`                     | `State`                      | Utility function             |       Optional | Alternates maximizing and minimizing turns  |
-| Hill climbing            | `SubidaMontanha`             | `HeuristicState`             |                           — |            Yes | Local search; can get stuck                 |
-| Stochastic hill climbing | `SubidaMontanhaEstocastico`  | `CspState`             |                           — |            Yes | Local/stochastic search                     |
+## Pruning strategies
 
-The graph-search algorithms accept a `pruning` argument:
+Graph-search algorithms accept a `pruning` argument:
 
 ```python
-result = algorithm.search(state, pruning='general')  # 'without', 'father-son', or 'general'
+result = algorithm.search(state, pruning="general")
 ```
 
-MinMax instead uses `start=0` for the maximizing player, `start=1` for the
-minimizing player, and `m` as an optional search-depth limit:
+- `without`: does not prevent repeated states.
+- `father-son`: prevents an immediate return to the parent state.
+- `general`: tracks environments that have already been generated.
+
+The available behavior depends on `env()` uniquely representing the state.
+
+## MinMax
+
+MinMax uses `start=0` for the maximizing player and `start=1` for the
+minimizing player. The optional `m` argument limits the explored depth.
 
 ```python
 from aigyminsper.search.search_algorithms import MinMax
 
+
 result = MinMax().search(state, start=0, m=4)
 ```
 
-> For examples on real usages of the flow above see [Examples](./examples.md) page.
-
-## Pruning strategies
-
-**without** — no repeated-state pruning. The algorithm may revisit states it has already explored.
-
-**father-son** — prevents immediate backtracking between a state and its parent, if that matches your implementation.
-
-**general** — tracks previously visited environments and prevents/reduces repeated exploration, presumably based on env().
+For a complete implementation, see the [Noughts & Crosses example](examples.md#noughts-crosses).
