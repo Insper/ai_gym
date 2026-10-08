@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://insper.github.io/ai_gym/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/community/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/community/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/community/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/examples/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/examples/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/examples/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/trace/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/trace/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/trace/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/user_guide/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/user_guide/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/user_guide/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/implementations/NoughtsNCrosses/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/NoughtsNCrosses/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/NoughtsNCrosses/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/implementations/Puzzle8/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/Puzzle8/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/Puzzle8/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/implementations/U2/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/U2/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/U2/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/implementations/VacuumWorldGeneric/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/VacuumWorldGeneric/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/VacuumWorldGeneric/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/community/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/community/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/community/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/examples/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/examples/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/examples/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/trace/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/trace/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/trace/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/user_guide/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/user_guide/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/user_guide/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/implementations/NoughtsNCrosses/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/NoughtsNCrosses/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/NoughtsNCrosses/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/implementations/Puzzle8/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/Puzzle8/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/Puzzle8/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/implementations/U2/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/U2/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/U2/"/>
+    </url>
+    <url>
+        <loc>https://insper.github.io/ai_gym/pt/implementations/VacuumWorldGeneric/</loc>
+        <lastmod>2026-10-08</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://insper.github.io/ai_gym/pt/implementations/VacuumWorldGeneric/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://insper.github.io/ai_gym/implementations/VacuumWorldGeneric/"/>
+    </url>
+</urlset>
